@@ -49,9 +49,9 @@
       
         <tags>
             
-            <tag> docker </tag>
-            
             <tag> 教程 </tag>
+            
+            <tag> docker </tag>
             
         </tags>
       
@@ -78,9 +78,9 @@
       
         <tags>
             
-            <tag> 教程 </tag>
-            
             <tag> linux </tag>
+            
+            <tag> 教程 </tag>
             
         </tags>
       
@@ -107,31 +107,9 @@
     
     
     <entry>
-      <title>tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>about</title>
       <link href="/about/index.html"/>
       <url>/about/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>comments</title>
-      <link href="/comments/index.html"/>
-      <url>/comments/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -156,6 +134,28 @@
       <url>/js/mathjax_config.js</url>
       
         <content type="html"><![CDATA[MathJax = {  tex: {    inlineMath: [['$', '$'], ['\\(', '\\)']]  }};]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>comments</title>
+      <link href="/comments/index.html"/>
+      <url>/comments/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
