@@ -37,7 +37,7 @@
       <link href="/posts/56777.html"/>
       <url>/posts/56777.html</url>
       
-        <content type="html"><![CDATA[<h1 id="docker配置国内镜像加速">docker配置国内镜像加速</h1><p>使用docker测试拉取镜像时，出现了拉取失败的情况，如下：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[r@101 ~]# docker run hello-world</span><br><span class="line">Unable to find image 'hello-world:latest' locally</span><br><span class="line">docker: Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled n (Client.Timeout exceeded while awaiting headers).</span><br><span class="line">See 'docker run --help'.</span><br></pre></td></tr></table></figure><p>这是由于访问官方镜像库超时了，接下来配置镜像加速</p><p>使用的是CentOS 7</p><ul><li><p>如果不存在 <code>/etc/docker/daemon.json</code>，使用以下命令：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建目录</span></span><br><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">写入镜像配置</span></span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-'EOF'</span><br><span class="line">{</span><br><span class="line">    "registry-mirrors": [</span><br><span class="line">        "https://docker.m.daocloud.io",</span><br><span class="line">        "https://dockerproxy.com",</span><br><span class="line">        "https://docker.mirrors.ustc.edu.cn",</span><br><span class="line">        "https://docker.nju.edu.cn"</span><br><span class="line">    ]</span><br><span class="line">}</span><br><span class="line">EOF</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启docker服务</span></span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br><span class="line">sudo systemctl status docker</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查镜像源配置</span></span><br><span class="line">docker info | grep -A 5 "Registry Mirrors"</span><br></pre></td></tr></table></figure></li><li><p>如果已经存在 <code>/etc/docker/daemon.json</code> ，则</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sudo cat &gt; /etc/docker/daemon.json &lt;&lt; EOF</span><br><span class="line">{</span><br><span class="line">    "registry-mirrors": [</span><br><span class="line">        "https://docker.m.daocloud.io",</span><br><span class="line">        "https://dockerproxy.com",</span><br><span class="line">        "https://docker.mirrors.ustc.edu.cn",</span><br><span class="line">        "https://docker.nju.edu.cn"</span><br><span class="line">    ]</span><br><span class="line">}</span><br><span class="line">EOF</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">然后重启服务</span></span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br><span class="line">sudo systemctl status docker</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查镜像源配置</span></span><br><span class="line">docker info | grep -A 5 "Registry Mirrors"</span><br></pre></td></tr></table></figure></li></ul><p>之后执行 <code>docker run hello-world</code>，如果还是不行，检查网络问题或者换其他镜像源<del>换几次源才成功也不奇怪</del></p><h2 id="结尾">结尾</h2><p>又水了一篇ƪ(˘⌣˘)ʃ</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="docker配置国内镜像加速">docker配置国内镜像加速</h1><h2 id="前言">前言</h2><p>本篇只是最基础的配置国内镜像，不是什么奇法妙技</p><h2 id="正文">正文</h2><p>使用docker测试拉取镜像时，出现了拉取失败的情况，如下：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[r@101 ~]# docker run hello-world</span><br><span class="line">Unable to find image 'hello-world:latest' locally</span><br><span class="line">docker: Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled n (Client.Timeout exceeded while awaiting headers).</span><br><span class="line">See 'docker run --help'.</span><br></pre></td></tr></table></figure><p>这是由于访问官方镜像库超时了，接下来配置镜像加速</p><p>使用的是CentOS 7</p><ul><li><p>如果不存在 <code>/etc/docker/daemon.json</code>，使用以下命令：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">创建目录</span></span><br><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">写入镜像配置</span></span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-'EOF'</span><br><span class="line">{</span><br><span class="line">    "registry-mirrors": [</span><br><span class="line">        "https://docker.m.daocloud.io",</span><br><span class="line">        "https://dockerproxy.com",</span><br><span class="line">        "https://docker.mirrors.ustc.edu.cn",</span><br><span class="line">        "https://docker.nju.edu.cn"</span><br><span class="line">    ]</span><br><span class="line">}</span><br><span class="line">EOF</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启docker服务</span></span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br><span class="line">sudo systemctl status docker</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查镜像源配置</span></span><br><span class="line">docker info | grep -A 5 "Registry Mirrors"</span><br></pre></td></tr></table></figure></li><li><p>如果已经存在 <code>/etc/docker/daemon.json</code> ，则</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sudo cat &gt; /etc/docker/daemon.json &lt;&lt; EOF</span><br><span class="line">{</span><br><span class="line">    "registry-mirrors": [</span><br><span class="line">        "https://docker.m.daocloud.io",</span><br><span class="line">        "https://dockerproxy.com",</span><br><span class="line">        "https://docker.mirrors.ustc.edu.cn",</span><br><span class="line">        "https://docker.nju.edu.cn"</span><br><span class="line">    ]</span><br><span class="line">}</span><br><span class="line">EOF</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">然后重启服务</span></span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br><span class="line">sudo systemctl status docker</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查镜像源配置</span></span><br><span class="line">docker info | grep -A 5 "Registry Mirrors"</span><br></pre></td></tr></table></figure></li></ul><p>之后执行 <code>docker run hello-world</code>，如果还是不行，检查网络问题或者换其他镜像源<del>换几次源才成功也不奇怪</del></p><h2 id="结尾">结尾</h2><p>又水了一篇ƪ(˘⌣˘)ʃ</p>]]></content>
       
       
       <categories>
@@ -107,9 +107,9 @@
     
     
     <entry>
-      <title>categories</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
+      <title>about</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -118,9 +118,20 @@
     
     
     <entry>
-      <title>about</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>categories</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -143,17 +154,6 @@
       <title>comments</title>
       <link href="/comments/index.html"/>
       <url>/comments/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
