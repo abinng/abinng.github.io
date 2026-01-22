@@ -827,7 +827,7 @@ window.addEventListener('load', () => {
             headers: { 'Content-Type': 'application/json' }
           }
           danmuStore = [];
-          const response = await fetch(`https://twikoo.worker.abinng.dpdns.org`, options);
+          const response = await fetch(``, options);
           if (response.ok) {
             const { data } = await response.json();
             //- console.info(data);

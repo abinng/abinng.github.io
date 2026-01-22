@@ -321,11 +321,6 @@ if (true) {
         <span class="tagsPageCount">1</span>
       </a>
     
-      <a href="/categories/深度学习/" id="/categories/深度学习/">
-        <span class="tags-punctuation">#</span>深度学习
-        <span class="tagsPageCount">1</span>
-      </a>
-    
       <a href="/categories/linux/" id="/categories/linux/">
         <span class="tags-punctuation">#</span>linux
         <span class="tagsPageCount">1</span>
@@ -333,6 +328,11 @@ if (true) {
     
       <a href="/categories/Hexo/" id="/categories/Hexo/">
         <span class="tags-punctuation">#</span>Hexo
+        <span class="tagsPageCount">1</span>
+      </a>
+    
+      <a href="/categories/深度学习/" id="/categories/深度学习/">
+        <span class="tags-punctuation">#</span>深度学习
         <span class="tagsPageCount">1</span>
       </a>
     
@@ -703,7 +703,7 @@ window.addEventListener('load', () => {
             headers: { 'Content-Type': 'application/json' }
           }
           danmuStore = [];
-          const response = await fetch(`https://twikoo.worker.abinng.dpdns.org`, options);
+          const response = await fetch(``, options);
           if (response.ok) {
             const { data } = await response.json();
             //- console.info(data);
