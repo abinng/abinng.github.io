@@ -84,9 +84,9 @@
       
         <tags>
             
-            <tag> docker </tag>
-            
             <tag> 教程 </tag>
+            
+            <tag> docker </tag>
             
         </tags>
       
@@ -113,9 +113,9 @@
       
         <tags>
             
-            <tag> 教程 </tag>
-            
             <tag> linux </tag>
+            
+            <tag> 教程 </tag>
             
         </tags>
       
@@ -142,17 +142,6 @@
     
     
     <entry>
-      <title>about</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>categories</title>
       <link href="/categories/index.html"/>
       <url>/categories/index.html</url>
@@ -164,9 +153,20 @@
     
     
     <entry>
-      <title>tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
+      <title></title>
+      <link href="/css/custom.css"/>
+      <url>/css/custom.css</url>
+      
+        <content type="html"><![CDATA[/* 恢复 Twikoo 预览按钮显示 */#twikoo .tk-comments .el-button.tk-preview {  display: inline-flex !important;  visibility: visible !important;  opacity: 1 !important;  pointer-events: auto !important;}#twikoo .tk-comments .el-button.tk-preview:hover {  opacity: 0.85 !important;}#twikoo .tk-comments .el-button.tk-preview {    position: absolute;    top: -40px;    right: 107px;    opacity: 0.3;}#twikoo .tk-comments .el-button--primary {    color: var(--anzhiyu-card-bg);    box-shadow: var(--anzhiyu-shadow-black);    width: 6.25rem;    position: absolute;    top: -41px;    right: 0px;    height: 32px;    margin-left: 0.5rem !important;    border-color: var(--anzhiyu-fontcolor);    border-radius: 12px;    transition: 0.3s;}#twikoo .tk-comments .tk-meta-input {    position: relative;    margin-top: 8px;    width: calc(100% - 165px);}/* 1. 针对弹幕容器 .default-style */#danmu-wrap .default-style {  /* 核心修复：强制把行高改回正常值 */  line-height: 30px !important;     /* 布局修复：使用 Flex 让图片和文字对齐 */  display: flex !important;  align-items: center !important;    /* 外观美化：加上背景色和圆角，让它看起来像个弹幕条 */  background: rgba(255, 255, 255, 0.9) !important; /* 白色半透明背景 */  border-radius: 20px !important; /* 胶囊形状 */  padding: 5px 10px !important;   /* 内部留点空隙 */  border: 1px solid #eee !important; /* 加上细边框 */  box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important; /* 加点阴影更立体 */    /* 防止被主题样式干扰 */  width: auto !important;  height: auto !important;}/* 2. 针对里面的文字 <p> */#danmu-wrap .default-style p {  margin: 0 !important;  /* 去掉主题默认的段落间距 */  padding: 0 !important;  font-size: 14px !important; /* 字体大小 */  color: #333 !important; /* 强制文字颜色，防止看不清 */  white-space: nowrap !important; /* 防止文字换行 */}/* 3. 针对里面的头像 <img> */#danmu-wrap .default-style img {  width: 24px !important;  /* 限制头像大小 */  height: 24px !important;  border-radius: 50% !important; /* 圆形头像 */  margin: 0 8px 0 0 !important; /* 头像右边留点空隙，去掉其他方向的 margin */  display: inline-block !important;}/* 4. 暗黑模式适配 (可选，如果您的主题支持暗黑模式) */[data-theme="dark"] #danmu-wrap .default-style {  background: rgba(50, 50, 50, 0.9) !important;  border-color: #444 !important;}[data-theme="dark"] #danmu-wrap .default-style p {  color: #eee !important;}]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>about</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -186,20 +186,20 @@
     
     
     <entry>
-      <title></title>
-      <link href="/css/custom.css"/>
-      <url>/css/custom.css</url>
+      <title>留言板</title>
+      <link href="/comments/index.html"/>
+      <url>/comments/index.html</url>
       
-        <content type="html"><![CDATA[/* 恢复 Twikoo 预览按钮显示 */#twikoo .tk-comments .el-button.tk-preview {  display: inline-flex !important;  visibility: visible !important;  opacity: 1 !important;  pointer-events: auto !important;}#twikoo .tk-comments .el-button.tk-preview:hover {  opacity: 0.85 !important;}#twikoo .tk-comments .el-button.tk-preview {    position: absolute;    top: -40px;    right: 107px;    opacity: 0.3;}#twikoo .tk-comments .el-button--primary {    color: var(--anzhiyu-card-bg);    box-shadow: var(--anzhiyu-shadow-black);    width: 6.25rem;    position: absolute;    top: -41px;    right: 0px;    height: 32px;    margin-left: 0.5rem !important;    border-color: var(--anzhiyu-fontcolor);    border-radius: 12px;    transition: 0.3s;}#twikoo .tk-comments .tk-meta-input {    position: relative;    margin-top: 8px;    width: calc(100% - 165px);}]]></content>
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
     
     
     <entry>
-      <title>留言板</title>
-      <link href="/comments/index.html"/>
-      <url>/comments/index.html</url>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       

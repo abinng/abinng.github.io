@@ -809,7 +809,7 @@ window.addEventListener('load', () => {
         line: 5, //- 弹幕行数
         speed: 20, //- 弹幕播放速度
         hover: true, //- 鼠标hover时是否暂停播放弹幕
-        loop: false, //- 开启循环播放
+        loop: true, //- 开启循环播放
         colourful: true, //- 开启彩色弹幕
         coefficient: 1.38, //- 弹幕密度系数
         runtime: 10, //- 循环弹幕播放时长
@@ -820,7 +820,9 @@ window.addEventListener('load', () => {
           const options = {
             method: "POST",
             body: JSON.stringify({
-              "event": "GET_RECENT_COMMENTS",
+              //- "event": "GET_RECENT_COMMENTS",
+              "event": "COMMENT_GET",
+              "url": "/comments/",
               "includeReply": false,
               "pageSize": 100
             }),
@@ -860,7 +862,7 @@ window.addEventListener('load', () => {
       if (typeof EasyDanmaku === 'function') {
         await naokuo_danmu();
       } else {
-        const easyDanmakuScript = await getScript('https://pprory.github.io/easyDanmaku/demo/easy-Danmaku.js');
+        const easyDanmakuScript = await getScript('https://pprory.github.io/easyDanmaku/demo/easy-Danmaku.min.js');
         if (typeof EasyDanmaku === 'function') {
           await naokuo_danmu();
         } else {
