@@ -752,7 +752,7 @@ window.addEventListener('load', () => {
       if (typeof EasyDanmaku === 'function') {
         await naokuo_danmu();
       } else {
-        const easyDanmakuScript = await getScript('https://npm.onmicrosoft.cn/naokuo-blog@1.2.12/js/easy-Danmaku.js');
+        const easyDanmakuScript = await getScript('/js/easy-Danmaku.js');
         if (typeof EasyDanmaku === 'function') {
           await naokuo_danmu();
         } else {
