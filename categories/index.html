@@ -703,7 +703,7 @@ window.addEventListener('load', () => {
             headers: { 'Content-Type': 'application/json' }
           }
           danmuStore = [];
-          const response = await fetch(``, options);
+          const response = await fetch(`https://twikoo.worker.abinng.dpdns.org`, options);
           if (response.ok) {
             const { data } = await response.json();
             //- console.info(data);
@@ -736,7 +736,7 @@ window.addEventListener('load', () => {
       if (typeof EasyDanmaku === 'function') {
         await naokuo_danmu();
       } else {
-        const easyDanmakuScript = await getScript('https://npm.onmicrosoft.cn/naokuo-blog@1.2.12/js/easy-Danmaku.js');
+        const easyDanmakuScript = await getScript('https://github.com/pprory/easyDanmaku/blob/main/src/easyDanmaku.js');
         if (typeof EasyDanmaku === 'function') {
           await naokuo_danmu();
         } else {
