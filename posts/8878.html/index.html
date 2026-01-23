@@ -702,7 +702,8 @@ document.addEventListener('pjax:error', e => {
         loop: true,           // 循环播放 (true/false)
         colourful: true, // 彩色弹幕 (true/false)
         coefficient: 1.38, // 密度系数
-        runtime: 10      // 运行时长(目前代码中未强制限制总时长，主要靠loop控制)
+        runtime: 10,      // 运行时长(目前代码中未强制限制总时长，主要靠loop控制)
+        textShadow: 1 // 描边(1)和阴影(2)
       });
 
       try {
@@ -714,8 +715,9 @@ document.addEventListener('pjax:error', e => {
           const options = {
             method: "POST",
             body: JSON.stringify({
-              "event": "COMMENT_GET",
-              "url": "/comments/",
+              "event": "GET_RECENT_COMMENT",
+              //- "event": "COMMENT_GET",
+              //- "url": "/comments/",
               "includeReply": false,
               "pageSize": 100
             }),

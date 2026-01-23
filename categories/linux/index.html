@@ -60,7 +60,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2026-01-23 13:46:08',
+  postUpdate: '2026-01-23 14:10:46',
   postMainColor: '',
 }</script><noscript><style type="text/css">
   #nav {
@@ -322,9 +322,9 @@ if (true) {
       </a>
     </div>
     
-    <div class="catalog-list-item" id="/categories/深度学习/">
-      <a href="/categories/深度学习/">
-        深度学习
+    <div class="catalog-list-item" id="/categories/linux/">
+      <a href="/categories/linux/">
+        linux
       </a>
     </div>
     
@@ -334,9 +334,9 @@ if (true) {
       </a>
     </div>
     
-    <div class="catalog-list-item" id="/categories/linux/">
-      <a href="/categories/linux/">
-        linux
+    <div class="catalog-list-item" id="/categories/深度学习/">
+      <a href="/categories/深度学习/">
+        深度学习
       </a>
     </div>
     
@@ -649,7 +649,8 @@ document.addEventListener('pjax:error', e => {
         loop: true,           // 循环播放 (true/false)
         colourful: true, // 彩色弹幕 (true/false)
         coefficient: 1.38, // 密度系数
-        runtime: 10      // 运行时长(目前代码中未强制限制总时长，主要靠loop控制)
+        runtime: 10,      // 运行时长(目前代码中未强制限制总时长，主要靠loop控制)
+        textShadow: 1 // 描边(1)和阴影(2)
       });
 
       try {
@@ -661,8 +662,9 @@ document.addEventListener('pjax:error', e => {
           const options = {
             method: "POST",
             body: JSON.stringify({
-              "event": "COMMENT_GET",
-              "url": "/comments/",
+              "event": "GET_RECENT_COMMENT",
+              //- "event": "COMMENT_GET",
+              //- "url": "/comments/",
               "includeReply": false,
               "pageSize": 100
             }),
