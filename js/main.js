@@ -1841,6 +1841,8 @@ document.addEventListener("DOMContentLoaded", function () {
     anzhiyu.getCustomPlayList();
     anzhiyu.addEventListenerConsoleMusicList(false);
     anzhiyu.initPaginationObserver();
+    // ip地址欢迎信息
+    Bornforthis.setWelcome_info();
 
     setTimeout(() => {
       setInputFocusListener();
