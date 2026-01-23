@@ -798,31 +798,31 @@ document.addEventListener('pjax:error', e => {
   if (e.request.status === 404) {
     pjax.loadUrl('/404.html')
   }
-})</script><script async data-pjax src="//npm.elemecdn.com/penndu@1.0.0/bsz.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script><script>//- 留言板页面弹幕
+})</script><script async data-pjax src="//npm.elemecdn.com/penndu@1.0.0/bsz.js"></script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script><script>//- 留言板页面弹幕 (Bilibili Style Modified)
 window.addEventListener('load', () => {
   const getnaokuo_danmu = () => {
-    if (!window.location.pathname.startsWith('/comments/')) return; //- 判断是否是留言板页面
+    if (!window.location.pathname.startsWith('/comments/')) return; 
+    
     const naokuo_danmu = async () => {
+      // 初始化参数
       const Danmaku = new EasyDanmaku({
-        page: '/comments/', //- 即留言板地址
-        el: '#danmu-wrap', //- 弹幕挂载节点
-        line: 5, //- 弹幕行数
-        speed: 20, //- 弹幕播放速度
-        hover: true, //- 鼠标hover时是否暂停播放弹幕
-        loop: true, //- 开启循环播放
-        colourful: true, //- 开启彩色弹幕
-        coefficient: 1.38, //- 弹幕密度系数
-        runtime: 10, //- 循环弹幕播放时长
+        el: '#danmu-wrap', 
+        line: 5, 
+        speed: 20, 
+        hover: true, 
+        loop: true,
+        runtime: 10
       });
+
       try {
         let danmuStore = saveToLocal.get('twikoo-danmu');
         if (!danmuStore) {
           const options = {
             method: "POST",
             body: JSON.stringify({
-              "event": "GET_RECENT_COMMENTS",
-              //- "event": "COMMENT_GET",
-              //- "url": "/comments/",
+              //- "event": "GET_RECENT_COMMENTS",
+              "event": "GET",
+              "url": "/comments",
               "includeReply": false,
               "pageSize": 100
             }),
@@ -832,23 +832,35 @@ window.addEventListener('load', () => {
           const response = await fetch(`https://twikoo.worker.abinng.dpdns.org`, options);
           if (response.ok) {
             const { data } = await response.json();
-            //- console.info(data);
+            
             data.forEach(i => {
-              if (i.avatar == undefined) i.avatar = 'https://cravatar.cn/avatar/d615d5793929e8c7d70eab5f00f7f5f1?d=mp'
-              danmuStore.push({ avatar: i.avatar, content: i.nick + '：' + formatDanmaku(i.comment), url: i.url + '#' + i.id })
+              // 核心修改：只提取纯文本内容，不再拼接 HTML
+              // Bilibili 风格不需要头像，只需要文字
+              const cleanContent = formatDanmaku(i.comment);
+              if(cleanContent && cleanContent.length > 0) {
+                 danmuStore.push({ 
+                   content: cleanContent, // 纯文本
+                   nick: i.nick, // 昵称可选，虽然B站弹幕不显示昵称，但保留数据
+                   url: i.url 
+                 });
+              }
             });
+            
             Danmaku.batchSend(danmuStore, true);
             saveToLocal.set('twikoo-danmu', danmuStore, 0.5)
           }
-          //- 格式化评论
+
+          // 格式化评论：去除标签，只留文字
           function formatDanmaku(str) {
-            str = str.replace(/<\/*br>|[\s\uFEFF\xA0]+/g, '');
+            if(!str) return "";
+            str = str.replace(/<\/*br>|[\s\uFEFF\xA0]+/g, ' '); // 换行变空格
             str = str.replace(/<img.*?>/g, '[图片]');
             str = str.replace(/<a.*?>.*?<\/a>/g, '[链接]');
-            str = str.replace(/<pre.*?>.*?<\/pre>/g, '[代码块]');
-            str = str.replace(/<.*?>/g, '');
-            return str
+            str = str.replace(/<pre.*?>.*?<\/pre>/g, '[代码]');
+            str = str.replace(/<.*?>/g, ''); // 去除所有 HTML 标签
+            return str.trim();
           }
+
         } else {
           Danmaku.batchSend(danmuStore, true);
         }
@@ -856,21 +868,57 @@ window.addEventListener('load', () => {
         console.error("Error fetching data:", err);
       }
 
-      document.getElementById('danmu-Btn') && (document.getElementById('danmu-Btn').innerHTML = `<button class="hide-Btn" onclick="document.getElementById('danmu-wrap').classList.remove('hide-danmu')">显示弹幕</button> <button class="hide-Btn" onclick="document.getElementById('danmu-wrap').classList.add('hide-danmu')">隐藏弹幕</button>`)
+      // 按钮控制逻辑
+      const btnContainer = document.getElementById('danmu-Btn');
+      if(btnContainer) {
+          btnContainer.innerHTML = `
+              <button class="hide-Btn" onclick="document.getElementById('danmu-wrap').style.opacity = '1'">开启弹幕</button> 
+              <button class="hide-Btn" onclick="document.getElementById('danmu-wrap').style.opacity = '0'">关闭弹幕</button>
+          `;
+      }
     }
+
     (async () => {
       if (typeof EasyDanmaku === 'function') {
         await naokuo_danmu();
       } else {
         const easyDanmakuScript = await getScript('/js/easy-Danmaku.js');
-        if (typeof EasyDanmaku === 'function') {
-          await naokuo_danmu();
-        } else {
-          console.error('EasyDanmaku function not found even after loading the script.');
-        }
+        await naokuo_danmu();
       }
     })();
   }
   getnaokuo_danmu()
   document.addEventListener('pjax:complete', getnaokuo_danmu)
-})</script></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>
+})
+</script><style>#danmu-wrap {
+  width: 100%;
+  height: calc(100% - 60px);
+  position: fixed;
+  left: 0;
+  top: 60px;
+  z-index: 3;
+  pointer-events: none; /* 确保不遮挡下方内容点击 */
+  transition: opacity 0.3s;
+}
+
+/* 按钮样式 */
+div#danmu-Btn {
+  display: flex;
+  justify-content: center;
+  margin: 64px 0 0;
+  position: relative;
+  z-index: 5;
+}
+div#danmu-Btn button.hide-Btn {
+  background: rgba(52,106,133,.478);
+  color: white;
+  padding: 8px 20px;
+  margin: 0 10px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+div#danmu-Btn button.hide-Btn:hover {
+  background: var(--anzhiyu-main);
+}</style></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>
