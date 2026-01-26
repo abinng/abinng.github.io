@@ -6,7 +6,7 @@
   LA51: {"enable":true,"ck":"3Ol1Iy7dq073txBo","LingQueMonitorID":"3Ol1jFxj4SF3LU9D"},
   greetingBox: {"enable":true,"default":"晚上好👋","list":[{"greeting":"晚安😴","startTime":0,"endTime":5},{"greeting":"早上好鸭👋, 祝你一天好心情！","startTime":6,"endTime":9},{"greeting":"上午好👋, 状态很好，鼓励一下～","startTime":10,"endTime":10},{"greeting":"11点多啦, 在坚持一下就吃饭啦～","startTime":11,"endTime":11},{"greeting":"午安👋, 宝贝","startTime":12,"endTime":14},{"greeting":"🌈充实的一天辛苦啦！","startTime":14,"endTime":18},{"greeting":"19点喽, 奖励一顿丰盛的大餐吧🍔。","startTime":19,"endTime":19},{"greeting":"晚上好👋, 在属于自己的时间好好放松😌~","startTime":20,"endTime":24}]},
   twikooEnvId: 'https://twikoo-worker.abinng.dpdns.org',
-  commentBarrageConfig:{"enable":true,"maxBarrage":1,"barrageTime":4000,"accessToken":"","mailMd5":""},
+  commentBarrageConfig:{"enable":true,"maxBarrage":1,"barrageTime":8000,"accessToken":"69bc6684b6f6fd95917bfd6606eddd25","mailMd5":"74EF7B4E1E247A295204D8BB4B038394"},
   music_page_default: "nav_music",
   root: '/',
   preloader: {"source":3},
@@ -336,13 +336,13 @@ if (true) {
         <span class="tagsPageCount">2</span>
       </a>
     
-      <a href="/tags/linux/" id="/tags/linux/">
-        <span class="tags-punctuation">#</span>linux
+      <a href="/tags/docker/" id="/tags/docker/">
+        <span class="tags-punctuation">#</span>docker
         <span class="tagsPageCount">1</span>
       </a>
     
-      <a href="/tags/docker/" id="/tags/docker/">
-        <span class="tags-punctuation">#</span>docker
+      <a href="/tags/linux/" id="/tags/linux/">
+        <span class="tags-punctuation">#</span>linux
         <span class="tagsPageCount">1</span>
       </a>
     
@@ -383,7 +383,7 @@ if (true) {
             color: color
           }
         },
-        data: ["深度学习","卷积神经网络","Pytorch","教程","linux","docker","Hexo"]
+        data: ["深度学习","卷积神经网络","Pytorch","教程","docker","linux","Hexo"]
       },
       yAxis: {
         name: '文章篇数',
@@ -411,7 +411,7 @@ if (true) {
       series: [{
         name: '文章篇数',
         type: 'bar',
-        data: [{"name":"深度学习","value":3,"path":"tags/深度学习/"},{"name":"卷积神经网络","value":3,"path":"tags/卷积神经网络/"},{"name":"Pytorch","value":3,"path":"tags/Pytorch/"},{"name":"教程","value":2,"path":"tags/教程/"},{"name":"linux","value":1,"path":"tags/linux/"},{"name":"docker","value":1,"path":"tags/docker/"},{"name":"Hexo","value":1,"path":"tags/Hexo/"}],
+        data: [{"name":"深度学习","value":3,"path":"tags/深度学习/"},{"name":"卷积神经网络","value":3,"path":"tags/卷积神经网络/"},{"name":"Pytorch","value":3,"path":"tags/Pytorch/"},{"name":"教程","value":2,"path":"tags/教程/"},{"name":"docker","value":1,"path":"tags/docker/"},{"name":"linux","value":1,"path":"tags/linux/"},{"name":"Hexo","value":1,"path":"tags/Hexo/"}],
         itemStyle: {
           borderRadius: [5, 5, 0, 0],
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -755,7 +755,7 @@ document.addEventListener('pjax:error', e => {
       if (typeof EasyDanmaku === 'function') {
         await naokuo_danmu();
       } else {
-        const easyDanmakuScript = await getScript('/js/easy-Danmaku.js');
+        const easyDanmakuScript = await getScript('/js/easy-Danmaku.min.js');
         await naokuo_danmu();
       }
     })();
