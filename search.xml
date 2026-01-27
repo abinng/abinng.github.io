@@ -285,11 +285,11 @@
     
     
     <entry>
-      <title>charts</title>
-      <link href="/charts/index.html"/>
-      <url>/charts/index.html</url>
+      <title>categories</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
-        <content type="html"><![CDATA[<!-- 文章发布时间统计图 --><div id="posts-chart" data-start="2026-01" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章标签统计图 --><div id="tags-chart" data-length="10" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章分类统计图 --><div id="categories-chart" data-parent="true" style="border-radius: 8px; height: 300px; padding: 10px;"></div>]]></content>
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
@@ -307,20 +307,31 @@
     
     
     <entry>
-      <title></title>
-      <link href="/js/charts-light-dark.js"/>
-      <url>/js/charts-light-dark.js</url>
+      <title>charts</title>
+      <link href="/charts/index.html"/>
+      <url>/charts/index.html</url>
       
-        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
+        <content type="html"><![CDATA[<!-- 文章发布时间统计图 --><div id="posts-chart" data-start="2026-01" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章标签统计图 --><div id="tags-chart" data-length="10" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章分类统计图 --><div id="categories-chart" data-parent="true" style="border-radius: 8px; height: 300px; padding: 10px;"></div>]]></content>
       
     </entry>
     
     
     
     <entry>
-      <title>categories</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
+      <title></title>
+      <link href="/css/custom.css"/>
+      <url>/css/custom.css</url>
+      
+        <content type="html"><![CDATA[/* 恢复 Twikoo 预览按钮显示 */#twikoo .tk-comments .el-button.tk-preview {  display: inline-flex !important;  visibility: visible !important;  opacity: 1 !important;  pointer-events: auto !important;}#twikoo .tk-comments .el-button.tk-preview:hover {  opacity: 0.85 !important;}#twikoo .tk-comments .el-button.tk-preview {    position: absolute;    top: -40px;    right: 107px;    opacity: 0.3;}#twikoo .tk-comments .el-button--primary {    color: var(--anzhiyu-card-bg);    box-shadow: var(--anzhiyu-shadow-black);    width: 6.25rem;    position: absolute;    top: -41px;    right: 0px;    height: 32px;    margin-left: 0.5rem !important;    border-color: var(--anzhiyu-fontcolor);    border-radius: 12px;    transition: 0.3s;}#twikoo .tk-comments .tk-meta-input {    position: relative;    margin-top: 8px;    width: calc(100% - 165px);}]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -340,22 +351,11 @@
     
     
     <entry>
-      <title>tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title></title>
-      <link href="/css/custom.css"/>
-      <url>/css/custom.css</url>
+      <link href="/js/charts-light-dark.js"/>
+      <url>/js/charts-light-dark.js</url>
       
-        <content type="html"><![CDATA[/* 恢复 Twikoo 预览按钮显示 */#twikoo .tk-comments .el-button.tk-preview {  display: inline-flex !important;  visibility: visible !important;  opacity: 1 !important;  pointer-events: auto !important;}#twikoo .tk-comments .el-button.tk-preview:hover {  opacity: 0.85 !important;}#twikoo .tk-comments .el-button.tk-preview {    position: absolute;    top: -40px;    right: 107px;    opacity: 0.3;}#twikoo .tk-comments .el-button--primary {    color: var(--anzhiyu-card-bg);    box-shadow: var(--anzhiyu-shadow-black);    width: 6.25rem;    position: absolute;    top: -41px;    right: 0px;    height: 32px;    margin-left: 0.5rem !important;    border-color: var(--anzhiyu-fontcolor);    border-radius: 12px;    transition: 0.3s;}#twikoo .tk-comments .tk-meta-input {    position: relative;    margin-top: 8px;    width: calc(100% - 165px);}]]></content>
+        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
       
     </entry>
     
