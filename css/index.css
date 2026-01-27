@@ -6091,7 +6091,7 @@ body[data-type="envelope"] #maincontent {
     z-index: 0;
   }
   body[data-type="envelope"] #form-wrap:hover {
-    height: 1050px;
+    height: 900px;
     top: -200px;
     will-change: transform, top;
   }
