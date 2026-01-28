@@ -10,7 +10,7 @@
       <link href="/posts/59966.html/"/>
       <url>/posts/59966.html/</url>
       
-        <content type="html"><![CDATA[<h2 id="诞生">诞生</h2><p>本博客诞生起源于……</p><p>2025年1月，看到别人的博客，我去，怎么那么帅呢，就想自己也搞一个，不过一直拖到了2026年的1月(=。=)</p><p>随念一想，博客现在出来了，本着开源的精神，我可以把笔记(<del>电子垃圾</del>)发出来，还可以发一些处理bug的过程。</p><p><strong>电脑网页端观感更佳哦</strong></p><h2 id="维护">维护</h2><p>本博客部署于Cloudflare，仅域名(abinng.com)是在阿里云购买的，总成本<strong>85/年</strong></p><p>其他可访问的站点：</p><ul><li><a href="https://cf.abinng.dpdns.org">cf.abinng.dpdns.org</a></li><li><a href="https://abinng.github.io">abinng.github.io</a></li></ul><p>既然部署于Cloudflare，emm，后台不挂东西的话，加载还是会慢的，所以你可以开着进来，体验更佳</p><h2 id="内容">内容</h2><p>本博客主要是编程、生活相关，技术部分都相当基础，主要是因为我本人也比较菜，不过会一直更新的。。（可能吧）</p><p>快速找到想看的内容？可以通过首页右上角的搜索或者在标签/分类页进行关键词查看~</p><p>关于文章质量，目前我只是将我自己本地给自己看的笔记，微微优化之后发到博客上，再加上博主文笔不好，可能观感不是那么好，不过再怎么说也是真实的技术/bug记录，还是有不少真东西的</p><h2 id="图片">图片</h2><p>关于装饰图，本博客一些关于ATRI的图片是从b站up主<a href="https://space.bilibili.com/1196260828?spm_id_from=333.40164.0.0">吖密</a>的视频中截取，欢迎大家去路过哦</p><p>关于博文插图，本博客不加水印，大家可以<strong>有限制地随便</strong>拿去用，这里有限制是在于，不能将某张图片用于代表我的立场去给我拉仇恨。。。</p><p>由于本博客源自于本地笔记人工处理后上传，加上本人本地的笔记插图中可能会包含重要信息(坏习惯不要学)，如果你发现了某张图片中有重要信息，而恰巧你又非常非常善良帅气 美丽乐于助人，请联系我的邮箱(abinng@outlook.com)，告诉我！！可以给赏金</p><h2 id="你的建议">你的建议？？</h2><p>如果你对本博客的内容、结构、设计等方面有<strong>建议</strong>，或者说诶?你<strong>发现网站出现了BUG</strong>，还是说你有什么<strong>想说的、想问的</strong>可以到文章末尾/<a href="https://blog.abinng.com/comments/">留言板</a>处发表评论，我都会通过邮箱收到提醒滴</p><p>留言板支持<strong>拟B站弹幕</strong>哦~</p><p><img src="https://blog-img-worker.abinng.dpdns.org/2026/01/f335b7393b341aa23d26fed7ae431eb8.webp" alt="image-20260127150425732"></p><p>那么接下来就是<strong>留言板</strong>和<strong>评论</strong>的一些注意事项</p><h2 id="评论功能">评论功能</h2><p>本站特意支持了评论功能来保证互动的…可能？？大家多多评论呀😭（支持匿名）</p><p>也支持图片（用的是CloudflareR2当图床，可能加载比较慢）和<strong>KaTeX</strong>公式~</p><p>既然涉及到评论了，为了维持良好风气，下面是<strong>免责声明</strong>和<strong>评论规范</strong></p><h3 id="免责声明-disclaimer">免责声明 (Disclaimer)</h3><details class="folding-tag" cyan="" close=""><summary> 点击展开 </summary>              <div class="content">              <p><strong>1. 内容观点</strong>本博客（包含所有可以访问本博客的域名）所载的所有文章、图片及其他资料，仅供参考之用。文章内容仅代表作者个人观点，不代表任何机构或团体的立场。作者已尽力确保内容的准确性，但不对其准确性、完整性或适用性做出任何保证。</p><p><strong>2. 评论规范</strong>本博客欢迎友善交流，但评论区言论仅代表评论者个人观点，与博主无关。博主保留在未通知的情况下删除包含以下内容的评论的权利：</p><ul><li>垃圾广告或推广链接；</li><li>人身攻击、辱骂或仇恨言论；</li><li>违反中国法律法规的内容；</li><li>其他博主认为不适宜的内容。</li></ul><p><strong>3. 版权说明</strong> 除特别声明外，本博客内容均采用 [CCBY-NC-SA 4.0] 协议许可。非商业转载请注明出处，商业使用请联系博主。</p><p><strong>4. 外部链接</strong>本博客可能包含指向第三方网站的链接，博主不对这些网站的内容或隐私政策负责。</p><p><strong>5. 隐私保护</strong>当您在本博客留言时，可能需要填写昵称和邮箱。您的邮箱仅用于接收回复通知，博主承诺不会公开或出售您的私人信息。</p>              </div>            </details><h3 id="评论规范">评论规范</h3><details class="folding-tag" cyan="" close=""><summary> 点击展开 </summary>              <div class="content">              <p><strong>1. 尊重他人</strong></p><ul><li>尊重每个成员的观点和意见。</li><li>避免使用侮辱性、歧视性或攻击性的语言。</li></ul><p><strong>2. 保持友好和谐</strong></p><ul><li>保持友好的沟通氛围，鼓励积极互动。</li><li>避免引起不必要的争端或争吵。</li></ul><p><strong>3. 不允许骚扰</strong></p><ul><li>禁止骚扰、威胁或恶意追踪其他成员。</li><li>如发现任何骚扰行为，将会被直接拉入黑名单。</li></ul><p><strong>4. 不得发布不适当内容</strong></p><ul><li>不得发布涉及色情、恶心或令人不适的内容。</li><li>禁止分享任何违法或侵权的材料。</li></ul><p><strong>5. 避免广告和垃圾信息</strong></p><ul><li>请勿在留言板发布未经许可的广告信息。</li><li>禁止发送垃圾信息、连续无意义的文字或链接。</li></ul><p><strong>6. 谨慎共享个人信息</strong></p><ul><li>不要在留言板上公开敏感个人信息。</li><li>谨慎分享任何涉及隐私的内容。</li></ul><p><strong>7. 遵守版权法</strong></p><ul><li>不得在留言板上发布侵犯版权的内容。</li><li>尊重他人的知识产权。</li></ul><p><strong>8. 尊重管理员的决定</strong></p><ul><li>遵循网站管理条约和中华人民共和国网络安全法的指示和决定。</li><li>若有任何疑问或争议，请以邮件的方式私下联系管理员解决。 请注意：</li></ul><p>违反规范的行为可能导致警告、禁言或永久封禁。网站站长有权根据具体情况对规范进行调整和解释。</p>              </div>            </details><h2 id="友链">友链</h2><p>本博客暂时未支持友链功能。。</p><p>当然如果有人来建立友链，我会去花精力支持的，欢迎大家交换友链！！(⌐■_■)</p><h2 id="最后">最后</h2><p>希望本博客可以一直更新下去~</p>]]></content>
+        <content type="html"><![CDATA[<h2 id="诞生">诞生</h2><p>本博客诞生起源于……</p><p>2025年1月，看到别人的博客，我去，怎么那么帅呢，就想自己也搞一个，不过一直拖到了2026年的1月(=。=)</p><p>随念一想，博客现在出来了，本着开源的精神，我可以把笔记(<del>电子垃圾</del>)发出来，还可以发一些处理bug的过程。</p><p><strong>电脑网页端观感更佳哦</strong></p><h2 id="维护">维护</h2><p>本博客部署于Cloudflare，仅域名(abinng.com)是在阿里云购买的，总成本<strong>85/年</strong></p><p>其他可访问的站点：</p><ul><li><a href="https://cf.abinng.dpdns.org">cf.abinng.dpdns.org</a></li><li><a href="https://abinng.github.io">abinng.github.io</a></li></ul><p>既然部署于Cloudflare，emm，后台不挂东西的话，加载还是会慢的，所以你可以开着进来，体验更佳</p><h2 id="内容">内容</h2><p>本博客主要是编程、生活相关，技术部分都相当基础，主要是因为我本人也比较菜，不过会一直更新的。。（可能吧）</p><p>快速找到想看的内容？可以通过首页右上角的搜索或者在标签/分类页进行关键词查看~</p><p>关于文章质量，目前我只是将我自己本地给自己看的笔记，微微优化之后发到博客上，再加上博主文笔不好，可能观感不是那么好，不过再怎么说也是真实的技术/bug记录，还是有不少真东西的</p><h2 id="图片">图片</h2><p>关于装饰图，本博客一些关于ATRI的图片是从b站up主<a href="https://space.bilibili.com/1196260828?spm_id_from=333.40164.0.0">吖密</a>的视频中截取，欢迎大家去路过哦</p><p>关于博文插图，本博客不加水印（因为有的图也是我从其他地方截的），大家可以<strong>有限制地随便</strong>拿去用，这里有限制是在于，不能将某张图片用于代表我/原作者的立场去给我/原作者拉仇恨。。。</p><p>由于本博客源自于本地笔记人工处理后上传，加上本人本地的笔记插图中可能会包含重要信息(坏习惯不要学)，如果你发现了某张图片中有重要信息，而恰巧你又非常非常善良帅气 美丽乐于助人，请联系我的邮箱(abinng@outlook.com)，告诉我！！可以给赏金</p><h2 id="你的建议">你的建议？？</h2><p>如果你对本博客的内容、结构、设计等方面有<strong>建议</strong>，或者说诶?你<strong>发现网站出现了BUG</strong>，还是说你有什么<strong>想说的、想问的</strong>可以到文章末尾/<a href="https://blog.abinng.com/comments/">留言板</a>处发表评论，我都会通过邮箱收到提醒滴</p><p>留言板支持<strong>拟B站弹幕</strong>哦~</p><p><img src="https://blog-img-worker.abinng.dpdns.org/2026/01/f335b7393b341aa23d26fed7ae431eb8.webp" alt="image-20260127150425732"></p><p>那么接下来就是<strong>留言板</strong>和<strong>评论</strong>的一些注意事项</p><h2 id="评论功能">评论功能</h2><p>本站特意支持了评论功能来保证互动的…可能？？大家多多评论呀😭（支持匿名）</p><p>也支持图片（用的是CloudflareR2当图床，可能加载比较慢）和<strong>KaTeX</strong>公式~</p><p>既然涉及到评论了，为了维持良好风气，下面是<strong>免责声明</strong>和<strong>评论规范</strong></p><h3 id="免责声明-disclaimer">免责声明 (Disclaimer)</h3><details class="folding-tag" cyan="" close=""><summary> 点击展开 </summary>              <div class="content">              <p><strong>1. 内容观点</strong>本博客（包含所有可以访问本博客的域名）所载的所有文章、图片及其他资料，仅供参考之用。文章内容仅代表作者个人观点，不代表任何机构或团体的立场。作者已尽力确保内容的准确性，但不对其准确性、完整性或适用性做出任何保证。</p><p><strong>2. 评论规范</strong>本博客欢迎友善交流，但评论区言论仅代表评论者个人观点，与博主无关。博主保留在未通知的情况下删除包含以下内容的评论的权利：</p><ul><li>垃圾广告或推广链接；</li><li>人身攻击、辱骂或仇恨言论；</li><li>违反中国法律法规的内容；</li><li>其他博主认为不适宜的内容。</li></ul><p><strong>3. 版权说明</strong> 除特别声明外，本博客内容均采用 [CCBY-NC-SA 4.0] 协议许可。非商业转载请注明出处，商业使用请联系博主。</p><p><strong>4. 外部链接</strong>本博客可能包含指向第三方网站的链接，博主不对这些网站的内容或隐私政策负责。</p><p><strong>5. 隐私保护</strong>当您在本博客留言时，可能需要填写昵称和邮箱。您的邮箱仅用于接收回复通知，博主承诺不会公开或出售您的私人信息。</p>              </div>            </details><h3 id="评论规范">评论规范</h3><details class="folding-tag" cyan="" close=""><summary> 点击展开 </summary>              <div class="content">              <p><strong>1. 尊重他人</strong></p><ul><li>尊重每个成员的观点和意见。</li><li>避免使用侮辱性、歧视性或攻击性的语言。</li></ul><p><strong>2. 保持友好和谐</strong></p><ul><li>保持友好的沟通氛围，鼓励积极互动。</li><li>避免引起不必要的争端或争吵。</li></ul><p><strong>3. 不允许骚扰</strong></p><ul><li>禁止骚扰、威胁或恶意追踪其他成员。</li><li>如发现任何骚扰行为，将会被直接拉入黑名单。</li></ul><p><strong>4. 不得发布不适当内容</strong></p><ul><li>不得发布涉及色情、恶心或令人不适的内容。</li><li>禁止分享任何违法或侵权的材料。</li></ul><p><strong>5. 避免广告和垃圾信息</strong></p><ul><li>请勿在留言板发布未经许可的广告信息。</li><li>禁止发送垃圾信息、连续无意义的文字或链接。</li></ul><p><strong>6. 谨慎共享个人信息</strong></p><ul><li>不要在留言板上公开敏感个人信息。</li><li>谨慎分享任何涉及隐私的内容。</li></ul><p><strong>7. 遵守版权法</strong></p><ul><li>不得在留言板上发布侵犯版权的内容。</li><li>尊重他人的知识产权。</li></ul><p><strong>8. 尊重管理员的决定</strong></p><ul><li>遵循网站管理条约和中华人民共和国网络安全法的指示和决定。</li><li>若有任何疑问或争议，请以邮件的方式私下联系管理员解决。 请注意：</li></ul><p>违反规范的行为可能导致警告、禁言或永久封禁。网站站长有权根据具体情况对规范进行调整和解释。</p>              </div>            </details><h2 id="友链">友链</h2><p>本博客暂时未支持友链功能。。</p><p>当然如果有人来建立友链，我会去花精力支持的，欢迎大家交换友链！！(⌐■_■)</p><h2 id="最后">最后</h2><p>希望本博客可以一直更新下去~</p>]]></content>
       
       
       <categories>
@@ -79,20 +79,24 @@
           
           <category> 深度学习 </category>
           
-          <category> 卷积神经网络 </category>
+          <category> 计算机视觉 </category>
           
-          <category> Pytorch </category>
+          <category> 图像分类 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 深度学习 </tag>
+            <tag> CNN </tag>
             
-            <tag> 卷积神经网络 </tag>
+            <tag> PyTorch </tag>
             
-            <tag> Pytorch </tag>
+            <tag> 计算机视觉 </tag>
+            
+            <tag> 科研 </tag>
+            
+            <tag> 图像分类 </tag>
             
         </tags>
       
@@ -114,20 +118,24 @@
           
           <category> 深度学习 </category>
           
-          <category> 卷积神经网络 </category>
+          <category> 计算机视觉 </category>
           
-          <category> Pytorch </category>
+          <category> 图像分类 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 深度学习 </tag>
+            <tag> CNN </tag>
             
-            <tag> 卷积神经网络 </tag>
+            <tag> PyTorch </tag>
             
-            <tag> Pytorch </tag>
+            <tag> 计算机视觉 </tag>
+            
+            <tag> 科研 </tag>
+            
+            <tag> 图像分类 </tag>
             
         </tags>
       
@@ -149,20 +157,24 @@
           
           <category> 深度学习 </category>
           
-          <category> 卷积神经网络 </category>
+          <category> 计算机视觉 </category>
           
-          <category> Pytorch </category>
+          <category> 图像分类 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 深度学习 </tag>
+            <tag> CNN </tag>
             
-            <tag> 卷积神经网络 </tag>
+            <tag> PyTorch </tag>
             
-            <tag> Pytorch </tag>
+            <tag> 计算机视觉 </tag>
+            
+            <tag> 科研 </tag>
+            
+            <tag> 图像分类 </tag>
             
         </tags>
       
@@ -296,17 +308,6 @@
     
     
     <entry>
-      <title>留言板</title>
-      <link href="/comments/index.html"/>
-      <url>/comments/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>charts</title>
       <link href="/charts/index.html"/>
       <url>/charts/index.html</url>
@@ -329,6 +330,17 @@
     
     
     <entry>
+      <title>留言板</title>
+      <link href="/comments/index.html"/>
+      <url>/comments/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>tags</title>
       <link href="/tags/index.html"/>
       <url>/tags/index.html</url>
@@ -341,10 +353,10 @@
     
     <entry>
       <title></title>
-      <link href="/js/easy-Danmaku.js"/>
-      <url>/js/easy-Danmaku.js</url>
+      <link href="/js/charts-light-dark.js"/>
+      <url>/js/charts-light-dark.js</url>
       
-        <content type="html"><![CDATA[/** * Bilibili 风格弹幕核心逻辑 (最终优化版：全屏随机分布) */class EasyDanmaku {  constructor(options) {    this.container = document.querySelector(options.el);    this.options = {      line: parseInt(options.line, 10) || 10,      speed: options.speed || 10,      hover: options.hover,      loop: options.loop,      colourful: options.colourful,      coefficient: options.coefficient || 1,      textShadow: options.textShadow || 1    };        // 颜色库    this.colors = ['#FFFFFF','#FFFFFF','#FE0302', '#FF7204', '#FFAA02', '#00CD00', '#4266BE', '#CC0273', '#CC3333', '#0099CC', '#FF6666'];    this.tracks = new Array(this.options.line).fill(true);    this.danmakuQueue = [];    this.timer = null;    this.isPaused = false;        this.init();  }  init() {    if (this.container) {        this.container.style.position = 'fixed';        this.container.style.top = '60px';        this.container.style.left = '0';        this.container.style.width = '100%';        this.container.style.height = 'calc(100% - 60px)';        this.container.style.pointerEvents = 'none';        this.container.style.zIndex = '999';        this.container.style.overflow = 'hidden';    }    let containerHeight = this.container ? this.container.offsetHeight : 0;    if (containerHeight === 0) {        containerHeight = window.innerHeight - 60;     }    this.trackHeight = containerHeight / this.options.line;    if (!this.trackHeight || this.trackHeight <= 0) this.trackHeight = 40;  }  batchSend(dataList, isLoop = false) {    let index = 0;    const sendNext = () => {      if (this.isPaused) return;      if (index >= dataList.length) {        if (this.options.loop) index = 0;        else return;      }      const item = dataList[index];      this.send(item);      index++;    };    if (this.timer) clearInterval(this.timer);        const interval = 1000 / this.options.coefficient;        this.timer = setInterval(() => {      if(Math.random() > 0.1) sendNext();    }, interval);   }  send(item) {    if (!this.container) return;    const rand = Math.random();    let type = 'scroll';    // 5% 概率顶部，5% 概率底部，90% 滚动    if (rand > 0.95) type = 'bottom';    else if (rand > 0.90) type = 'top';    const dom = document.createElement('div');    dom.innerText = item.content;        this.setStyle(dom, type);    if (type === 'scroll') {      this.renderScroll(dom);    } else {      this.renderStatic(dom, type);    }  }  setStyle(dom, type) {    dom.style.position = 'absolute';    dom.style.whiteSpace = 'nowrap';    dom.style.fontFamily = '"黑体", "Heiti SC", sans-serif';    dom.style.fontWeight = 'bold';    dom.style.fontSize = `${Math.floor(22 + Math.random() * 6)}px`;    // 描边和阴影选一个    if(this.options.textShadow === 1) { // 下面这个是描边        dom.style.textShadow = '#000 1px 0 1px, #000 0 1px 1px, #000 0 -1px 1px, #000 -1px 0 1px';    } else { // 下面这个是阴影        dom.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';    }    dom.style.pointerEvents = 'auto';    dom.style.cursor = 'default';    dom.style.zIndex = 10;        if (this.options.colourful) {        const color = this.colors[Math.floor(Math.random() * this.colors.length)];        dom.style.color = color;    } else {        dom.style.color = '#FFFFFF';    }  }  renderScroll(dom) {    // --- 核心修改：随机选择空闲轨道 ---        // 1. 找出所有当前空闲的轨道索引    const availableTracks = [];    this.tracks.forEach((isFree, index) => {        if (isFree) availableTracks.push(index);    });    let trackIndex = -1;    if (availableTracks.length > 0) {        // 2. 如果有空闲轨道，从中随机选一个        // 这解决了总是堆积在前几行的问题        const randomPos = Math.floor(Math.random() * availableTracks.length);        trackIndex = availableTracks[randomPos];    } else {        // 3. 如果全满了，就随机挤占任意一行        trackIndex = Math.floor(Math.random() * this.options.line);    }    this.tracks[trackIndex] = false;    setTimeout(() => { this.tracks[trackIndex] = true; }, 2000);     const topPos = trackIndex * this.trackHeight;    dom.style.top = `${topPos}px`;    dom.style.left = '100%';    dom.style.transform = 'translateX(0)';        this.container.appendChild(dom);    const containerWidth = this.container.offsetWidth || window.innerWidth;    const duration = this.options.speed + (Math.random() * 2);         const animation = dom.animate([      { transform: 'translateX(0)' },      { transform: `translateX(-${containerWidth + dom.offsetWidth + 50}px)` }    ], {      duration: duration * 1000,      easing: 'linear'    });    if (this.options.hover) {        dom.addEventListener('mouseenter', () => {            animation.pause();            dom.style.zIndex = 100;            dom.style.border = "1px solid rgba(255,255,255,0.5)";            dom.style.backgroundColor = "rgba(0,0,0,0.4)";            dom.style.borderRadius = "4px";        });        dom.addEventListener('mouseleave', () => {            animation.play();            dom.style.zIndex = 10;            dom.style.border = "none";            dom.style.backgroundColor = "transparent";        });    }    animation.onfinish = () => {      dom.remove();    };  }  renderStatic(dom, type) {    dom.style.left = '50%';    dom.style.transform = 'translateX(-50%)';    dom.style.zIndex = 20;    dom.style.textShadow = 'none';     dom.style.background = 'rgba(0,0,0,0.6)';    dom.style.borderRadius = '20px';    dom.style.padding = '4px 12px';    dom.style.border = `1px solid ${dom.style.color}`;    // --- 核心修改：移除行数限制 ---    // 允许静态弹幕出现在任意一行    const offset = Math.floor(Math.random() * this.options.line) * this.trackHeight;    if (type === 'top') {      dom.style.top = `${offset + 20}px`;    } else {      dom.style.top = 'auto';       dom.style.bottom = `${offset + 80}px`;    }    this.container.appendChild(dom);    setTimeout(() => {      dom.remove();    }, 5000);  }}]]></content>
+        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
       
     </entry>
     
@@ -352,10 +364,10 @@
     
     <entry>
       <title></title>
-      <link href="/js/charts-light-dark.js"/>
-      <url>/js/charts-light-dark.js</url>
+      <link href="/js/easy-Danmaku.js"/>
+      <url>/js/easy-Danmaku.js</url>
       
-        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
+        <content type="html"><![CDATA[/** * Bilibili 风格弹幕核心逻辑 (最终优化版：全屏随机分布) */class EasyDanmaku {  constructor(options) {    this.container = document.querySelector(options.el);    this.options = {      line: parseInt(options.line, 10) || 10,      speed: options.speed || 10,      hover: options.hover,      loop: options.loop,      colourful: options.colourful,      coefficient: options.coefficient || 1,      textShadow: options.textShadow || 1    };        // 颜色库    this.colors = ['#FFFFFF','#FFFFFF','#FE0302', '#FF7204', '#FFAA02', '#00CD00', '#4266BE', '#CC0273', '#CC3333', '#0099CC', '#FF6666'];    this.tracks = new Array(this.options.line).fill(true);    this.danmakuQueue = [];    this.timer = null;    this.isPaused = false;        this.init();  }  init() {    if (this.container) {        this.container.style.position = 'fixed';        this.container.style.top = '60px';        this.container.style.left = '0';        this.container.style.width = '100%';        this.container.style.height = 'calc(100% - 60px)';        this.container.style.pointerEvents = 'none';        this.container.style.zIndex = '999';        this.container.style.overflow = 'hidden';    }    let containerHeight = this.container ? this.container.offsetHeight : 0;    if (containerHeight === 0) {        containerHeight = window.innerHeight - 60;     }    this.trackHeight = containerHeight / this.options.line;    if (!this.trackHeight || this.trackHeight <= 0) this.trackHeight = 40;  }  batchSend(dataList, isLoop = false) {    let index = 0;    const sendNext = () => {      if (this.isPaused) return;      if (index >= dataList.length) {        if (this.options.loop) index = 0;        else return;      }      const item = dataList[index];      this.send(item);      index++;    };    if (this.timer) clearInterval(this.timer);        const interval = 1000 / this.options.coefficient;        this.timer = setInterval(() => {      if(Math.random() > 0.1) sendNext();    }, interval);   }  send(item) {    if (!this.container) return;    const rand = Math.random();    let type = 'scroll';    // 5% 概率顶部，5% 概率底部，90% 滚动    if (rand > 0.95) type = 'bottom';    else if (rand > 0.90) type = 'top';    const dom = document.createElement('div');    dom.innerText = item.content;        this.setStyle(dom, type);    if (type === 'scroll') {      this.renderScroll(dom);    } else {      this.renderStatic(dom, type);    }  }  setStyle(dom, type) {    dom.style.position = 'absolute';    dom.style.whiteSpace = 'nowrap';    dom.style.fontFamily = '"黑体", "Heiti SC", sans-serif';    dom.style.fontWeight = 'bold';    dom.style.fontSize = `${Math.floor(22 + Math.random() * 6)}px`;    // 描边和阴影选一个    if(this.options.textShadow === 1) { // 下面这个是描边        dom.style.textShadow = '#000 1px 0 1px, #000 0 1px 1px, #000 0 -1px 1px, #000 -1px 0 1px';    } else { // 下面这个是阴影        dom.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';    }    dom.style.pointerEvents = 'auto';    dom.style.cursor = 'default';    dom.style.zIndex = 10;        if (this.options.colourful) {        const color = this.colors[Math.floor(Math.random() * this.colors.length)];        dom.style.color = color;    } else {        dom.style.color = '#FFFFFF';    }  }  renderScroll(dom) {    // --- 核心修改：随机选择空闲轨道 ---        // 1. 找出所有当前空闲的轨道索引    const availableTracks = [];    this.tracks.forEach((isFree, index) => {        if (isFree) availableTracks.push(index);    });    let trackIndex = -1;    if (availableTracks.length > 0) {        // 2. 如果有空闲轨道，从中随机选一个        // 这解决了总是堆积在前几行的问题        const randomPos = Math.floor(Math.random() * availableTracks.length);        trackIndex = availableTracks[randomPos];    } else {        // 3. 如果全满了，就随机挤占任意一行        trackIndex = Math.floor(Math.random() * this.options.line);    }    this.tracks[trackIndex] = false;    setTimeout(() => { this.tracks[trackIndex] = true; }, 2000);     const topPos = trackIndex * this.trackHeight;    dom.style.top = `${topPos}px`;    dom.style.left = '100%';    dom.style.transform = 'translateX(0)';        this.container.appendChild(dom);    const containerWidth = this.container.offsetWidth || window.innerWidth;    const duration = this.options.speed + (Math.random() * 2);         const animation = dom.animate([      { transform: 'translateX(0)' },      { transform: `translateX(-${containerWidth + dom.offsetWidth + 50}px)` }    ], {      duration: duration * 1000,      easing: 'linear'    });    if (this.options.hover) {        dom.addEventListener('mouseenter', () => {            animation.pause();            dom.style.zIndex = 100;            dom.style.border = "1px solid rgba(255,255,255,0.5)";            dom.style.backgroundColor = "rgba(0,0,0,0.4)";            dom.style.borderRadius = "4px";        });        dom.addEventListener('mouseleave', () => {            animation.play();            dom.style.zIndex = 10;            dom.style.border = "none";            dom.style.backgroundColor = "transparent";        });    }    animation.onfinish = () => {      dom.remove();    };  }  renderStatic(dom, type) {    dom.style.left = '50%';    dom.style.transform = 'translateX(-50%)';    dom.style.zIndex = 20;    dom.style.textShadow = 'none';     dom.style.background = 'rgba(0,0,0,0.6)';    dom.style.borderRadius = '20px';    dom.style.padding = '4px 12px';    dom.style.border = `1px solid ${dom.style.color}`;    // --- 核心修改：移除行数限制 ---    // 允许静态弹幕出现在任意一行    const offset = Math.floor(Math.random() * this.options.line) * this.trackHeight;    if (type === 'top') {      dom.style.top = `${offset + 20}px`;    } else {      dom.style.top = 'auto';       dom.style.bottom = `${offset + 80}px`;    }    this.container.appendChild(dom);    setTimeout(() => {      dom.remove();    }, 5000);  }}]]></content>
       
     </entry>
     
