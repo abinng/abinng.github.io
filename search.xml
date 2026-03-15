@@ -10,7 +10,7 @@
       <link href="/posts/49683.html/"/>
       <url>/posts/49683.html/</url>
       
-        <content type="html"><![CDATA[<h2 id="问">问：</h2><p>github上一些项目的release中总是有类似配套的东西，有xxx.exe和xxx.exe.sig，如下</p><p><img src="https://blog-img-worker.abinng.dpdns.org/2026/03/1c7de824cc8e2f294ff288a4401f3ba8.webp"></p><h2 id="答">答：</h2><h3 id="是什么">是什么</h3><p>图片里那些与安装包同名、以 <code>.sig</code>结尾的文件，是<strong>数字签名文件（Digital Signature）</strong>。</p><p>开发者在发布软件时提供这些配套的 <code>.sig</code>文件，主要是出于<strong>安全和防篡改</strong>的考虑。简单来说，它的作用相当于给软件盖上了一个“官方认证的防伪钢印”。</p><h3 id="为什么存在">为什么存在</h3><h4 id="1-验证软件来源真实性">1. 验证软件来源（真实性）</h4><p>当你在网上下载文件时，存在被黑客劫持或者下载服务器被入侵的风险。黑客可能会把官方的<code>xxx.exe</code> 替换成带有病毒的恶意版本。为了防止这种情况，开发者会用只有他们自己才拥有的**私钥（PrivateKey）<strong>对软件进行加密计算，生成这个 <code>.sig</code>签名文件。用户下载后，可以使用开发者公开的</strong>公钥（PublicKey）**来验证这个签名。如果验证通过，就说明这个文件确实是原作者发布的，没有被别人掉包。</p><h4 id="2-验证文件完整性防篡改防损坏">2.验证文件完整性（防篡改防损坏）</h4><p>除了防掉包，签名还能验证文件在下载过程中有没有损坏或被偷偷修改哪怕一个字节。只要文件内容发生了极微小的改变，签名验证就会失败。</p><h3 id="作为普通用户你需要下载它吗">作为普通用户，你需要下载它吗？</h3><p><strong>通常情况下不需要。</strong>如果你只是一个普通用户，且确信自己是在官方的 GitHub页面上下载软件，直接下载对应的 <code>.exe</code>、<code>.dmg</code> 或<code>.apk</code> 安装包使用即可。这些 <code>.sig</code>文件主要是给对安全性要求极高的用户、企业管理员，或者自动化打包脚本用来做安全校验的。</p><h2 id="补充">补充</h2><p>图片中的 <code>sha256</code> 也是干嘛的？</p><p>除了 <code>.sig</code> 文件，你在图片右侧应该还注意到了每一行都有一个<code>sha256: 65a54...</code> 这样的一长串字符。</p><ul><li><p><strong>SHA256哈希值</strong>：主要用于验证<strong>完整性</strong>。你可以自己计算下载下来的<code>.exe</code> 文件的 SHA256值，如果和网页上显示的一模一样，说明下载过程很完美，文件没损坏。</p></li><li><p><strong><code>.sig</code>签名</strong>：比哈希值更高级，它不仅验证完整性，还验证<strong>真实性</strong>（是谁发出的）。因为黑客如果替换了安装包，他也可以顺手把网页上的SHA256 字符串改掉；但他没有开发者的私钥，伪造不出匹配的<code>.sig</code> 签名。</p></li></ul>]]></content>
+        <content type="html"><![CDATA[<p><code>auther</code>: abinng <code>date</code>: 2026-03-15 11:05<code>createDate:</code>2026-03-15 10:10</p><h2 id="问">问：</h2><p>github上一些项目的release中总是有类似配套的东西，有xxx.exe和xxx.exe.sig，如下</p><p><img src="https://blog-img-worker.abinng.dpdns.org/2026/03/1c7de824cc8e2f294ff288a4401f3ba8.webp"></p><h2 id="答">答：</h2><h3 id="是什么">是什么</h3><p>图片里那些与安装包同名、以 <code>.sig</code>结尾的文件，是<strong>数字签名文件（Digital Signature）</strong>。</p><p>开发者在发布软件时提供这些配套的 <code>.sig</code>文件，主要是出于<strong>安全和防篡改</strong>的考虑。简单来说，它的作用相当于给软件盖上了一个“官方认证的防伪钢印”。</p><h3 id="为什么存在">为什么存在</h3><h4 id="1-验证软件来源真实性">1. 验证软件来源（真实性）</h4><p>当你在网上下载文件时，存在被黑客劫持或者下载服务器被入侵的风险。黑客可能会把官方的<code>xxx.exe</code> 替换成带有病毒的恶意版本。为了防止这种情况，开发者会用只有他们自己才拥有的**私钥（PrivateKey）<strong>对软件进行加密计算，生成这个 <code>.sig</code>签名文件。用户下载后，可以使用开发者公开的</strong>公钥（PublicKey）**来验证这个签名。如果验证通过，就说明这个文件确实是原作者发布的，没有被别人掉包。</p><h4 id="2-验证文件完整性防篡改防损坏">2.验证文件完整性（防篡改防损坏）</h4><p>除了防掉包，签名还能验证文件在下载过程中有没有损坏或被偷偷修改哪怕一个字节。只要文件内容发生了极微小的改变，签名验证就会失败。</p><h3 id="作为普通用户你需要下载它吗">作为普通用户，你需要下载它吗？</h3><p><strong>通常情况下不需要。</strong>如果你只是一个普通用户，且确信自己是在官方的 GitHub页面上下载软件，直接下载对应的 <code>.exe</code>、<code>.dmg</code> 或<code>.apk</code> 安装包使用即可。这些 <code>.sig</code>文件主要是给对安全性要求极高的用户、企业管理员，或者自动化打包脚本用来做安全校验的。</p><h2 id="补充">补充</h2><p>图片中的 <code>sha256</code> 也是干嘛的？</p><p>除了 <code>.sig</code> 文件，你在图片右侧应该还注意到了每一行都有一个<code>sha256: 65a54...</code> 这样的一长串字符。</p><ul><li><p><strong>SHA256哈希值</strong>：主要用于验证<strong>完整性</strong>。你可以自己计算下载下来的<code>.exe</code> 文件的 SHA256值，如果和网页上显示的一模一样，说明下载过程很完美，文件没损坏。</p></li><li><p><strong><code>.sig</code>签名</strong>：比哈希值更高级，它不仅验证完整性，还验证<strong>真实性</strong>（是谁发出的）。因为黑客如果替换了安装包，他也可以顺手把网页上的SHA256 字符串改掉；但他没有开发者的私钥，伪造不出匹配的<code>.sig</code> 签名。</p></li></ul>]]></content>
       
       
       <categories>
@@ -52,7 +52,7 @@
       
       <categories>
           
-          <category> 技术教程 </category>
+          <category> 系统与运维 </category>
           
           <category> 环境配置 </category>
           
@@ -83,9 +83,9 @@
       
       <categories>
           
-          <category> Cpp后端开发 </category>
+          <category> 后端与底层 </category>
           
-          <category> 编程基础 </category>
+          <category> C/C++ </category>
           
       </categories>
       
@@ -124,9 +124,9 @@
       
       <categories>
           
-          <category> Cpp后端开发 </category>
+          <category> 后端与底层 </category>
           
-          <category> 编程基础 </category>
+          <category> C/C++ </category>
           
       </categories>
       
@@ -161,9 +161,9 @@
       
       <categories>
           
-          <category> Cpp后端开发 </category>
+          <category> 后端与底层 </category>
           
-          <category> 编程基础 </category>
+          <category> C/C++ </category>
           
       </categories>
       
@@ -198,9 +198,9 @@
       
       <categories>
           
-          <category> Cpp后端开发 </category>
+          <category> 后端与底层 </category>
           
-          <category> 编程基础 </category>
+          <category> C/C++ </category>
           
       </categories>
       
@@ -235,7 +235,9 @@
       
       <categories>
           
-          <category> 水文 </category>
+          <category> 后端与底层 </category>
+          
+          <category> C/C++ </category>
           
       </categories>
       
@@ -246,11 +248,11 @@
             
             <tag> Linux </tag>
             
+            <tag> Windows </tag>
+            
             <tag> GCC </tag>
             
             <tag> 底层 </tag>
-            
-            <tag> Windows </tag>
             
         </tags>
       
@@ -270,20 +272,20 @@
       
       <categories>
           
-          <category> 技术教程 </category>
+          <category> 系统与运维 </category>
           
-          <category> 容器化 </category>
+          <category> 容器与部署 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> Windows </tag>
-            
             <tag> Docker </tag>
             
             <tag> Docker Desktop </tag>
+            
+            <tag> Windows </tag>
             
             <tag> WSL2 </tag>
             
@@ -309,9 +311,9 @@
       
       <categories>
           
-          <category> 技术教程 </category>
+          <category> 系统与运维 </category>
           
-          <category> 运维 </category>
+          <category> 环境配置 </category>
           
       </categories>
       
@@ -344,7 +346,9 @@
       
       <categories>
           
-          <category> 技术教程 </category>
+          <category> 系统与运维 </category>
+          
+          <category> 环境配置 </category>
           
       </categories>
       
@@ -353,9 +357,9 @@
             
             <tag> Windows </tag>
             
-            <tag> 代理配置 </tag>
-            
             <tag> 开发环境 </tag>
+            
+            <tag> 代理配置 </tag>
             
         </tags>
       
@@ -375,11 +379,9 @@
       
       <categories>
           
-          <category> 深度学习 </category>
+          <category> 人工智能 </category>
           
           <category> 计算机视觉 </category>
-          
-          <category> 目标检测 </category>
           
       </categories>
       
@@ -412,11 +414,9 @@
       
       <categories>
           
-          <category> 深度学习 </category>
+          <category> 人工智能 </category>
           
           <category> 计算机视觉 </category>
-          
-          <category> 图像分类 </category>
           
       </categories>
       
@@ -449,11 +449,9 @@
       
       <categories>
           
-          <category> 深度学习 </category>
+          <category> 人工智能 </category>
           
           <category> 计算机视觉 </category>
-          
-          <category> 图像分类 </category>
           
       </categories>
       
@@ -486,7 +484,9 @@
       
       <categories>
           
-          <category> 入站必看 </category>
+          <category> 随笔 </category>
+          
+          <category> 站点公告 </category>
           
       </categories>
       
@@ -513,9 +513,9 @@
       
       <categories>
           
-          <category> Hexo </category>
+          <category> 随笔 </category>
           
-          <category> 图床 </category>
+          <category> 博客建站 </category>
           
       </categories>
       
@@ -550,11 +550,9 @@
       
       <categories>
           
-          <category> 深度学习 </category>
+          <category> 人工智能 </category>
           
           <category> 计算机视觉 </category>
-          
-          <category> 图像分类 </category>
           
       </categories>
       
@@ -587,11 +585,9 @@
       
       <categories>
           
-          <category> 深度学习 </category>
+          <category> 人工智能 </category>
           
           <category> 计算机视觉 </category>
-          
-          <category> 图像分类 </category>
           
       </categories>
       
@@ -624,11 +620,9 @@
       
       <categories>
           
-          <category> 深度学习 </category>
+          <category> 人工智能 </category>
           
           <category> 计算机视觉 </category>
-          
-          <category> 图像分类 </category>
           
       </categories>
       
@@ -661,7 +655,9 @@
       
       <categories>
           
-          <category> Hexo </category>
+          <category> 随笔 </category>
+          
+          <category> 站点公告 </category>
           
       </categories>
       
@@ -688,9 +684,9 @@
       
       <categories>
           
-          <category> Docker </category>
+          <category> 系统与运维 </category>
           
-          <category> 运维 </category>
+          <category> 容器与部署 </category>
           
       </categories>
       
@@ -711,7 +707,7 @@
     
     <entry>
       
-        <title>linux的core转储位置</title>
+        <title>linux 的 core 转储位置</title>
       
       <link href="/posts/8878.html/"/>
       <url>/posts/8878.html/</url>
@@ -721,9 +717,9 @@
       
       <categories>
           
-          <category> Bug </category>
+          <category> 系统与运维 </category>
           
-          <category> Linux </category>
+          <category> 环境配置 </category>
           
       </categories>
       
@@ -761,11 +757,11 @@
     
     
     <entry>
-      <title>about</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
+      <title>charts</title>
+      <link href="/charts/index.html"/>
+      <url>/charts/index.html</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h2 id="computer-后端与底层-backend--foundation">💻 后端与底层 (Backend&amp; Foundation)</h2><h3 id="open_file_folder-cc">📂 C/C++</h3><ul><li><a href="https://blog.abinng.com/posts/20647.html/">操作系统C++实践：深入理解标准IO与文件IO</a></li><li><a href="https://blog.abinng.com/posts/41744.html/">操作系统C++实践：深入理解多进程与IPC</a></li><li><a href="https://blog.abinng.com/posts/8321.html/">操作系统C++实践：深入理解多线程编程</a></li><li><a href="https://blog.abinng.com/posts/49194.html/">计算机网络C++实践：试试远程进程通信</a></li><li><a href="https://blog.abinng.com/posts/58098.html/">水一篇：gcc-o在干什么</a></li></ul><h3 id="open_file_folder-架构与网络">📂 架构与网络</h3><ul><li>入门—最简框架 (Oat++ 核心工作流解析)</li></ul><h2 id="brain-人工智能-ai">🧠 人工智能 (AI)</h2><h3 id="open_file_folder-计算机视觉-cv">📂 计算机视觉 (CV)</h3><ul><li><a href="https://blog.abinng.com/posts/44655.html/">LeNet-5详解：梦开始的地方</a></li><li><a href="https://blog.abinng.com/posts/41031.html/">AlexNet详解：深度学习指数爆炸的起点</a></li><li><a href="https://blog.abinng.com/posts/6882.html/">VGG详解：小卷积核与暴力堆层</a></li><li><a href="https://blog.abinng.com/posts/59522.html/">GoogLeNet详解：特征还能这样提取？</a></li><li><a href="https://blog.abinng.com/posts/24080.html/">ResNet详解：你尽管堆层，我来担责</a></li><li><a href="https://blog.abinng.com/posts/24080.html/">YOLOv1详解：从那只狗开始…</a></li></ul><h3 id="open_file_folder-大模型技术-llm">📂 大模型技术 (LLM)</h3><ul><li><em>(虚位以待：留给未来的大模型文章)</em></li></ul><h3 id="open_file_folder-深度学习基础">📂 深度学习基础</h3><ul><li><em>(虚位以待)</em></li></ul><h2 id="hammer_and_wrench-系统与运维-os--devops">🛠️ 系统与运维 (OS &amp;DevOps)</h2><h3 id="open_file_folder-环境配置">📂 环境配置</h3><ul><li><a href="https://blog.abinng.com/posts/41948.html/">配置 Windows终端代理</a></li><li><a href="https://blog.abinng.com/posts/28408.html/">Linux 与 Docker代理配置全指南</a></li><li><a href="https://blog.abinng.com/posts/28584.html/">WSL2安装与配置</a></li><li><a href="https://blog.abinng.com/posts/8878.html/">linux 的 core转储位置</a></li></ul><h3 id="open_file_folder-容器与部署">📂 容器与部署</h3><ul><li><a href="https://blog.abinng.com/posts/18106.html/">Windows DockerDesktop 安装与配置</a></li><li><a href="https://blog.abinng.com/posts/56777.html/">docker配置国内镜像加速</a></li></ul><h3 id="open_file_folder-开发常识">📂 开发常识</h3><ul><li><a href="https://blog.abinng.com/posts/49683.html/">xxx.exe.sig是什么</a></li></ul><h2 id="coffee-随笔-misc">☕ 随笔 (Misc)</h2><h3 id="open_file_folder-博客建站">📂 博客建站</h3><ul><li><a href="https://blog.abinng.com/posts/7125.html/">我的图床方案</a></li></ul><h3 id="open_file_folder-站点公告">📂 站点公告</h3><ul><li><a href="https://blog.abinng.com/posts/16107.html/">Hello-Hexo</a></li><li><a href="https://blog.abinng.com/posts/59966.html/">入站必看</a></li><li><a href="https://blog.abinng.com/posts/37411.html/">测试用</a></li></ul><h3 id="open_file_folder-日常水文">📂 日常水文</h3><ul><li><em>(虚位以待：留给未来的灵光一现)</em></li></ul><!-- 文章发布时间统计图 --><div id="posts-chart" data-start="2026-01" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章标签统计图 --><div id="tags-chart" data-length="10" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章分类统计图 --><div id="categories-chart" data-parent="true" style="border-radius: 8px; height: 300px; padding: 10px;"></div>]]></content>
       
     </entry>
     
@@ -783,11 +779,33 @@
     
     
     <entry>
-      <title></title>
-      <link href="/css/custom.css"/>
-      <url>/css/custom.css</url>
+      <title>about</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
-        <content type="html"><![CDATA[/* 恢复 Twikoo 预览按钮显示 */#twikoo .tk-comments .el-button.tk-preview {  display: inline-flex !important;  visibility: visible !important;  opacity: 1 !important;  pointer-events: auto !important;}#twikoo .tk-comments .el-button.tk-preview:hover {  opacity: 0.85 !important;}#twikoo .tk-comments .el-button.tk-preview {    position: absolute;    top: -40px;    right: 107px;    opacity: 0.3;}#twikoo .tk-comments .el-button--primary {    color: var(--anzhiyu-card-bg);    box-shadow: var(--anzhiyu-shadow-black);    width: 6.25rem;    position: absolute;    top: -41px;    right: 0px;    height: 32px;    margin-left: 0.5rem !important;    border-color: var(--anzhiyu-fontcolor);    border-radius: 12px;    transition: 0.3s;}#twikoo .tk-comments .tk-meta-input {    position: relative;    margin-top: 8px;    width: calc(100% - 165px);}]]></content>
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>留言板</title>
+      <link href="/comments/index.html"/>
+      <url>/comments/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title></title>
+      <link href="/js/mathjax_config.js"/>
+      <url>/js/mathjax_config.js</url>
+      
+        <content type="html"><![CDATA[MathJax = {  tex: {    inlineMath: [['$', '$'], ['\\(', '\\)']]  }};]]></content>
       
     </entry>
     
@@ -805,22 +823,11 @@
     
     
     <entry>
-      <title>charts</title>
-      <link href="/charts/index.html"/>
-      <url>/charts/index.html</url>
+      <title></title>
+      <link href="/js/easy-Danmaku.js"/>
+      <url>/js/easy-Danmaku.js</url>
       
-        <content type="html"><![CDATA[<!-- 文章发布时间统计图 --><div id="posts-chart" data-start="2026-01" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章标签统计图 --><div id="tags-chart" data-length="10" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章分类统计图 --><div id="categories-chart" data-parent="true" style="border-radius: 8px; height: 300px; padding: 10px;"></div>]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>留言板</title>
-      <link href="/comments/index.html"/>
-      <url>/comments/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[/** * Bilibili 风格弹幕核心逻辑 (最终优化版：全屏随机分布) */class EasyDanmaku {  constructor(options) {    this.container = document.querySelector(options.el);    this.options = {      line: parseInt(options.line, 10) || 10,      speed: options.speed || 10,      hover: options.hover,      loop: options.loop,      colourful: options.colourful,      coefficient: options.coefficient || 1,      textShadow: options.textShadow || 1    };        // 颜色库    this.colors = ['#FFFFFF','#FFFFFF','#FE0302', '#FF7204', '#FFAA02', '#00CD00', '#4266BE', '#CC0273', '#CC3333', '#0099CC', '#FF6666'];    this.tracks = new Array(this.options.line).fill(true);    this.danmakuQueue = [];    this.timer = null;    this.isPaused = false;        this.init();  }  init() {    if (this.container) {        this.container.style.position = 'fixed';        this.container.style.top = '60px';        this.container.style.left = '0';        this.container.style.width = '100%';        this.container.style.height = 'calc(100% - 60px)';        this.container.style.pointerEvents = 'none';        this.container.style.zIndex = '999';        this.container.style.overflow = 'hidden';    }    let containerHeight = this.container ? this.container.offsetHeight : 0;    if (containerHeight === 0) {        containerHeight = window.innerHeight - 60;     }    this.trackHeight = containerHeight / this.options.line;    if (!this.trackHeight || this.trackHeight <= 0) this.trackHeight = 40;  }  batchSend(dataList, isLoop = false) {    let index = 0;    const sendNext = () => {      if (this.isPaused) return;      if (index >= dataList.length) {        if (this.options.loop) index = 0;        else return;      }      const item = dataList[index];      this.send(item);      index++;    };    if (this.timer) clearInterval(this.timer);        const interval = 1000 / this.options.coefficient;        this.timer = setInterval(() => {      if(Math.random() > 0.1) sendNext();    }, interval);   }  send(item) {    if (!this.container) return;    const rand = Math.random();    let type = 'scroll';    // 5% 概率顶部，5% 概率底部，90% 滚动    if (rand > 0.95) type = 'bottom';    else if (rand > 0.90) type = 'top';    const dom = document.createElement('div');    dom.innerText = item.content;        this.setStyle(dom, type);    if (type === 'scroll') {      this.renderScroll(dom);    } else {      this.renderStatic(dom, type);    }  }  setStyle(dom, type) {    dom.style.position = 'absolute';    dom.style.whiteSpace = 'nowrap';    dom.style.fontFamily = '"黑体", "Heiti SC", sans-serif';    dom.style.fontWeight = 'bold';    dom.style.fontSize = `${Math.floor(22 + Math.random() * 6)}px`;    // 描边和阴影选一个    if(this.options.textShadow === 1) { // 下面这个是描边        dom.style.textShadow = '#000 1px 0 1px, #000 0 1px 1px, #000 0 -1px 1px, #000 -1px 0 1px';    } else { // 下面这个是阴影        dom.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';    }    dom.style.pointerEvents = 'auto';    dom.style.cursor = 'default';    dom.style.zIndex = 10;        if (this.options.colourful) {        const color = this.colors[Math.floor(Math.random() * this.colors.length)];        dom.style.color = color;    } else {        dom.style.color = '#FFFFFF';    }  }  renderScroll(dom) {    // --- 核心修改：随机选择空闲轨道 ---        // 1. 找出所有当前空闲的轨道索引    const availableTracks = [];    this.tracks.forEach((isFree, index) => {        if (isFree) availableTracks.push(index);    });    let trackIndex = -1;    if (availableTracks.length > 0) {        // 2. 如果有空闲轨道，从中随机选一个        // 这解决了总是堆积在前几行的问题        const randomPos = Math.floor(Math.random() * availableTracks.length);        trackIndex = availableTracks[randomPos];    } else {        // 3. 如果全满了，就随机挤占任意一行        trackIndex = Math.floor(Math.random() * this.options.line);    }    this.tracks[trackIndex] = false;    setTimeout(() => { this.tracks[trackIndex] = true; }, 2000);     const topPos = trackIndex * this.trackHeight;    dom.style.top = `${topPos}px`;    dom.style.left = '100%';    dom.style.transform = 'translateX(0)';        this.container.appendChild(dom);    const containerWidth = this.container.offsetWidth || window.innerWidth;    const duration = this.options.speed + (Math.random() * 2);         const animation = dom.animate([      { transform: 'translateX(0)' },      { transform: `translateX(-${containerWidth + dom.offsetWidth + 50}px)` }    ], {      duration: duration * 1000,      easing: 'linear'    });    if (this.options.hover) {        dom.addEventListener('mouseenter', () => {            animation.pause();            dom.style.zIndex = 100;            dom.style.border = "1px solid rgba(255,255,255,0.5)";            dom.style.backgroundColor = "rgba(0,0,0,0.4)";            dom.style.borderRadius = "4px";        });        dom.addEventListener('mouseleave', () => {            animation.play();            dom.style.zIndex = 10;            dom.style.border = "none";            dom.style.backgroundColor = "transparent";        });    }    animation.onfinish = () => {      dom.remove();    };  }  renderStatic(dom, type) {    dom.style.left = '50%';    dom.style.transform = 'translateX(-50%)';    dom.style.zIndex = 20;    dom.style.textShadow = 'none';     dom.style.background = 'rgba(0,0,0,0.6)';    dom.style.borderRadius = '20px';    dom.style.padding = '4px 12px';    dom.style.border = `1px solid ${dom.style.color}`;    // --- 核心修改：移除行数限制 ---    // 允许静态弹幕出现在任意一行    const offset = Math.floor(Math.random() * this.options.line) * this.trackHeight;    if (type === 'top') {      dom.style.top = `${offset + 20}px`;    } else {      dom.style.top = 'auto';       dom.style.bottom = `${offset + 80}px`;    }    this.container.appendChild(dom);    setTimeout(() => {      dom.remove();    }, 5000);  }}]]></content>
       
     </entry>
     
@@ -839,21 +846,10 @@
     
     <entry>
       <title></title>
-      <link href="/js/easy-Danmaku.js"/>
-      <url>/js/easy-Danmaku.js</url>
+      <link href="/css/custom.css"/>
+      <url>/css/custom.css</url>
       
-        <content type="html"><![CDATA[/** * Bilibili 风格弹幕核心逻辑 (最终优化版：全屏随机分布) */class EasyDanmaku {  constructor(options) {    this.container = document.querySelector(options.el);    this.options = {      line: parseInt(options.line, 10) || 10,      speed: options.speed || 10,      hover: options.hover,      loop: options.loop,      colourful: options.colourful,      coefficient: options.coefficient || 1,      textShadow: options.textShadow || 1    };        // 颜色库    this.colors = ['#FFFFFF','#FFFFFF','#FE0302', '#FF7204', '#FFAA02', '#00CD00', '#4266BE', '#CC0273', '#CC3333', '#0099CC', '#FF6666'];    this.tracks = new Array(this.options.line).fill(true);    this.danmakuQueue = [];    this.timer = null;    this.isPaused = false;        this.init();  }  init() {    if (this.container) {        this.container.style.position = 'fixed';        this.container.style.top = '60px';        this.container.style.left = '0';        this.container.style.width = '100%';        this.container.style.height = 'calc(100% - 60px)';        this.container.style.pointerEvents = 'none';        this.container.style.zIndex = '999';        this.container.style.overflow = 'hidden';    }    let containerHeight = this.container ? this.container.offsetHeight : 0;    if (containerHeight === 0) {        containerHeight = window.innerHeight - 60;     }    this.trackHeight = containerHeight / this.options.line;    if (!this.trackHeight || this.trackHeight <= 0) this.trackHeight = 40;  }  batchSend(dataList, isLoop = false) {    let index = 0;    const sendNext = () => {      if (this.isPaused) return;      if (index >= dataList.length) {        if (this.options.loop) index = 0;        else return;      }      const item = dataList[index];      this.send(item);      index++;    };    if (this.timer) clearInterval(this.timer);        const interval = 1000 / this.options.coefficient;        this.timer = setInterval(() => {      if(Math.random() > 0.1) sendNext();    }, interval);   }  send(item) {    if (!this.container) return;    const rand = Math.random();    let type = 'scroll';    // 5% 概率顶部，5% 概率底部，90% 滚动    if (rand > 0.95) type = 'bottom';    else if (rand > 0.90) type = 'top';    const dom = document.createElement('div');    dom.innerText = item.content;        this.setStyle(dom, type);    if (type === 'scroll') {      this.renderScroll(dom);    } else {      this.renderStatic(dom, type);    }  }  setStyle(dom, type) {    dom.style.position = 'absolute';    dom.style.whiteSpace = 'nowrap';    dom.style.fontFamily = '"黑体", "Heiti SC", sans-serif';    dom.style.fontWeight = 'bold';    dom.style.fontSize = `${Math.floor(22 + Math.random() * 6)}px`;    // 描边和阴影选一个    if(this.options.textShadow === 1) { // 下面这个是描边        dom.style.textShadow = '#000 1px 0 1px, #000 0 1px 1px, #000 0 -1px 1px, #000 -1px 0 1px';    } else { // 下面这个是阴影        dom.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';    }    dom.style.pointerEvents = 'auto';    dom.style.cursor = 'default';    dom.style.zIndex = 10;        if (this.options.colourful) {        const color = this.colors[Math.floor(Math.random() * this.colors.length)];        dom.style.color = color;    } else {        dom.style.color = '#FFFFFF';    }  }  renderScroll(dom) {    // --- 核心修改：随机选择空闲轨道 ---        // 1. 找出所有当前空闲的轨道索引    const availableTracks = [];    this.tracks.forEach((isFree, index) => {        if (isFree) availableTracks.push(index);    });    let trackIndex = -1;    if (availableTracks.length > 0) {        // 2. 如果有空闲轨道，从中随机选一个        // 这解决了总是堆积在前几行的问题        const randomPos = Math.floor(Math.random() * availableTracks.length);        trackIndex = availableTracks[randomPos];    } else {        // 3. 如果全满了，就随机挤占任意一行        trackIndex = Math.floor(Math.random() * this.options.line);    }    this.tracks[trackIndex] = false;    setTimeout(() => { this.tracks[trackIndex] = true; }, 2000);     const topPos = trackIndex * this.trackHeight;    dom.style.top = `${topPos}px`;    dom.style.left = '100%';    dom.style.transform = 'translateX(0)';        this.container.appendChild(dom);    const containerWidth = this.container.offsetWidth || window.innerWidth;    const duration = this.options.speed + (Math.random() * 2);         const animation = dom.animate([      { transform: 'translateX(0)' },      { transform: `translateX(-${containerWidth + dom.offsetWidth + 50}px)` }    ], {      duration: duration * 1000,      easing: 'linear'    });    if (this.options.hover) {        dom.addEventListener('mouseenter', () => {            animation.pause();            dom.style.zIndex = 100;            dom.style.border = "1px solid rgba(255,255,255,0.5)";            dom.style.backgroundColor = "rgba(0,0,0,0.4)";            dom.style.borderRadius = "4px";        });        dom.addEventListener('mouseleave', () => {            animation.play();            dom.style.zIndex = 10;            dom.style.border = "none";            dom.style.backgroundColor = "transparent";        });    }    animation.onfinish = () => {      dom.remove();    };  }  renderStatic(dom, type) {    dom.style.left = '50%';    dom.style.transform = 'translateX(-50%)';    dom.style.zIndex = 20;    dom.style.textShadow = 'none';     dom.style.background = 'rgba(0,0,0,0.6)';    dom.style.borderRadius = '20px';    dom.style.padding = '4px 12px';    dom.style.border = `1px solid ${dom.style.color}`;    // --- 核心修改：移除行数限制 ---    // 允许静态弹幕出现在任意一行    const offset = Math.floor(Math.random() * this.options.line) * this.trackHeight;    if (type === 'top') {      dom.style.top = `${offset + 20}px`;    } else {      dom.style.top = 'auto';       dom.style.bottom = `${offset + 80}px`;    }    this.container.appendChild(dom);    setTimeout(() => {      dom.remove();    }, 5000);  }}]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title></title>
-      <link href="/js/mathjax_config.js"/>
-      <url>/js/mathjax_config.js</url>
-      
-        <content type="html"><![CDATA[MathJax = {  tex: {    inlineMath: [['$', '$'], ['\\(', '\\)']]  }};]]></content>
+        <content type="html"><![CDATA[/* 恢复 Twikoo 预览按钮显示 */#twikoo .tk-comments .el-button.tk-preview {  display: inline-flex !important;  visibility: visible !important;  opacity: 1 !important;  pointer-events: auto !important;}#twikoo .tk-comments .el-button.tk-preview:hover {  opacity: 0.85 !important;}#twikoo .tk-comments .el-button.tk-preview {    position: absolute;    top: -40px;    right: 107px;    opacity: 0.3;}#twikoo .tk-comments .el-button--primary {    color: var(--anzhiyu-card-bg);    box-shadow: var(--anzhiyu-shadow-black);    width: 6.25rem;    position: absolute;    top: -41px;    right: 0px;    height: 32px;    margin-left: 0.5rem !important;    border-color: var(--anzhiyu-fontcolor);    border-radius: 12px;    transition: 0.3s;}#twikoo .tk-comments .tk-meta-input {    position: relative;    margin-top: 8px;    width: calc(100% - 165px);}]]></content>
       
     </entry>
     
