@@ -5,6 +5,43 @@
     
     <entry>
       
+        <title>Oatpp 入门--最简框架</title>
+      
+      <link href="/posts/35594.html/"/>
+      <url>/posts/35594.html/</url>
+      
+        <content type="html"><![CDATA[<p><code>auther</code>: abinng <code>date</code>: 2026-03-15 10:25<code>createDate:</code>2026-03-15 10:23</p><h2 id="code-display">Code display</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"oatpp/web/server/HttpConnectionHandler.hpp"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"oatpp/network/Server.hpp"</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"oatpp/network/tcp/server/ConnectionProvider.hpp"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">run</span><span class="params">()</span> </span>{</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Create Router for HTTP requests routing */</span></span><br><span class="line">  <span class="keyword">auto</span> router = oatpp::web::server::HttpRouter::<span class="built_in">createShared</span>();</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Create HTTP connection handler with router */</span></span><br><span class="line">  <span class="keyword">auto</span> connectionHandler = oatpp::web::server::HttpConnectionHandler::<span class="built_in">createShared</span>(router);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Create TCP connection provider */</span></span><br><span class="line">  <span class="keyword">auto</span> connectionProvider = oatpp::network::tcp::server::ConnectionProvider::<span class="built_in">createShared</span>({<span class="string">"localhost"</span>, <span class="number">8000</span>, oatpp::network::Address::IP_4});</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Create server which takes provided TCP connections and passes them to HTTP connection handler */</span></span><br><span class="line">  oatpp::<span class="function">network::Server <span class="title">server</span><span class="params">(connectionProvider, connectionHandler)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Print info about server port */</span></span><br><span class="line">  <span class="built_in">OATPP_LOGI</span>(<span class="string">"MyApp"</span>, <span class="string">"Server running on port %s"</span>, connectionProvider-&gt;<span class="built_in">getProperty</span>(<span class="string">"port"</span>).<span class="built_in">getData</span>());</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Run server */</span></span><br><span class="line">  server.<span class="built_in">run</span>();</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>{</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Init oatpp Environment */</span></span><br><span class="line">  oatpp::base::Environment::<span class="built_in">init</span>();</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Run App */</span></span><br><span class="line">  <span class="built_in">run</span>();</span><br><span class="line"></span><br><span class="line">  <span class="comment">/* Destroy oatpp Environment */</span></span><br><span class="line">  oatpp::base::Environment::<span class="built_in">destroy</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">}</span><br></pre></td></tr></table></figure><h2 id="解析">解析</h2><p>这段代码展示了 <strong>Oat++</strong>（一个高性能、现代 C++ Web框架）最核心的工作流。我们可以将这个过程拆解为<strong>初始化</strong>、<strong>架构组件</strong>以及<strong>请求处理生命周期</strong>三个部分来理解。</p><h3 id="1-核心组件拆解">1. 核心组件拆解</h3><p>在 <code>run()</code> 函数中，你构建了服务器的四个关键层级：</p><ul><li><strong>Router (路由):</strong> 就像地图。它记录了哪个 URL 路径（如<code>/hello</code>）对应哪个业务逻辑（<code>Handler</code>）。</li><li><strong>ConnectionHandler (协议处理器):</strong>它是“翻译官”。负责将底层的 TCP 字节流解析成 HTTP 请求对象，并将 HTTP响应转换回字节流。</li><li><strong>ConnectionProvider (连接提供者):</strong>它是“门卫”。负责底层的网络通信（监听端口、接受 Socket 连接）。这里使用了TCP IPv4 协议，监听 <code>8000</code> 端口。</li><li><strong>Server (服务器主引擎):</strong>它是“调度员”。它把“门卫”拿到的连接交给“翻译官”去处理。</li></ul><hr><h3 id="2-请求处理流程-request-lifecycle">2. 请求处理流程 (RequestLifecycle)</h3><p>当你在浏览器访问 <code>http://localhost:8000/hello</code>时，数据流转如下：</p><ol type="1"><li><strong>建立连接:</strong> <code>ConnectionProvider</code>监听到新的 TCP 请求，创建一个 Socket。</li><li><strong>移交任务:</strong> <code>Server</code>接收到这个连接，并将其传递给 <code>ConnectionHandler</code>。</li><li><strong>解析协议:</strong> <code>ConnectionHandler</code> 从 Socket读取数据，解析 HTTP 头部和正文，构造出一个 <code>IncomingRequest</code>对象。</li><li><strong>路由匹配:</strong> <code>ConnectionHandler</code> 询问<code>Router</code>：“这个 GET 请求访问 <code>/hello</code>，我该找谁？”<code>Router</code> 返回指向 <code>Handler</code> 的指针。</li><li><strong>执行逻辑:</strong> 调用 <code>Handler::handle()</code>方法。<ul><li>在你的代码中，它简单地通过 <code>ResponseFactory</code>创建了一个包含 “Hello World!” 的 200 OK 响应。</li></ul></li><li><strong>返回响应:</strong> <code>ConnectionHandler</code> 将返回的<code>OutgoingResponse</code> 序列化为字符串，通过 TCP发回给客户端，然后根据配置决定是否关闭连接。</li></ol><hr><h3 id="3-代码细节说明">3. 代码细节说明</h3><ul><li><strong>环境管理:</strong><code>oatpp::base::Environment::init()</code> 和 <code>destroy()</code>是必须的。Oat++有一套自己的内存管理机制（如组件注入和智能指针），这两行代码负责启动和清理整个框架的内存池和日志系统。</li><li><strong>多线程模型:</strong> 虽然这段代码看起来很简洁，但<code>oatpp::network::Server</code> 在调用 <code>run()</code>后，默认会在内部通过阻塞或非阻塞（取决于配置）的方式循环等待连接。每当有新请求时，它会高效地分配任务。</li><li><strong>智能指针:</strong> 你会发现代码中大量使用了<code>std::shared_ptr</code> 或 <code>createShared()</code>。这是 Oat++的设计风格，确保了在异步或多线程环境下，对象（如 Router 和Handler）的生命周期能被正确管理，避免内存泄漏。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 后端与底层 </category>
+          
+          <category> 架构与网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> C++ </tag>
+            
+            <tag> 网络编程 </tag>
+            
+            <tag> Oat++ </tag>
+            
+            <tag> Web框架 </tag>
+            
+            <tag> 后端开发 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      
         <title>xxx.exe.sig是什么</title>
       
       <link href="/posts/49683.html/"/>
@@ -137,11 +174,11 @@
             
             <tag> C++ </tag>
             
-            <tag> 操作系统 </tag>
-            
             <tag> Linux </tag>
             
             <tag> 多线程 </tag>
+            
+            <tag> 操作系统 </tag>
             
         </tags>
       
@@ -174,9 +211,9 @@
             
             <tag> C++ </tag>
             
-            <tag> 操作系统 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 操作系统 </tag>
             
             <tag> 多进程 </tag>
             
@@ -211,11 +248,11 @@
             
             <tag> C++ </tag>
             
+            <tag> Linux </tag>
+            
             <tag> 操作系统 </tag>
             
             <tag> IO流 </tag>
-            
-            <tag> Linux </tag>
             
         </tags>
       
@@ -357,9 +394,9 @@
             
             <tag> Windows </tag>
             
-            <tag> 代理配置 </tag>
-            
             <tag> 开发环境 </tag>
+            
+            <tag> 代理配置 </tag>
             
         </tags>
       
@@ -779,28 +816,6 @@
     
     
     <entry>
-      <title></title>
-      <link href="/js/charts-light-dark.js"/>
-      <url>/js/charts-light-dark.js</url>
-      
-        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>留言板</title>
-      <link href="/comments/index.html"/>
-      <url>/comments/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>categories</title>
       <link href="/categories/index.html"/>
       <url>/categories/index.html</url>
@@ -812,11 +827,11 @@
     
     
     <entry>
-      <title></title>
-      <link href="/js/mathjax_config.js"/>
-      <url>/js/mathjax_config.js</url>
+      <title>留言板</title>
+      <link href="/comments/index.html"/>
+      <url>/comments/index.html</url>
       
-        <content type="html"><![CDATA[MathJax = {  tex: {    inlineMath: [['$', '$'], ['\\(', '\\)']]  }};]]></content>
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
@@ -835,10 +850,32 @@
     
     <entry>
       <title></title>
+      <link href="/js/charts-light-dark.js"/>
+      <url>/js/charts-light-dark.js</url>
+      
+        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title></title>
       <link href="/js/easy-Danmaku.js"/>
       <url>/js/easy-Danmaku.js</url>
       
         <content type="html"><![CDATA[/** * Bilibili 风格弹幕核心逻辑 (最终优化版：全屏随机分布) */class EasyDanmaku {  constructor(options) {    this.container = document.querySelector(options.el);    this.options = {      line: parseInt(options.line, 10) || 10,      speed: options.speed || 10,      hover: options.hover,      loop: options.loop,      colourful: options.colourful,      coefficient: options.coefficient || 1,      textShadow: options.textShadow || 1    };        // 颜色库    this.colors = ['#FFFFFF','#FFFFFF','#FE0302', '#FF7204', '#FFAA02', '#00CD00', '#4266BE', '#CC0273', '#CC3333', '#0099CC', '#FF6666'];    this.tracks = new Array(this.options.line).fill(true);    this.danmakuQueue = [];    this.timer = null;    this.isPaused = false;        this.init();  }  init() {    if (this.container) {        this.container.style.position = 'fixed';        this.container.style.top = '60px';        this.container.style.left = '0';        this.container.style.width = '100%';        this.container.style.height = 'calc(100% - 60px)';        this.container.style.pointerEvents = 'none';        this.container.style.zIndex = '999';        this.container.style.overflow = 'hidden';    }    let containerHeight = this.container ? this.container.offsetHeight : 0;    if (containerHeight === 0) {        containerHeight = window.innerHeight - 60;     }    this.trackHeight = containerHeight / this.options.line;    if (!this.trackHeight || this.trackHeight <= 0) this.trackHeight = 40;  }  batchSend(dataList, isLoop = false) {    let index = 0;    const sendNext = () => {      if (this.isPaused) return;      if (index >= dataList.length) {        if (this.options.loop) index = 0;        else return;      }      const item = dataList[index];      this.send(item);      index++;    };    if (this.timer) clearInterval(this.timer);        const interval = 1000 / this.options.coefficient;        this.timer = setInterval(() => {      if(Math.random() > 0.1) sendNext();    }, interval);   }  send(item) {    if (!this.container) return;    const rand = Math.random();    let type = 'scroll';    // 5% 概率顶部，5% 概率底部，90% 滚动    if (rand > 0.95) type = 'bottom';    else if (rand > 0.90) type = 'top';    const dom = document.createElement('div');    dom.innerText = item.content;        this.setStyle(dom, type);    if (type === 'scroll') {      this.renderScroll(dom);    } else {      this.renderStatic(dom, type);    }  }  setStyle(dom, type) {    dom.style.position = 'absolute';    dom.style.whiteSpace = 'nowrap';    dom.style.fontFamily = '"黑体", "Heiti SC", sans-serif';    dom.style.fontWeight = 'bold';    dom.style.fontSize = `${Math.floor(22 + Math.random() * 6)}px`;    // 描边和阴影选一个    if(this.options.textShadow === 1) { // 下面这个是描边        dom.style.textShadow = '#000 1px 0 1px, #000 0 1px 1px, #000 0 -1px 1px, #000 -1px 0 1px';    } else { // 下面这个是阴影        dom.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';    }    dom.style.pointerEvents = 'auto';    dom.style.cursor = 'default';    dom.style.zIndex = 10;        if (this.options.colourful) {        const color = this.colors[Math.floor(Math.random() * this.colors.length)];        dom.style.color = color;    } else {        dom.style.color = '#FFFFFF';    }  }  renderScroll(dom) {    // --- 核心修改：随机选择空闲轨道 ---        // 1. 找出所有当前空闲的轨道索引    const availableTracks = [];    this.tracks.forEach((isFree, index) => {        if (isFree) availableTracks.push(index);    });    let trackIndex = -1;    if (availableTracks.length > 0) {        // 2. 如果有空闲轨道，从中随机选一个        // 这解决了总是堆积在前几行的问题        const randomPos = Math.floor(Math.random() * availableTracks.length);        trackIndex = availableTracks[randomPos];    } else {        // 3. 如果全满了，就随机挤占任意一行        trackIndex = Math.floor(Math.random() * this.options.line);    }    this.tracks[trackIndex] = false;    setTimeout(() => { this.tracks[trackIndex] = true; }, 2000);     const topPos = trackIndex * this.trackHeight;    dom.style.top = `${topPos}px`;    dom.style.left = '100%';    dom.style.transform = 'translateX(0)';        this.container.appendChild(dom);    const containerWidth = this.container.offsetWidth || window.innerWidth;    const duration = this.options.speed + (Math.random() * 2);         const animation = dom.animate([      { transform: 'translateX(0)' },      { transform: `translateX(-${containerWidth + dom.offsetWidth + 50}px)` }    ], {      duration: duration * 1000,      easing: 'linear'    });    if (this.options.hover) {        dom.addEventListener('mouseenter', () => {            animation.pause();            dom.style.zIndex = 100;            dom.style.border = "1px solid rgba(255,255,255,0.5)";            dom.style.backgroundColor = "rgba(0,0,0,0.4)";            dom.style.borderRadius = "4px";        });        dom.addEventListener('mouseleave', () => {            animation.play();            dom.style.zIndex = 10;            dom.style.border = "none";            dom.style.backgroundColor = "transparent";        });    }    animation.onfinish = () => {      dom.remove();    };  }  renderStatic(dom, type) {    dom.style.left = '50%';    dom.style.transform = 'translateX(-50%)';    dom.style.zIndex = 20;    dom.style.textShadow = 'none';     dom.style.background = 'rgba(0,0,0,0.6)';    dom.style.borderRadius = '20px';    dom.style.padding = '4px 12px';    dom.style.border = `1px solid ${dom.style.color}`;    // --- 核心修改：移除行数限制 ---    // 允许静态弹幕出现在任意一行    const offset = Math.floor(Math.random() * this.options.line) * this.trackHeight;    if (type === 'top') {      dom.style.top = `${offset + 20}px`;    } else {      dom.style.top = 'auto';       dom.style.bottom = `${offset + 80}px`;    }    this.container.appendChild(dom);    setTimeout(() => {      dom.remove();    }, 5000);  }}]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title></title>
+      <link href="/js/mathjax_config.js"/>
+      <url>/js/mathjax_config.js</url>
+      
+        <content type="html"><![CDATA[MathJax = {  tex: {    inlineMath: [['$', '$'], ['\\(', '\\)']]  }};]]></content>
       
     </entry>
     
