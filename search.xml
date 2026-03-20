@@ -26,11 +26,11 @@
             
             <tag> C++ </tag>
             
-            <tag> 网络编程 </tag>
-            
             <tag> Oat++ </tag>
             
             <tag> Web框架 </tag>
+            
+            <tag> 网络编程 </tag>
             
             <tag> 后端开发 </tag>
             
@@ -129,13 +129,13 @@
       
         <tags>
             
-            <tag> C语言 </tag>
-            
-            <tag> Linux </tag>
-            
             <tag> C++ </tag>
             
             <tag> 网络编程 </tag>
+            
+            <tag> C语言 </tag>
+            
+            <tag> Linux </tag>
             
             <tag> TCP/IP </tag>
             
@@ -170,15 +170,15 @@
       
         <tags>
             
+            <tag> C++ </tag>
+            
             <tag> C语言 </tag>
             
             <tag> Linux </tag>
             
-            <tag> C++ </tag>
+            <tag> 多线程 </tag>
             
             <tag> 操作系统 </tag>
-            
-            <tag> 多线程 </tag>
             
         </tags>
       
@@ -207,11 +207,11 @@
       
         <tags>
             
+            <tag> C++ </tag>
+            
             <tag> C语言 </tag>
             
             <tag> Linux </tag>
-            
-            <tag> C++ </tag>
             
             <tag> 操作系统 </tag>
             
@@ -244,11 +244,11 @@
       
         <tags>
             
+            <tag> C++ </tag>
+            
             <tag> C语言 </tag>
             
             <tag> Linux </tag>
-            
-            <tag> C++ </tag>
             
             <tag> 操作系统 </tag>
             
@@ -281,13 +281,13 @@
       
         <tags>
             
-            <tag> GCC </tag>
-            
-            <tag> 底层 </tag>
-            
             <tag> C语言 </tag>
             
             <tag> Linux </tag>
+            
+            <tag> GCC </tag>
+            
+            <tag> 底层 </tag>
             
             <tag> Windows </tag>
             
@@ -318,13 +318,13 @@
       
         <tags>
             
-            <tag> Windows </tag>
-            
             <tag> Docker </tag>
             
-            <tag> WSL2 </tag>
+            <tag> Windows </tag>
             
             <tag> Docker Desktop </tag>
+            
+            <tag> WSL2 </tag>
             
             <tag> 容器化 </tag>
             
@@ -559,8 +559,6 @@
       
         <tags>
             
-            <tag> Hexo </tag>
-            
             <tag> Cloudflare </tag>
             
             <tag> R2 </tag>
@@ -568,6 +566,8 @@
             <tag> PicList </tag>
             
             <tag> 图床 </tag>
+            
+            <tag> Hexo </tag>
             
         </tags>
       
@@ -805,6 +805,39 @@
     
     
     <entry>
+      <title>charts</title>
+      <link href="/charts/index.html"/>
+      <url>/charts/index.html</url>
+      
+        <content type="html"><![CDATA[<!-- 文章发布时间统计图 --><div id="posts-chart" data-start="2026-01" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章标签统计图 --><div id="tags-chart" data-length="10" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章分类统计图 --><div id="categories-chart" data-parent="true" style="border-radius: 8px; height: 300px; padding: 10px;"></div><h2 id="computer-后端与底层-backend--foundation">💻 后端与底层 (Backend&amp; Foundation)</h2><h3 id="open_file_folder-cc">📂 C/C++</h3><ul><li><a href="https://blog.abinng.com/posts/20647.html/">操作系统C++实践：深入理解标准IO与文件IO</a></li><li><a href="https://blog.abinng.com/posts/41744.html/">操作系统C++实践：深入理解多进程与IPC</a></li><li><a href="https://blog.abinng.com/posts/8321.html/">操作系统C++实践：深入理解多线程编程</a></li><li><a href="https://blog.abinng.com/posts/49194.html/">计算机网络C++实践：试试远程进程通信</a></li><li><a href="https://blog.abinng.com/posts/58098.html/">水一篇：gcc-o在干什么</a></li></ul><h3 id="open_file_folder-架构与网络">📂 架构与网络</h3><ul><li><a href="https://blog.abinng.com/posts/35594.html/">Oatpp入门—最简框架 (Oat++ 核心工作流解析)</a></li></ul><h2 id="brain-人工智能-ai">🧠 人工智能 (AI)</h2><h3 id="open_file_folder-计算机视觉-cv">📂 计算机视觉 (CV)</h3><ul><li><a href="https://blog.abinng.com/posts/44655.html/">LeNet-5详解：梦开始的地方</a></li><li><a href="https://blog.abinng.com/posts/41031.html/">AlexNet详解：深度学习指数爆炸的起点</a></li><li><a href="https://blog.abinng.com/posts/6882.html/">VGG详解：小卷积核与暴力堆层</a></li><li><a href="https://blog.abinng.com/posts/59522.html/">GoogLeNet详解：特征还能这样提取？</a></li><li><a href="https://blog.abinng.com/posts/24080.html/">ResNet详解：你尽管堆层，我来担责</a></li><li><a href="https://blog.abinng.com/posts/24080.html/">YOLOv1详解：从那只狗开始…</a></li></ul><h3 id="open_file_folder-大模型技术-llm">📂 大模型技术 (LLM)</h3><ul><li><em>(虚位以待：留给未来的大模型文章)</em></li></ul><h3 id="open_file_folder-深度学习基础">📂 深度学习基础</h3><ul><li><em>(虚位以待)</em></li></ul><h2 id="hammer_and_wrench-系统与运维-os--devops">🛠️ 系统与运维 (OS &amp;DevOps)</h2><h3 id="open_file_folder-环境配置">📂 环境配置</h3><ul><li><a href="https://blog.abinng.com/posts/41948.html/">配置 Windows终端代理</a></li><li><a href="https://blog.abinng.com/posts/28408.html/">Linux 与 Docker代理配置全指南</a></li><li><a href="https://blog.abinng.com/posts/28584.html/">WSL2安装与配置</a></li><li><a href="https://blog.abinng.com/posts/8878.html/">linux 的 core转储位置</a></li></ul><h3 id="open_file_folder-容器与部署">📂 容器与部署</h3><ul><li><a href="https://blog.abinng.com/posts/18106.html/">Windows DockerDesktop 安装与配置</a></li><li><a href="https://blog.abinng.com/posts/56777.html/">docker配置国内镜像加速</a></li></ul><h3 id="open_file_folder-开发常识">📂 开发常识</h3><ul><li><a href="https://blog.abinng.com/posts/49683.html/">xxx.exe.sig是什么</a></li></ul><h2 id="coffee-随笔-misc">☕ 随笔 (Misc)</h2><h3 id="open_file_folder-博客建站">📂 博客建站</h3><ul><li><a href="https://blog.abinng.com/posts/7125.html/">我的图床方案</a></li></ul><h3 id="open_file_folder-站点公告">📂 站点公告</h3><ul><li><a href="https://blog.abinng.com/posts/16107.html/">Hello-Hexo</a></li><li><a href="https://blog.abinng.com/posts/59966.html/">入站必看</a></li><li><a href="https://blog.abinng.com/posts/37411.html/">测试用</a></li></ul><h3 id="open_file_folder-日常水文">📂 日常水文</h3><ul><li><em>(虚位以待：留给未来的灵光一现)</em></li></ul>]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>categories</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title></title>
+      <link href="/js/charts-light-dark.js"/>
+      <url>/js/charts-light-dark.js</url>
+      
+        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>留言板</title>
       <link href="/comments/index.html"/>
       <url>/comments/index.html</url>
@@ -816,9 +849,9 @@
     
     
     <entry>
-      <title>categories</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -839,32 +872,10 @@
     
     <entry>
       <title></title>
-      <link href="/js/charts-light-dark.js"/>
-      <url>/js/charts-light-dark.js</url>
+      <link href="/js/easy-Danmaku.js"/>
+      <url>/js/easy-Danmaku.js</url>
       
-        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>charts</title>
-      <link href="/charts/index.html"/>
-      <url>/charts/index.html</url>
-      
-        <content type="html"><![CDATA[<!-- 文章发布时间统计图 --><div id="posts-chart" data-start="2026-01" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章标签统计图 --><div id="tags-chart" data-length="10" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章分类统计图 --><div id="categories-chart" data-parent="true" style="border-radius: 8px; height: 300px; padding: 10px;"></div><h2 id="computer-后端与底层-backend--foundation">💻 后端与底层 (Backend&amp; Foundation)</h2><h3 id="open_file_folder-cc">📂 C/C++</h3><ul><li><a href="https://blog.abinng.com/posts/20647.html/">操作系统C++实践：深入理解标准IO与文件IO</a></li><li><a href="https://blog.abinng.com/posts/41744.html/">操作系统C++实践：深入理解多进程与IPC</a></li><li><a href="https://blog.abinng.com/posts/8321.html/">操作系统C++实践：深入理解多线程编程</a></li><li><a href="https://blog.abinng.com/posts/49194.html/">计算机网络C++实践：试试远程进程通信</a></li><li><a href="https://blog.abinng.com/posts/58098.html/">水一篇：gcc-o在干什么</a></li></ul><h3 id="open_file_folder-架构与网络">📂 架构与网络</h3><ul><li><a href="https://blog.abinng.com/posts/35594.html/">Oatpp入门—最简框架 (Oat++ 核心工作流解析)</a></li></ul><h2 id="brain-人工智能-ai">🧠 人工智能 (AI)</h2><h3 id="open_file_folder-计算机视觉-cv">📂 计算机视觉 (CV)</h3><ul><li><a href="https://blog.abinng.com/posts/44655.html/">LeNet-5详解：梦开始的地方</a></li><li><a href="https://blog.abinng.com/posts/41031.html/">AlexNet详解：深度学习指数爆炸的起点</a></li><li><a href="https://blog.abinng.com/posts/6882.html/">VGG详解：小卷积核与暴力堆层</a></li><li><a href="https://blog.abinng.com/posts/59522.html/">GoogLeNet详解：特征还能这样提取？</a></li><li><a href="https://blog.abinng.com/posts/24080.html/">ResNet详解：你尽管堆层，我来担责</a></li><li><a href="https://blog.abinng.com/posts/24080.html/">YOLOv1详解：从那只狗开始…</a></li></ul><h3 id="open_file_folder-大模型技术-llm">📂 大模型技术 (LLM)</h3><ul><li><em>(虚位以待：留给未来的大模型文章)</em></li></ul><h3 id="open_file_folder-深度学习基础">📂 深度学习基础</h3><ul><li><em>(虚位以待)</em></li></ul><h2 id="hammer_and_wrench-系统与运维-os--devops">🛠️ 系统与运维 (OS &amp;DevOps)</h2><h3 id="open_file_folder-环境配置">📂 环境配置</h3><ul><li><a href="https://blog.abinng.com/posts/41948.html/">配置 Windows终端代理</a></li><li><a href="https://blog.abinng.com/posts/28408.html/">Linux 与 Docker代理配置全指南</a></li><li><a href="https://blog.abinng.com/posts/28584.html/">WSL2安装与配置</a></li><li><a href="https://blog.abinng.com/posts/8878.html/">linux 的 core转储位置</a></li></ul><h3 id="open_file_folder-容器与部署">📂 容器与部署</h3><ul><li><a href="https://blog.abinng.com/posts/18106.html/">Windows DockerDesktop 安装与配置</a></li><li><a href="https://blog.abinng.com/posts/56777.html/">docker配置国内镜像加速</a></li></ul><h3 id="open_file_folder-开发常识">📂 开发常识</h3><ul><li><a href="https://blog.abinng.com/posts/49683.html/">xxx.exe.sig是什么</a></li></ul><h2 id="coffee-随笔-misc">☕ 随笔 (Misc)</h2><h3 id="open_file_folder-博客建站">📂 博客建站</h3><ul><li><a href="https://blog.abinng.com/posts/7125.html/">我的图床方案</a></li></ul><h3 id="open_file_folder-站点公告">📂 站点公告</h3><ul><li><a href="https://blog.abinng.com/posts/16107.html/">Hello-Hexo</a></li><li><a href="https://blog.abinng.com/posts/59966.html/">入站必看</a></li><li><a href="https://blog.abinng.com/posts/37411.html/">测试用</a></li></ul><h3 id="open_file_folder-日常水文">📂 日常水文</h3><ul><li><em>(虚位以待：留给未来的灵光一现)</em></li></ul>]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[/** * Bilibili 风格弹幕核心逻辑 (最终优化版：全屏随机分布) */class EasyDanmaku {  constructor(options) {    this.container = document.querySelector(options.el);    this.options = {      line: parseInt(options.line, 10) || 10,      speed: options.speed || 10,      hover: options.hover,      loop: options.loop,      colourful: options.colourful,      coefficient: options.coefficient || 1,      textShadow: options.textShadow || 1    };        // 颜色库    this.colors = ['#FFFFFF','#FFFFFF','#FE0302', '#FF7204', '#FFAA02', '#00CD00', '#4266BE', '#CC0273', '#CC3333', '#0099CC', '#FF6666'];    this.tracks = new Array(this.options.line).fill(true);    this.danmakuQueue = [];    this.timer = null;    this.isPaused = false;        this.init();  }  init() {    if (this.container) {        this.container.style.position = 'fixed';        this.container.style.top = '60px';        this.container.style.left = '0';        this.container.style.width = '100%';        this.container.style.height = 'calc(100% - 60px)';        this.container.style.pointerEvents = 'none';        this.container.style.zIndex = '999';        this.container.style.overflow = 'hidden';    }    let containerHeight = this.container ? this.container.offsetHeight : 0;    if (containerHeight === 0) {        containerHeight = window.innerHeight - 60;     }    this.trackHeight = containerHeight / this.options.line;    if (!this.trackHeight || this.trackHeight <= 0) this.trackHeight = 40;  }  batchSend(dataList, isLoop = false) {    let index = 0;    const sendNext = () => {      if (this.isPaused) return;      if (index >= dataList.length) {        if (this.options.loop) index = 0;        else return;      }      const item = dataList[index];      this.send(item);      index++;    };    if (this.timer) clearInterval(this.timer);        const interval = 1000 / this.options.coefficient;        this.timer = setInterval(() => {      if(Math.random() > 0.1) sendNext();    }, interval);   }  send(item) {    if (!this.container) return;    const rand = Math.random();    let type = 'scroll';    // 5% 概率顶部，5% 概率底部，90% 滚动    if (rand > 0.95) type = 'bottom';    else if (rand > 0.90) type = 'top';    const dom = document.createElement('div');    dom.innerText = item.content;        this.setStyle(dom, type);    if (type === 'scroll') {      this.renderScroll(dom);    } else {      this.renderStatic(dom, type);    }  }  setStyle(dom, type) {    dom.style.position = 'absolute';    dom.style.whiteSpace = 'nowrap';    dom.style.fontFamily = '"黑体", "Heiti SC", sans-serif';    dom.style.fontWeight = 'bold';    dom.style.fontSize = `${Math.floor(22 + Math.random() * 6)}px`;    // 描边和阴影选一个    if(this.options.textShadow === 1) { // 下面这个是描边        dom.style.textShadow = '#000 1px 0 1px, #000 0 1px 1px, #000 0 -1px 1px, #000 -1px 0 1px';    } else { // 下面这个是阴影        dom.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';    }    dom.style.pointerEvents = 'auto';    dom.style.cursor = 'default';    dom.style.zIndex = 10;        if (this.options.colourful) {        const color = this.colors[Math.floor(Math.random() * this.colors.length)];        dom.style.color = color;    } else {        dom.style.color = '#FFFFFF';    }  }  renderScroll(dom) {    // --- 核心修改：随机选择空闲轨道 ---        // 1. 找出所有当前空闲的轨道索引    const availableTracks = [];    this.tracks.forEach((isFree, index) => {        if (isFree) availableTracks.push(index);    });    let trackIndex = -1;    if (availableTracks.length > 0) {        // 2. 如果有空闲轨道，从中随机选一个        // 这解决了总是堆积在前几行的问题        const randomPos = Math.floor(Math.random() * availableTracks.length);        trackIndex = availableTracks[randomPos];    } else {        // 3. 如果全满了，就随机挤占任意一行        trackIndex = Math.floor(Math.random() * this.options.line);    }    this.tracks[trackIndex] = false;    setTimeout(() => { this.tracks[trackIndex] = true; }, 2000);     const topPos = trackIndex * this.trackHeight;    dom.style.top = `${topPos}px`;    dom.style.left = '100%';    dom.style.transform = 'translateX(0)';        this.container.appendChild(dom);    const containerWidth = this.container.offsetWidth || window.innerWidth;    const duration = this.options.speed + (Math.random() * 2);         const animation = dom.animate([      { transform: 'translateX(0)' },      { transform: `translateX(-${containerWidth + dom.offsetWidth + 50}px)` }    ], {      duration: duration * 1000,      easing: 'linear'    });    if (this.options.hover) {        dom.addEventListener('mouseenter', () => {            animation.pause();            dom.style.zIndex = 100;            dom.style.border = "1px solid rgba(255,255,255,0.5)";            dom.style.backgroundColor = "rgba(0,0,0,0.4)";            dom.style.borderRadius = "4px";        });        dom.addEventListener('mouseleave', () => {            animation.play();            dom.style.zIndex = 10;            dom.style.border = "none";            dom.style.backgroundColor = "transparent";        });    }    animation.onfinish = () => {      dom.remove();    };  }  renderStatic(dom, type) {    dom.style.left = '50%';    dom.style.transform = 'translateX(-50%)';    dom.style.zIndex = 20;    dom.style.textShadow = 'none';     dom.style.background = 'rgba(0,0,0,0.6)';    dom.style.borderRadius = '20px';    dom.style.padding = '4px 12px';    dom.style.border = `1px solid ${dom.style.color}`;    // --- 核心修改：移除行数限制 ---    // 允许静态弹幕出现在任意一行    const offset = Math.floor(Math.random() * this.options.line) * this.trackHeight;    if (type === 'top') {      dom.style.top = `${offset + 20}px`;    } else {      dom.style.top = 'auto';       dom.style.bottom = `${offset + 80}px`;    }    this.container.appendChild(dom);    setTimeout(() => {      dom.remove();    }, 5000);  }}]]></content>
       
     </entry>
     
@@ -876,17 +887,6 @@
       <url>/js/mathjax_config.js</url>
       
         <content type="html"><![CDATA[MathJax = {  tex: {    inlineMath: [['$', '$'], ['\\(', '\\)']]  }};]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title></title>
-      <link href="/js/easy-Danmaku.js"/>
-      <url>/js/easy-Danmaku.js</url>
-      
-        <content type="html"><![CDATA[/** * Bilibili 风格弹幕核心逻辑 (最终优化版：全屏随机分布) */class EasyDanmaku {  constructor(options) {    this.container = document.querySelector(options.el);    this.options = {      line: parseInt(options.line, 10) || 10,      speed: options.speed || 10,      hover: options.hover,      loop: options.loop,      colourful: options.colourful,      coefficient: options.coefficient || 1,      textShadow: options.textShadow || 1    };        // 颜色库    this.colors = ['#FFFFFF','#FFFFFF','#FE0302', '#FF7204', '#FFAA02', '#00CD00', '#4266BE', '#CC0273', '#CC3333', '#0099CC', '#FF6666'];    this.tracks = new Array(this.options.line).fill(true);    this.danmakuQueue = [];    this.timer = null;    this.isPaused = false;        this.init();  }  init() {    if (this.container) {        this.container.style.position = 'fixed';        this.container.style.top = '60px';        this.container.style.left = '0';        this.container.style.width = '100%';        this.container.style.height = 'calc(100% - 60px)';        this.container.style.pointerEvents = 'none';        this.container.style.zIndex = '999';        this.container.style.overflow = 'hidden';    }    let containerHeight = this.container ? this.container.offsetHeight : 0;    if (containerHeight === 0) {        containerHeight = window.innerHeight - 60;     }    this.trackHeight = containerHeight / this.options.line;    if (!this.trackHeight || this.trackHeight <= 0) this.trackHeight = 40;  }  batchSend(dataList, isLoop = false) {    let index = 0;    const sendNext = () => {      if (this.isPaused) return;      if (index >= dataList.length) {        if (this.options.loop) index = 0;        else return;      }      const item = dataList[index];      this.send(item);      index++;    };    if (this.timer) clearInterval(this.timer);        const interval = 1000 / this.options.coefficient;        this.timer = setInterval(() => {      if(Math.random() > 0.1) sendNext();    }, interval);   }  send(item) {    if (!this.container) return;    const rand = Math.random();    let type = 'scroll';    // 5% 概率顶部，5% 概率底部，90% 滚动    if (rand > 0.95) type = 'bottom';    else if (rand > 0.90) type = 'top';    const dom = document.createElement('div');    dom.innerText = item.content;        this.setStyle(dom, type);    if (type === 'scroll') {      this.renderScroll(dom);    } else {      this.renderStatic(dom, type);    }  }  setStyle(dom, type) {    dom.style.position = 'absolute';    dom.style.whiteSpace = 'nowrap';    dom.style.fontFamily = '"黑体", "Heiti SC", sans-serif';    dom.style.fontWeight = 'bold';    dom.style.fontSize = `${Math.floor(22 + Math.random() * 6)}px`;    // 描边和阴影选一个    if(this.options.textShadow === 1) { // 下面这个是描边        dom.style.textShadow = '#000 1px 0 1px, #000 0 1px 1px, #000 0 -1px 1px, #000 -1px 0 1px';    } else { // 下面这个是阴影        dom.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';    }    dom.style.pointerEvents = 'auto';    dom.style.cursor = 'default';    dom.style.zIndex = 10;        if (this.options.colourful) {        const color = this.colors[Math.floor(Math.random() * this.colors.length)];        dom.style.color = color;    } else {        dom.style.color = '#FFFFFF';    }  }  renderScroll(dom) {    // --- 核心修改：随机选择空闲轨道 ---        // 1. 找出所有当前空闲的轨道索引    const availableTracks = [];    this.tracks.forEach((isFree, index) => {        if (isFree) availableTracks.push(index);    });    let trackIndex = -1;    if (availableTracks.length > 0) {        // 2. 如果有空闲轨道，从中随机选一个        // 这解决了总是堆积在前几行的问题        const randomPos = Math.floor(Math.random() * availableTracks.length);        trackIndex = availableTracks[randomPos];    } else {        // 3. 如果全满了，就随机挤占任意一行        trackIndex = Math.floor(Math.random() * this.options.line);    }    this.tracks[trackIndex] = false;    setTimeout(() => { this.tracks[trackIndex] = true; }, 2000);     const topPos = trackIndex * this.trackHeight;    dom.style.top = `${topPos}px`;    dom.style.left = '100%';    dom.style.transform = 'translateX(0)';        this.container.appendChild(dom);    const containerWidth = this.container.offsetWidth || window.innerWidth;    const duration = this.options.speed + (Math.random() * 2);         const animation = dom.animate([      { transform: 'translateX(0)' },      { transform: `translateX(-${containerWidth + dom.offsetWidth + 50}px)` }    ], {      duration: duration * 1000,      easing: 'linear'    });    if (this.options.hover) {        dom.addEventListener('mouseenter', () => {            animation.pause();            dom.style.zIndex = 100;            dom.style.border = "1px solid rgba(255,255,255,0.5)";            dom.style.backgroundColor = "rgba(0,0,0,0.4)";            dom.style.borderRadius = "4px";        });        dom.addEventListener('mouseleave', () => {            animation.play();            dom.style.zIndex = 10;            dom.style.border = "none";            dom.style.backgroundColor = "transparent";        });    }    animation.onfinish = () => {      dom.remove();    };  }  renderStatic(dom, type) {    dom.style.left = '50%';    dom.style.transform = 'translateX(-50%)';    dom.style.zIndex = 20;    dom.style.textShadow = 'none';     dom.style.background = 'rgba(0,0,0,0.6)';    dom.style.borderRadius = '20px';    dom.style.padding = '4px 12px';    dom.style.border = `1px solid ${dom.style.color}`;    // --- 核心修改：移除行数限制 ---    // 允许静态弹幕出现在任意一行    const offset = Math.floor(Math.random() * this.options.line) * this.trackHeight;    if (type === 'top') {      dom.style.top = `${offset + 20}px`;    } else {      dom.style.top = 'auto';       dom.style.bottom = `${offset + 80}px`;    }    this.container.appendChild(dom);    setTimeout(() => {      dom.remove();    }, 5000);  }}]]></content>
       
     </entry>
     
