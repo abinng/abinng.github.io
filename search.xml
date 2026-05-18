@@ -42,6 +42,43 @@
     
     <entry>
       
+        <title>001-Qt的编译原理</title>
+      
+      <link href="/posts/12940.html/"/>
+      <url>/posts/12940.html/</url>
+      
+        <content type="html"><![CDATA[<p><code>auther</code>: abinng <code>date</code>: 2026-03-18 20:07<code>createDate:</code>2026-03-18 20:07</p><p>在传统的 C++ 编译过程的基础上，多出了三个部分：</p><ul><li>ui 文件</li><li>元对象系统—&gt;信号和槽相关</li><li>QRC 资源文件</li></ul><p><img src="https://blog-img-worker.abinng.dpdns.org/2026/05/0bf15b562549efc8c22864e8cdc810fb.webp" alt="file-20260318204812131"></p><h3 id="qt-程序的标准编译流程">Qt 程序的标准编译流程</h3><p>在标准的 C++ 编译流程（预处理 -&gt; 编译 -&gt; 汇编 -&gt;链接）之前，Qt 增加了一个非常关键的 <strong>“代码生成阶段”</strong>。整个过程可以分为以下五个核心步骤：</p><p><strong>1. 界面文件的处理 (UIC - User InterfaceCompiler)</strong></p><ul><li><strong>输入：</strong> 开发者在 UI 设计器（QtDesigner）中拖拽生成的界面文件，比如 <code>win.ui</code>（本质上是一个XML 格式的文件）。</li><li><strong>处理：</strong> Qt 提供的 <strong>UIC 工具</strong>会解析这个 <code>.ui</code> 文件，并自动生成标准的 C++ 头文件，例如<code>ui_win.h</code>。</li><li><strong>关联：</strong> 我们的业务逻辑代码（如<code>win.cpp</code>）通过 <code>#include "ui_win.h"</code>来获取并操控界面上的控件。<em>(图中标注的<code>win.cpp -&gt; ui_win.h</code> 就是指这种包含关系)</em>。</li></ul><p><strong>2. 资源文件的处理 (RCC - Resource Compiler)</strong></p><ul><li><strong>输入：</strong> 开发者在工程中使用的外部资源文件，比如图片<code>D:/img/a.png</code>，它们被集中登记在 <code>.qrc</code>资源文件中。</li><li><strong>处理：</strong> <strong>RCC 子系统</strong>会读取这些二进制资源，并将它们转化为标准的 C++ 源文件（如底部的<code>xxx.cpp</code>）。</li><li><strong>本质：</strong> 图片等资源会被转换成巨大的<code>const unsigned char</code><strong>全局字符数组</strong>。这样，资源就被硬编码进了代码中，最终打进<code>.exe</code> 里，程序发布时就不怕丢失图片了。</li></ul><p><strong>3. 元对象系统的处理 (MOC - Meta-Object Compiler)</strong></p><ul><li><em>补充一点图上没画出的细节：</em> MOC 主要扫描工程中包含了<code>Q_OBJECT</code> 宏的头文件（比如 <code>widget.h</code> 或<code>win.h</code>）。</li><li><strong>处理：</strong> <strong>MOC 工具</strong> 负责支撑 Qt强大的信号与槽机制、反射机制。它会根据头文件中的声明，自动生成包含底层实现代码的C++ 源文件，通常命名为 <code>moc_*.cpp</code>（图中为<code>moc_widget.cpp</code>）。</li></ul><p><strong>4. 标准 C++ 编译阶段 (Compiler)</strong></p><ul><li>到了这一步，所有的“原材料”都准备好了。</li><li>C++ 编译器（如 GCC, MSVC 或Clang）开始介入。它将开发者手写的源码（<code>main.cpp</code>,<code>win.cpp</code>）和 Qt 工具生成的源码（<code>moc_widget.cpp</code>,<code>xxx.cpp</code>）统一进行编译。</li><li><strong>输出：</strong>生成各自对应的机器码目标文件（<code>.o</code> 或<code>.obj</code>），即图中的 <code>main.o</code>, <code>win.o</code>,<code>moc_widget.o</code>, <code>xxx.o</code>。</li></ul><p><strong>5. 最终链接阶段 (Linker)</strong></p><ul><li><strong>处理：</strong> 链接器（Linker）将前面生成的所有<code>.o</code> 目标文件整合到一起，同时还会去链接 Qt框架的核心动态/静态库（比如 Qt5Core, Qt5Gui 等）。</li><li><strong>输出：</strong> 最终合成我们需要的可执行文件，比如<code>build.exe</code>。</li></ul><hr><p><strong>总结一下核心逻辑：</strong> Qt的编译之所以看起来复杂，就是因为纯 C++ 语法不支持信号与槽、可视化 UI构建以及资源打包。所以 Qt 发明了 <strong>UIC、MOC、RCC</strong>这三大神器，<strong>先通过工具生成标准的 C++ 代码，然后再把接力棒交回给C++ 编译器</strong>去走传统流程。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 后端与底层 </category>
+          
+          <category> C/C++ </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> C++ </tag>
+            
+            <tag> Qt </tag>
+            
+            <tag> 编译原理 </tag>
+            
+            <tag> MOC </tag>
+            
+            <tag> 底层机制 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      
         <title>Oatpp 入门--最简框架</title>
       
       <link href="/posts/35594.html/"/>
@@ -166,13 +203,13 @@
       
         <tags>
             
-            <tag> C语言 </tag>
-            
             <tag> C++ </tag>
             
-            <tag> Linux </tag>
-            
             <tag> 网络编程 </tag>
+            
+            <tag> C语言 </tag>
+            
+            <tag> Linux </tag>
             
             <tag> TCP/IP </tag>
             
@@ -207,9 +244,9 @@
       
         <tags>
             
-            <tag> C语言 </tag>
-            
             <tag> C++ </tag>
+            
+            <tag> C语言 </tag>
             
             <tag> Linux </tag>
             
@@ -244,9 +281,9 @@
       
         <tags>
             
-            <tag> C语言 </tag>
-            
             <tag> C++ </tag>
+            
+            <tag> C语言 </tag>
             
             <tag> Linux </tag>
             
@@ -281,9 +318,9 @@
       
         <tags>
             
-            <tag> C语言 </tag>
-            
             <tag> C++ </tag>
+            
+            <tag> C语言 </tag>
             
             <tag> Linux </tag>
             
@@ -355,9 +392,9 @@
       
         <tags>
             
-            <tag> Docker </tag>
-            
             <tag> Windows </tag>
+            
+            <tag> Docker </tag>
             
             <tag> WSL2 </tag>
             
@@ -596,8 +633,6 @@
       
         <tags>
             
-            <tag> Hexo </tag>
-            
             <tag> Cloudflare </tag>
             
             <tag> R2 </tag>
@@ -605,6 +640,8 @@
             <tag> PicList </tag>
             
             <tag> 图床 </tag>
+            
+            <tag> Hexo </tag>
             
         </tags>
       
@@ -831,20 +868,9 @@
     
     
     <entry>
-      <title>charts</title>
-      <link href="/charts/index.html"/>
-      <url>/charts/index.html</url>
-      
-        <content type="html"><![CDATA[<!-- 文章发布时间统计图 --><div id="posts-chart" data-start="2026-01" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章标签统计图 --><div id="tags-chart" data-length="10" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章分类统计图 --><div id="categories-chart" data-parent="true" style="border-radius: 8px; height: 300px; padding: 10px;"></div><h2 id="computer-后端与底层-backend--foundation">💻 后端与底层 (Backend&amp; Foundation)</h2><h3 id="open_file_folder-cc">📂 C/C++</h3><ul><li><a href="https://blog.abinng.com/posts/20647.html/">操作系统C++实践：深入理解标准IO与文件IO</a></li><li><a href="https://blog.abinng.com/posts/41744.html/">操作系统C++实践：深入理解多进程与IPC</a></li><li><a href="https://blog.abinng.com/posts/8321.html/">操作系统C++实践：深入理解多线程编程</a></li><li><a href="https://blog.abinng.com/posts/49194.html/">计算机网络C++实践：试试远程进程通信</a></li><li><a href="https://blog.abinng.com/posts/58098.html/">水一篇：gcc-o在干什么</a></li></ul><h3 id="open_file_folder-架构与网络">📂 架构与网络</h3><p><strong>oatpp 微服务框架：</strong></p><ul><li><a href="https://blog.abinng.com/posts/35594.html/">Oatpp入门—最简框架 (Oat++ 核心工作流解析)</a></li></ul><p><strong>Qt：</strong></p><ul><li><a href="https://blog.abinng.com/posts/64071.html/">Qtdemo:银行输入键盘</a></li></ul><h2 id="brain-人工智能-ai">🧠 人工智能 (AI)</h2><h3 id="open_file_folder-计算机视觉-cv">📂 计算机视觉 (CV)</h3><ul><li><a href="https://blog.abinng.com/posts/44655.html/">LeNet-5详解：梦开始的地方</a></li><li><a href="https://blog.abinng.com/posts/41031.html/">AlexNet详解：深度学习指数爆炸的起点</a></li><li><a href="https://blog.abinng.com/posts/6882.html/">VGG详解：小卷积核与暴力堆层</a></li><li><a href="https://blog.abinng.com/posts/59522.html/">GoogLeNet详解：特征还能这样提取？</a></li><li><a href="https://blog.abinng.com/posts/24080.html/">ResNet详解：你尽管堆层，我来担责</a></li><li><a href="https://blog.abinng.com/posts/24080.html/">YOLOv1详解：从那只狗开始…</a></li></ul><h3 id="open_file_folder-大模型技术-llm">📂 大模型技术 (LLM)</h3><ul><li><em>(虚位以待：留给未来的大模型文章)</em></li></ul><h3 id="open_file_folder-深度学习基础">📂 深度学习基础</h3><ul><li><em>(虚位以待)</em></li></ul><h2 id="hammer_and_wrench-系统与运维-os--devops">🛠️ 系统与运维 (OS &amp;DevOps)</h2><h3 id="open_file_folder-环境配置">📂 环境配置</h3><ul><li><a href="https://blog.abinng.com/posts/41948.html/">配置 Windows终端代理</a></li><li><a href="https://blog.abinng.com/posts/28408.html/">Linux 与 Docker代理配置全指南</a></li><li><a href="https://blog.abinng.com/posts/28584.html/">WSL2安装与配置</a></li><li><a href="https://blog.abinng.com/posts/8878.html/">linux 的 core转储位置</a></li></ul><h3 id="open_file_folder-容器与部署">📂 容器与部署</h3><ul><li><a href="https://blog.abinng.com/posts/18106.html/">Windows DockerDesktop 安装与配置</a></li><li><a href="https://blog.abinng.com/posts/56777.html/">docker配置国内镜像加速</a></li></ul><h3 id="open_file_folder-开发常识">📂 开发常识</h3><ul><li><a href="https://blog.abinng.com/posts/49683.html/">xxx.exe.sig是什么</a></li></ul><h2 id="coffee-随笔-misc">☕ 随笔 (Misc)</h2><h3 id="open_file_folder-博客建站">📂 博客建站</h3><ul><li><a href="https://blog.abinng.com/posts/7125.html/">我的图床方案</a></li></ul><h3 id="open_file_folder-站点公告">📂 站点公告</h3><ul><li><a href="https://blog.abinng.com/posts/16107.html/">Hello-Hexo</a></li><li><a href="https://blog.abinng.com/posts/59966.html/">入站必看</a></li><li><a href="https://blog.abinng.com/posts/37411.html/">测试用</a></li></ul><h3 id="open_file_folder-日常水文">📂 日常水文</h3><ul><li><em>(虚位以待：留给未来的灵光一现)</em></li></ul>]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>留言板</title>
-      <link href="/comments/index.html"/>
-      <url>/comments/index.html</url>
+      <title>categories</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -864,22 +890,22 @@
     
     
     <entry>
-      <title></title>
-      <link href="/js/charts-light-dark.js"/>
-      <url>/js/charts-light-dark.js</url>
+      <title>留言板</title>
+      <link href="/comments/index.html"/>
+      <url>/comments/index.html</url>
       
-        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
     
     
     <entry>
-      <title></title>
-      <link href="/css/custom.css"/>
-      <url>/css/custom.css</url>
+      <title>charts</title>
+      <link href="/charts/index.html"/>
+      <url>/charts/index.html</url>
       
-        <content type="html"><![CDATA[/* 恢复 Twikoo 预览按钮显示 */#twikoo .tk-comments .el-button.tk-preview {  display: inline-flex !important;  visibility: visible !important;  opacity: 1 !important;  pointer-events: auto !important;}#twikoo .tk-comments .el-button.tk-preview:hover {  opacity: 0.85 !important;}#twikoo .tk-comments .el-button.tk-preview {    position: absolute;    top: -40px;    right: 107px;    opacity: 0.3;}#twikoo .tk-comments .el-button--primary {    color: var(--anzhiyu-card-bg);    box-shadow: var(--anzhiyu-shadow-black);    width: 6.25rem;    position: absolute;    top: -41px;    right: 0px;    height: 32px;    margin-left: 0.5rem !important;    border-color: var(--anzhiyu-fontcolor);    border-radius: 12px;    transition: 0.3s;}#twikoo .tk-comments .tk-meta-input {    position: relative;    margin-top: 8px;    width: calc(100% - 165px);}]]></content>
+        <content type="html"><![CDATA[<!-- 文章发布时间统计图 --><div id="posts-chart" data-start="2026-01" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章标签统计图 --><div id="tags-chart" data-length="10" style="border-radius: 8px; height: 300px; padding: 10px;"></div><!-- 文章分类统计图 --><div id="categories-chart" data-parent="true" style="border-radius: 8px; height: 300px; padding: 10px;"></div><h2 id="computer-后端与底层-backend--foundation">💻 后端与底层 (Backend&amp; Foundation)</h2><h3 id="open_file_folder-cc">📂 C/C++</h3><ul><li><a href="https://blog.abinng.com/posts/20647.html/">操作系统C++实践：深入理解标准IO与文件IO</a></li><li><a href="https://blog.abinng.com/posts/41744.html/">操作系统C++实践：深入理解多进程与IPC</a></li><li><a href="https://blog.abinng.com/posts/8321.html/">操作系统C++实践：深入理解多线程编程</a></li><li><a href="https://blog.abinng.com/posts/49194.html/">计算机网络C++实践：试试远程进程通信</a></li><li><a href="https://blog.abinng.com/posts/58098.html/">水一篇：gcc-o在干什么</a></li></ul><h3 id="open_file_folder-架构与网络">📂 架构与网络</h3><p><strong>oatpp 微服务框架：</strong></p><ul><li><a href="https://blog.abinng.com/posts/35594.html/">Oatpp入门—最简框架 (Oat++ 核心工作流解析)</a></li></ul><p><strong>Qt：</strong></p><p>这些笔记是我在学习 Qt 6 过程中整理的个人笔记，围绕 C++17 + CMake + Qt6.5 展开。阅读顺序建议从上往下，每篇笔记都配有可运行的代码示例。</p><p>本次 Qt 的笔记可能并不规范，无体系性，仅供参考</p><ul><li><p>基础篇</p><ul><li><strong><a href="001-Qt%20的编译原理.md">001-Qt的编译原理</a></strong> — qmake 与 CMake 的区别、Qt的构建流程、moc/uic/rcc 三个代码生成器的作用</li><li><strong><a href="002-CMake%20模板.md">002-CMake 模板</a></strong> —Qt6 项目的标准 CMake 模板，WIN32 平台 DLL 自动拷贝配置</li><li><strong><a href="003-Qt%20的对象管理.md">003-Qt的对象管理</a></strong> — QObject 父子机制、Qt的对象树模型与内存管理</li><li><strong><a href="004-QString.md">004-QString</a></strong> — Qt字符串类详解：构造、拼接、格式化（<code>QString::arg</code>）、编码转换</li><li><strong><a href="005-Qt%20的容器.md">005-Qt 的容器</a></strong> —QList、QMap 等隐式共享容器，与 STL 容器的对比</li><li><strong><a href="006-Qt%20的布局.md">006-Qt 的布局</a></strong> —QVBoxLayout / QHBoxLayout / QGridLayout的用法、伸缩因子（stretch）与嵌套布局技巧</li><li><strong><a href="007-分割条%20QSplitter.md">007-分割条QSplitter</a></strong> — QSplitter分割条，实现用户可拖拽调整的窗格布局</li><li><strong><a href="008-Qt%20的随机数生成器.md">008-Qt的随机数生成器</a></strong> — QRandomGenerator 与<code>std::random</code> 对比、随机数种子的设置</li></ul></li><li><p>核心机制篇</p><ul><li><strong><a href="009-Qt%20的元对象系统.md">009-Qt的元对象系统</a></strong> — Q_OBJECT 宏、moc生成的元对象代码、QMetaObject、Q_PROPERTY 属性系统</li><li><strong><a href="010-信号和槽.md">010-信号和槽</a></strong> —connect 的五种写法、信号槽的原理、disconnect、lambda 连接与生命周期</li><li><strong><a href="012-Qt%20的事件系统.md">012-Qt的事件系统</a></strong> — 事件循环、event()分发、accept/ignore、事件过滤器、sendEvent/postEvent、事件与信号的对比</li><li><strong><a href="013-Qt%20事件系统的小案例.md">013-Qt事件系统的小案例</a></strong> — 事件系统的配套实战小练习</li><li><strong><a href="014-Qt%20的线程机制.md">014-Qt的线程机制</a></strong> — QThread 两种用法（重写 run /moveToThread）、连接类型（Direct/Queued/BlockingQueued）</li><li><strong><a href="015-Qt%20的绘图系统.md">015-Qt的绘图系统</a></strong> — QPainter / QPaintDevice /QPaintEngine、坐标系变换、基本图形、QPainterPath、update/repaint重绘机制</li></ul></li><li><p>小项目实战篇</p><ul><li><strong><a href="011-小项目-动态矩阵密码键盘.md">011-小项目-动态矩阵密码键盘</a></strong>— 信号槽 + 布局的综合实战，实现可随机排列的数字键盘</li><li><strong><a href="016-小项目-仿汽车仪表盘.md">016-小项目-仿汽车仪表盘</a></strong> —综合运用绘图 + 动画：Q_PROPERTY + QPropertyAnimation驱动指针动画，QPainterPath 布尔运算实现镂空效果</li><li><strong><a href="016.5-小项目-仿时钟.md">016.5-小项目-仿时钟</a></strong> —拟物化时钟控件：60 刻度表盘、平滑扫秒动画（59→60过渡）、日夜间主题切换、QTimer 驱动时间推进</li></ul></li><li><p>模块专题篇</p><ul><li><strong><a href="017-Qt%20的数据库模块.md">017-Qt的数据库模块</a></strong> — Qt SQL模块分层架构、QSqlDatabase/QSqlQuery/QSqlTableModel/QSqlRelationalTableModel/自定义委托</li><li><strong><a href="018-Qt%20网络编程.md">018-Qt 网络编程</a></strong>— QUdpSocket（UDP 数据报）、QTcpServer + QTcpSocket（TCP多客户端服务端）、信号驱动的异步通信</li></ul></li><li><p><a href="https://blog.abinng.com/posts/64071.html/">Qtdemo:银行输入键盘</a></p></li></ul><h2 id="brain-人工智能-ai">🧠 人工智能 (AI)</h2><h3 id="open_file_folder-计算机视觉-cv">📂 计算机视觉 (CV)</h3><ul><li><a href="https://blog.abinng.com/posts/44655.html/">LeNet-5详解：梦开始的地方</a></li><li><a href="https://blog.abinng.com/posts/41031.html/">AlexNet详解：深度学习指数爆炸的起点</a></li><li><a href="https://blog.abinng.com/posts/6882.html/">VGG详解：小卷积核与暴力堆层</a></li><li><a href="https://blog.abinng.com/posts/59522.html/">GoogLeNet详解：特征还能这样提取？</a></li><li><a href="https://blog.abinng.com/posts/24080.html/">ResNet详解：你尽管堆层，我来担责</a></li><li><a href="https://blog.abinng.com/posts/24080.html/">YOLOv1详解：从那只狗开始…</a></li></ul><h3 id="open_file_folder-大模型技术-llm">📂 大模型技术 (LLM)</h3><ul><li><em>(虚位以待：留给未来的大模型文章)</em></li></ul><h3 id="open_file_folder-深度学习基础">📂 深度学习基础</h3><ul><li><em>(虚位以待)</em></li></ul><h2 id="hammer_and_wrench-系统与运维-os--devops">🛠️ 系统与运维 (OS &amp;DevOps)</h2><h3 id="open_file_folder-环境配置">📂 环境配置</h3><ul><li><a href="https://blog.abinng.com/posts/41948.html/">配置 Windows终端代理</a></li><li><a href="https://blog.abinng.com/posts/28408.html/">Linux 与 Docker代理配置全指南</a></li><li><a href="https://blog.abinng.com/posts/28584.html/">WSL2安装与配置</a></li><li><a href="https://blog.abinng.com/posts/8878.html/">linux 的 core转储位置</a></li></ul><h3 id="open_file_folder-容器与部署">📂 容器与部署</h3><ul><li><a href="https://blog.abinng.com/posts/18106.html/">Windows DockerDesktop 安装与配置</a></li><li><a href="https://blog.abinng.com/posts/56777.html/">docker配置国内镜像加速</a></li></ul><h3 id="open_file_folder-开发常识">📂 开发常识</h3><ul><li><a href="https://blog.abinng.com/posts/49683.html/">xxx.exe.sig是什么</a></li></ul><h2 id="coffee-随笔-misc">☕ 随笔 (Misc)</h2><h3 id="open_file_folder-博客建站">📂 博客建站</h3><ul><li><a href="https://blog.abinng.com/posts/7125.html/">我的图床方案</a></li></ul><h3 id="open_file_folder-站点公告">📂 站点公告</h3><ul><li><a href="https://blog.abinng.com/posts/16107.html/">Hello-Hexo</a></li><li><a href="https://blog.abinng.com/posts/59966.html/">入站必看</a></li><li><a href="https://blog.abinng.com/posts/37411.html/">测试用</a></li></ul><h3 id="open_file_folder-日常水文">📂 日常水文</h3><ul><li><em>(虚位以待：留给未来的灵光一现)</em></li></ul>]]></content>
       
     </entry>
     
@@ -897,17 +923,6 @@
     
     
     <entry>
-      <title>categories</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title></title>
       <link href="/js/easy-Danmaku.js"/>
       <url>/js/easy-Danmaku.js</url>
@@ -919,11 +934,33 @@
     
     
     <entry>
+      <title></title>
+      <link href="/css/custom.css"/>
+      <url>/css/custom.css</url>
+      
+        <content type="html"><![CDATA[/* 恢复 Twikoo 预览按钮显示 */#twikoo .tk-comments .el-button.tk-preview {  display: inline-flex !important;  visibility: visible !important;  opacity: 1 !important;  pointer-events: auto !important;}#twikoo .tk-comments .el-button.tk-preview:hover {  opacity: 0.85 !important;}#twikoo .tk-comments .el-button.tk-preview {    position: absolute;    top: -40px;    right: 107px;    opacity: 0.3;}#twikoo .tk-comments .el-button--primary {    color: var(--anzhiyu-card-bg);    box-shadow: var(--anzhiyu-shadow-black);    width: 6.25rem;    position: absolute;    top: -41px;    right: 0px;    height: 32px;    margin-left: 0.5rem !important;    border-color: var(--anzhiyu-fontcolor);    border-radius: 12px;    transition: 0.3s;}#twikoo .tk-comments .tk-meta-input {    position: relative;    margin-top: 8px;    width: calc(100% - 165px);}]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>tags</title>
       <link href="/tags/index.html"/>
       <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title></title>
+      <link href="/js/charts-light-dark.js"/>
+      <url>/js/charts-light-dark.js</url>
+      
+        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
       
     </entry>
     
