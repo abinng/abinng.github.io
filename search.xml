@@ -577,9 +577,9 @@
             
             <tag> Qt </tag>
             
-            <tag> COW </tag>
-            
             <tag> 容器 </tag>
+            
+            <tag> COW </tag>
             
         </tags>
       
@@ -612,11 +612,11 @@
             
             <tag> Qt </tag>
             
+            <tag> COW </tag>
+            
             <tag> QString </tag>
             
             <tag> 字符编码 </tag>
-            
-            <tag> COW </tag>
             
             <tag> 性能优化 </tag>
             
@@ -665,43 +665,6 @@
     
     <entry>
       
-        <title>002-CMake 模板</title>
-      
-      <link href="/posts/57570.html/"/>
-      <url>/posts/57570.html/</url>
-      
-        <content type="html"><![CDATA[<p><code>auther</code>: abinng <code>date</code>: 2026-03-18 17:19<code>createDate:</code>2026-03-18 17:18</p><p>针对于 <code>Qt6</code> 的 <code>CMake</code> 模板：</p><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 1. 基础环境与工程设置</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 规定使用此 CMakeLists 的最低 CMake 版本。Qt6 推荐 3.16 及以上。</span></span><br><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.16</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义项目名称为 ex01，并声明这是一个 C++ (CXX) 项目</span></span><br><span class="line"><span class="keyword">project</span>(ex01 CXX)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制要求使用 C++17 标准（这是 Qt6 的硬性要求）</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD_REQUIRED <span class="keyword">ON</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预防万一，手动打开 MOC, UIC, RCC</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_AUTOMOC <span class="keyword">ON</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_AUTOUIC <span class="keyword">ON</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_AUTORCC <span class="keyword">ON</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 2. Qt 环境查找与配置</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 指定你的 Qt SDK 路径。这告诉 CMake 去哪里找 Qt 的模块文件。</span></span><br><span class="line"><span class="comment"># 注意：如果路径发生改变，只需修改这里即可。</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_PREFIX_PATH <span class="string">"D:/Qt/6.5.3/mingw_64"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 寻找 Qt6 库，REQUIRED 表示找不到就报错停止编译。</span></span><br><span class="line"><span class="comment"># COMPONENTS 后面跟着需要用到的 Qt 模块，这里引入了核心(Core)和界面(Widgets)模块。</span></span><br><span class="line"><span class="keyword">find_package</span>(Qt6 REQUIRED COMPONENTS Core Widgets)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Qt6 引入的便捷指令：全局自动开启 MOC (元对象编译器)、UIC (UI文件转换) 和 RCC (资源文件转换)。</span></span><br><span class="line"><span class="comment"># 有了它，就不用手动处理 Qt 那些特殊的宏和文件了。</span></span><br><span class="line"><span class="comment"># 虽然有这个，我还是加上RCC的手动开启，就在上面的set(CMAKE_AUTORCC ON)</span></span><br><span class="line">qt_standard_project_setup()</span><br><span class="line"></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 3. 目标定义与链接</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 将源码 (hello.cpp) 编译成名为 ex01 的可执行程序。</span></span><br><span class="line"><span class="comment"># qt_add_executable 是 CMake 原生 add_executable 的增强版，会处理 Qt 的一些初始化工作。</span></span><br><span class="line">qt_add_executable(ex01</span><br><span class="line">    hello.cpp</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将之前找到的 Qt 核心库和界面库链接到我们的 ex01 程序上。</span></span><br><span class="line"><span class="keyword">target_link_libraries</span>(ex01 PRIVATE Qt6::Core Qt6::Widgets)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目标属性</span></span><br><span class="line"><span class="keyword">set_target_properties</span>(ex01 PROPERTIES</span><br><span class="line">    WIN32_EXECUTABLE <span class="keyword">ON</span>  <span class="comment"># Windows 下：作为图形界面程序运行，隐藏黑色的 CMD 控制台窗口</span></span><br><span class="line">    MACOSX_BUNDLE <span class="keyword">ON</span>     <span class="comment"># macOS 下：打包成标准的 .app 应用程序包</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 旧版拷贝代码</span></span><br><span class="line"><span class="comment"># if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)</span></span><br><span class="line"><span class="comment">#     set(DEBUG_SUFFIX)</span></span><br><span class="line"><span class="comment">#     if (MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")</span></span><br><span class="line"><span class="comment">#         set(DEBUG_SUFFIX "d")</span></span><br><span class="line"><span class="comment">#     endif ()</span></span><br><span class="line"><span class="comment">#     set(QT_INSTALL_PATH "${CMAKE_PREFIX_PATH}")</span></span><br><span class="line"><span class="comment">#     if (NOT EXISTS "${QT_INSTALL_PATH}/bin")</span></span><br><span class="line"><span class="comment">#         set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")</span></span><br><span class="line"><span class="comment">#         if (NOT EXISTS "${QT_INSTALL_PATH}/bin")</span></span><br><span class="line"><span class="comment">#             set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")</span></span><br><span class="line"><span class="comment">#         endif ()</span></span><br><span class="line"><span class="comment">#     endif ()</span></span><br><span class="line"><span class="comment">#     if (EXISTS "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll")</span></span><br><span class="line"><span class="comment">#         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD</span></span><br><span class="line"><span class="comment">#                 COMMAND ${CMAKE_COMMAND} -E make_directory</span></span><br><span class="line"><span class="comment">#                 "$&lt;TARGET_FILE_DIR:${PROJECT_NAME}&gt;/plugins/platforms/")</span></span><br><span class="line"><span class="comment">#         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD</span></span><br><span class="line"><span class="comment">#                 COMMAND ${CMAKE_COMMAND} -E copy</span></span><br><span class="line"><span class="comment">#                 "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll"</span></span><br><span class="line"><span class="comment">#                 "$&lt;TARGET_FILE_DIR:${PROJECT_NAME}&gt;/plugins/platforms/")</span></span><br><span class="line"><span class="comment">#     endif ()</span></span><br><span class="line"><span class="comment">#     foreach (QT_LIB Core Gui Widgets)</span></span><br><span class="line"><span class="comment">#         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD</span></span><br><span class="line"><span class="comment">#                 COMMAND ${CMAKE_COMMAND} -E copy</span></span><br><span class="line"><span class="comment">#                 "${QT_INSTALL_PATH}/bin/Qt6${QT_LIB}${DEBUG_SUFFIX}.dll"</span></span><br><span class="line"><span class="comment">#                 "$&lt;TARGET_FILE_DIR:${PROJECT_NAME}&gt;")</span></span><br><span class="line"><span class="comment">#     endforeach (QT_LIB)</span></span><br><span class="line"><span class="comment"># endif ()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 新版拷贝代码</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 4. Windows 自动部署 (VSCode 调试环境搭建的灵魂)</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 只有在 Windows 环境下才执行以下部署逻辑</span></span><br><span class="line"><span class="keyword">if</span> (WIN32 <span class="keyword">AND</span> <span class="keyword">NOT</span> <span class="keyword">DEFINED</span> CMAKE_TOOLCHAIN_FILE)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 动态获取当前 Qt 版本下的 windeployqt.exe 工具的绝对路径</span></span><br><span class="line">    <span class="keyword">get_target_property</span>(QT_QMAKE_EXECUTABLE Qt6::qmake IMPORTED_LOCATION)</span><br><span class="line">    <span class="keyword">get_filename_component</span>(QT_BIN_DIR <span class="string">"${QT_QMAKE_EXECUTABLE}"</span> DIRECTORY)</span><br><span class="line">    <span class="keyword">set</span>(WINDEPLOYQT_EXECUTABLE <span class="string">"${QT_BIN_DIR}/windeployqt.exe"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 如果成功找到了 windeployqt 工具</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">EXISTS</span> <span class="string">"${WINDEPLOYQT_EXECUTABLE}"</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 在程序构建(编译)完成之后 (POST_BUILD)，自动执行一条命令</span></span><br><span class="line">        <span class="keyword">add_custom_command</span>(<span class="keyword">TARGET</span> <span class="variable">${PROJECT_NAME}</span> POST_BUILD</span><br><span class="line">            <span class="comment"># 执行 windeployqt.exe，分析刚刚生成的 .exe 文件</span></span><br><span class="line">            <span class="keyword">COMMAND</span> <span class="string">"${WINDEPLOYQT_EXECUTABLE}"</span> </span><br><span class="line">                    <span class="comment"># 添加以下参数可以屏蔽一些不必要的文件（如翻译文件），加快拷贝速度</span></span><br><span class="line">                    --no-translations </span><br><span class="line">                    --no-compiler-runtime </span><br><span class="line">                    <span class="comment"># 传入我们的目标文件绝对路径</span></span><br><span class="line">                    <span class="string">"$&lt;TARGET_FILE:${PROJECT_NAME}&gt;"</span></span><br><span class="line">            COMMENT <span class="string">"正在运行 windeployqt 自动拷贝所需的 Qt DLL 和插件..."</span></span><br><span class="line">        )</span><br><span class="line">    <span class="keyword">else</span>()</span><br><span class="line">        <span class="keyword">message</span>(WARNING <span class="string">"未找到 windeployqt.exe 工具，程序可能因缺少 DLL 而无法直接运行。"</span>)</span><br><span class="line">    <span class="keyword">endif</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">endif</span>()</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> 后端与底层 </category>
-          
-          <category> C/C++ </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> C++ </tag>
-            
-            <tag> CMake </tag>
-            
-            <tag> Qt6 </tag>
-            
-            <tag> 构建脚本 </tag>
-            
-            <tag> windeployqt </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      
         <title>001-Qt的编译原理</title>
       
       <link href="/posts/12940.html/"/>
@@ -739,6 +702,43 @@
     
     <entry>
       
+        <title>002-CMake 模板</title>
+      
+      <link href="/posts/57570.html/"/>
+      <url>/posts/57570.html/</url>
+      
+        <content type="html"><![CDATA[<p><code>auther</code>: abinng <code>date</code>: 2026-03-18 17:19<code>createDate:</code>2026-03-18 17:18</p><p>针对于 <code>Qt6</code> 的 <code>CMake</code> 模板：</p><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 1. 基础环境与工程设置</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 规定使用此 CMakeLists 的最低 CMake 版本。Qt6 推荐 3.16 及以上。</span></span><br><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.16</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义项目名称为 ex01，并声明这是一个 C++ (CXX) 项目</span></span><br><span class="line"><span class="keyword">project</span>(ex01 CXX)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 强制要求使用 C++17 标准（这是 Qt6 的硬性要求）</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD_REQUIRED <span class="keyword">ON</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预防万一，手动打开 MOC, UIC, RCC</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_AUTOMOC <span class="keyword">ON</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_AUTOUIC <span class="keyword">ON</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_AUTORCC <span class="keyword">ON</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 2. Qt 环境查找与配置</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 指定你的 Qt SDK 路径。这告诉 CMake 去哪里找 Qt 的模块文件。</span></span><br><span class="line"><span class="comment"># 注意：如果路径发生改变，只需修改这里即可。</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_PREFIX_PATH <span class="string">"D:/Qt/6.5.3/mingw_64"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 寻找 Qt6 库，REQUIRED 表示找不到就报错停止编译。</span></span><br><span class="line"><span class="comment"># COMPONENTS 后面跟着需要用到的 Qt 模块，这里引入了核心(Core)和界面(Widgets)模块。</span></span><br><span class="line"><span class="keyword">find_package</span>(Qt6 REQUIRED COMPONENTS Core Widgets)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Qt6 引入的便捷指令：全局自动开启 MOC (元对象编译器)、UIC (UI文件转换) 和 RCC (资源文件转换)。</span></span><br><span class="line"><span class="comment"># 有了它，就不用手动处理 Qt 那些特殊的宏和文件了。</span></span><br><span class="line"><span class="comment"># 虽然有这个，我还是加上RCC的手动开启，就在上面的set(CMAKE_AUTORCC ON)</span></span><br><span class="line">qt_standard_project_setup()</span><br><span class="line"></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 3. 目标定义与链接</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 将源码 (hello.cpp) 编译成名为 ex01 的可执行程序。</span></span><br><span class="line"><span class="comment"># qt_add_executable 是 CMake 原生 add_executable 的增强版，会处理 Qt 的一些初始化工作。</span></span><br><span class="line">qt_add_executable(ex01</span><br><span class="line">    hello.cpp</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将之前找到的 Qt 核心库和界面库链接到我们的 ex01 程序上。</span></span><br><span class="line"><span class="keyword">target_link_libraries</span>(ex01 PRIVATE Qt6::Core Qt6::Widgets)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置目标属性</span></span><br><span class="line"><span class="keyword">set_target_properties</span>(ex01 PROPERTIES</span><br><span class="line">    WIN32_EXECUTABLE <span class="keyword">ON</span>  <span class="comment"># Windows 下：作为图形界面程序运行，隐藏黑色的 CMD 控制台窗口</span></span><br><span class="line">    MACOSX_BUNDLE <span class="keyword">ON</span>     <span class="comment"># macOS 下：打包成标准的 .app 应用程序包</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 旧版拷贝代码</span></span><br><span class="line"><span class="comment"># if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)</span></span><br><span class="line"><span class="comment">#     set(DEBUG_SUFFIX)</span></span><br><span class="line"><span class="comment">#     if (MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")</span></span><br><span class="line"><span class="comment">#         set(DEBUG_SUFFIX "d")</span></span><br><span class="line"><span class="comment">#     endif ()</span></span><br><span class="line"><span class="comment">#     set(QT_INSTALL_PATH "${CMAKE_PREFIX_PATH}")</span></span><br><span class="line"><span class="comment">#     if (NOT EXISTS "${QT_INSTALL_PATH}/bin")</span></span><br><span class="line"><span class="comment">#         set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")</span></span><br><span class="line"><span class="comment">#         if (NOT EXISTS "${QT_INSTALL_PATH}/bin")</span></span><br><span class="line"><span class="comment">#             set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")</span></span><br><span class="line"><span class="comment">#         endif ()</span></span><br><span class="line"><span class="comment">#     endif ()</span></span><br><span class="line"><span class="comment">#     if (EXISTS "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll")</span></span><br><span class="line"><span class="comment">#         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD</span></span><br><span class="line"><span class="comment">#                 COMMAND ${CMAKE_COMMAND} -E make_directory</span></span><br><span class="line"><span class="comment">#                 "$&lt;TARGET_FILE_DIR:${PROJECT_NAME}&gt;/plugins/platforms/")</span></span><br><span class="line"><span class="comment">#         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD</span></span><br><span class="line"><span class="comment">#                 COMMAND ${CMAKE_COMMAND} -E copy</span></span><br><span class="line"><span class="comment">#                 "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll"</span></span><br><span class="line"><span class="comment">#                 "$&lt;TARGET_FILE_DIR:${PROJECT_NAME}&gt;/plugins/platforms/")</span></span><br><span class="line"><span class="comment">#     endif ()</span></span><br><span class="line"><span class="comment">#     foreach (QT_LIB Core Gui Widgets)</span></span><br><span class="line"><span class="comment">#         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD</span></span><br><span class="line"><span class="comment">#                 COMMAND ${CMAKE_COMMAND} -E copy</span></span><br><span class="line"><span class="comment">#                 "${QT_INSTALL_PATH}/bin/Qt6${QT_LIB}${DEBUG_SUFFIX}.dll"</span></span><br><span class="line"><span class="comment">#                 "$&lt;TARGET_FILE_DIR:${PROJECT_NAME}&gt;")</span></span><br><span class="line"><span class="comment">#     endforeach (QT_LIB)</span></span><br><span class="line"><span class="comment"># endif ()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 新版拷贝代码</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 4. Windows 自动部署 (VSCode 调试环境搭建的灵魂)</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="comment"># 只有在 Windows 环境下才执行以下部署逻辑</span></span><br><span class="line"><span class="keyword">if</span> (WIN32 <span class="keyword">AND</span> <span class="keyword">NOT</span> <span class="keyword">DEFINED</span> CMAKE_TOOLCHAIN_FILE)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 动态获取当前 Qt 版本下的 windeployqt.exe 工具的绝对路径</span></span><br><span class="line">    <span class="keyword">get_target_property</span>(QT_QMAKE_EXECUTABLE Qt6::qmake IMPORTED_LOCATION)</span><br><span class="line">    <span class="keyword">get_filename_component</span>(QT_BIN_DIR <span class="string">"${QT_QMAKE_EXECUTABLE}"</span> DIRECTORY)</span><br><span class="line">    <span class="keyword">set</span>(WINDEPLOYQT_EXECUTABLE <span class="string">"${QT_BIN_DIR}/windeployqt.exe"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 如果成功找到了 windeployqt 工具</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">EXISTS</span> <span class="string">"${WINDEPLOYQT_EXECUTABLE}"</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 在程序构建(编译)完成之后 (POST_BUILD)，自动执行一条命令</span></span><br><span class="line">        <span class="keyword">add_custom_command</span>(<span class="keyword">TARGET</span> <span class="variable">${PROJECT_NAME}</span> POST_BUILD</span><br><span class="line">            <span class="comment"># 执行 windeployqt.exe，分析刚刚生成的 .exe 文件</span></span><br><span class="line">            <span class="keyword">COMMAND</span> <span class="string">"${WINDEPLOYQT_EXECUTABLE}"</span> </span><br><span class="line">                    <span class="comment"># 添加以下参数可以屏蔽一些不必要的文件（如翻译文件），加快拷贝速度</span></span><br><span class="line">                    --no-translations </span><br><span class="line">                    --no-compiler-runtime </span><br><span class="line">                    <span class="comment"># 传入我们的目标文件绝对路径</span></span><br><span class="line">                    <span class="string">"$&lt;TARGET_FILE:${PROJECT_NAME}&gt;"</span></span><br><span class="line">            COMMENT <span class="string">"正在运行 windeployqt 自动拷贝所需的 Qt DLL 和插件..."</span></span><br><span class="line">        )</span><br><span class="line">    <span class="keyword">else</span>()</span><br><span class="line">        <span class="keyword">message</span>(WARNING <span class="string">"未找到 windeployqt.exe 工具，程序可能因缺少 DLL 而无法直接运行。"</span>)</span><br><span class="line">    <span class="keyword">endif</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">endif</span>()</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 后端与底层 </category>
+          
+          <category> C/C++ </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> C++ </tag>
+            
+            <tag> CMake </tag>
+            
+            <tag> Qt6 </tag>
+            
+            <tag> 构建脚本 </tag>
+            
+            <tag> windeployqt </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      
         <title>Oatpp 入门--最简框架</title>
       
       <link href="/posts/35594.html/"/>
@@ -760,11 +760,11 @@
             
             <tag> C++ </tag>
             
+            <tag> 网络编程 </tag>
+            
             <tag> Oat++ </tag>
             
             <tag> Web框架 </tag>
-            
-            <tag> 网络编程 </tag>
             
             <tag> 后端开发 </tag>
             
@@ -908,11 +908,11 @@
             
             <tag> C++ </tag>
             
+            <tag> 操作系统 </tag>
+            
             <tag> Linux </tag>
             
             <tag> 多线程 </tag>
-            
-            <tag> 操作系统 </tag>
             
         </tags>
       
@@ -945,9 +945,9 @@
             
             <tag> C++ </tag>
             
-            <tag> Linux </tag>
-            
             <tag> 操作系统 </tag>
+            
+            <tag> Linux </tag>
             
             <tag> 多进程 </tag>
             
@@ -982,11 +982,11 @@
             
             <tag> C++ </tag>
             
-            <tag> Linux </tag>
-            
             <tag> 操作系统 </tag>
             
             <tag> IO流 </tag>
+            
+            <tag> Linux </tag>
             
         </tags>
       
@@ -1128,9 +1128,9 @@
             
             <tag> Windows </tag>
             
-            <tag> 代理配置 </tag>
-            
             <tag> 开发环境 </tag>
+            
+            <tag> 代理配置 </tag>
             
         </tags>
       
@@ -1528,6 +1528,17 @@
     
     
     <entry>
+      <title>about</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>charts</title>
       <link href="/charts/index.html"/>
       <url>/charts/index.html</url>
@@ -1551,43 +1562,10 @@
     
     <entry>
       <title></title>
-      <link href="/js/charts-light-dark.js"/>
-      <url>/js/charts-light-dark.js</url>
-      
-        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>about</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title></title>
       <link href="/css/custom.css"/>
       <url>/css/custom.css</url>
       
         <content type="html"><![CDATA[/* 恢复 Twikoo 预览按钮显示 */#twikoo .tk-comments .el-button.tk-preview {  display: inline-flex !important;  visibility: visible !important;  opacity: 1 !important;  pointer-events: auto !important;}#twikoo .tk-comments .el-button.tk-preview:hover {  opacity: 0.85 !important;}#twikoo .tk-comments .el-button.tk-preview {    position: absolute;    top: -40px;    right: 107px;    opacity: 0.3;}#twikoo .tk-comments .el-button--primary {    color: var(--anzhiyu-card-bg);    box-shadow: var(--anzhiyu-shadow-black);    width: 6.25rem;    position: absolute;    top: -41px;    right: 0px;    height: 32px;    margin-left: 0.5rem !important;    border-color: var(--anzhiyu-fontcolor);    border-radius: 12px;    transition: 0.3s;}#twikoo .tk-comments .tk-meta-input {    position: relative;    margin-top: 8px;    width: calc(100% - 165px);}]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title></title>
-      <link href="/js/mathjax_config.js"/>
-      <url>/js/mathjax_config.js</url>
-      
-        <content type="html"><![CDATA[MathJax = {  tex: {    inlineMath: [['$', '$'], ['\\(', '\\)']]  }};]]></content>
       
     </entry>
     
@@ -1605,11 +1583,11 @@
     
     
     <entry>
-      <title>tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
+      <title></title>
+      <link href="/js/charts-light-dark.js"/>
+      <url>/js/charts-light-dark.js</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[function switchPostChart () {    // 这里为了统一颜色选取的是“明暗模式”下的两种字体颜色，也可以自己定义    let color = document.documentElement.getAttribute('data-theme') === 'light' ? '#4C4948' : 'rgba(255,255,255,0.7)'    if (document.getElementById('posts-chart') && postsOption) {      try {        let postsOptionNew = postsOption        postsOptionNew.title.textStyle.color = color        postsOptionNew.xAxis.nameTextStyle.color = color        postsOptionNew.yAxis.nameTextStyle.color = color        postsOptionNew.xAxis.axisLabel.color = color        postsOptionNew.yAxis.axisLabel.color = color        postsOptionNew.xAxis.axisLine.lineStyle.color = color        postsOptionNew.yAxis.axisLine.lineStyle.color = color        postsOptionNew.series[0].markLine.data[0].label.color = color        postsChart.setOption(postsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('tags-chart') && tagsOption) {      try {        let tagsOptionNew = tagsOption        tagsOptionNew.title.textStyle.color = color        tagsOptionNew.xAxis.nameTextStyle.color = color        tagsOptionNew.yAxis.nameTextStyle.color = color        tagsOptionNew.xAxis.axisLabel.color = color        tagsOptionNew.yAxis.axisLabel.color = color        tagsOptionNew.xAxis.axisLine.lineStyle.color = color        tagsOptionNew.yAxis.axisLine.lineStyle.color = color        tagsOptionNew.series[0].markLine.data[0].label.color = color        tagsChart.setOption(tagsOptionNew)      } catch (error) {        console.log(error)      }    }    if (document.getElementById('categories-chart') && categoriesOption) {      try {        let categoriesOptionNew = categoriesOption        categoriesOptionNew.title.textStyle.color = color        categoriesOptionNew.legend.textStyle.color = color        if (!categoryParentFlag) { categoriesOptionNew.series[0].label.color = color }        categoriesChart.setOption(categoriesOptionNew)      } catch (error) {        console.log(error)      }    }  }  document.getElementById("mode-button").addEventListener("click", function () { setTimeout(switchPostChart, 100) })]]></content>
       
     </entry>
     
@@ -1621,6 +1599,28 @@
       <url>/js/easy-Danmaku.js</url>
       
         <content type="html"><![CDATA[/** * Bilibili 风格弹幕核心逻辑 (最终优化版：全屏随机分布) */class EasyDanmaku {  constructor(options) {    this.container = document.querySelector(options.el);    this.options = {      line: parseInt(options.line, 10) || 10,      speed: options.speed || 10,      hover: options.hover,      loop: options.loop,      colourful: options.colourful,      coefficient: options.coefficient || 1,      textShadow: options.textShadow || 1    };        // 颜色库    this.colors = ['#FFFFFF','#FFFFFF','#FE0302', '#FF7204', '#FFAA02', '#00CD00', '#4266BE', '#CC0273', '#CC3333', '#0099CC', '#FF6666'];    this.tracks = new Array(this.options.line).fill(true);    this.danmakuQueue = [];    this.timer = null;    this.isPaused = false;        this.init();  }  init() {    if (this.container) {        this.container.style.position = 'fixed';        this.container.style.top = '60px';        this.container.style.left = '0';        this.container.style.width = '100%';        this.container.style.height = 'calc(100% - 60px)';        this.container.style.pointerEvents = 'none';        this.container.style.zIndex = '999';        this.container.style.overflow = 'hidden';    }    let containerHeight = this.container ? this.container.offsetHeight : 0;    if (containerHeight === 0) {        containerHeight = window.innerHeight - 60;     }    this.trackHeight = containerHeight / this.options.line;    if (!this.trackHeight || this.trackHeight <= 0) this.trackHeight = 40;  }  batchSend(dataList, isLoop = false) {    let index = 0;    const sendNext = () => {      if (this.isPaused) return;      if (index >= dataList.length) {        if (this.options.loop) index = 0;        else return;      }      const item = dataList[index];      this.send(item);      index++;    };    if (this.timer) clearInterval(this.timer);        const interval = 1000 / this.options.coefficient;        this.timer = setInterval(() => {      if(Math.random() > 0.1) sendNext();    }, interval);   }  send(item) {    if (!this.container) return;    const rand = Math.random();    let type = 'scroll';    // 5% 概率顶部，5% 概率底部，90% 滚动    if (rand > 0.95) type = 'bottom';    else if (rand > 0.90) type = 'top';    const dom = document.createElement('div');    dom.innerText = item.content;        this.setStyle(dom, type);    if (type === 'scroll') {      this.renderScroll(dom);    } else {      this.renderStatic(dom, type);    }  }  setStyle(dom, type) {    dom.style.position = 'absolute';    dom.style.whiteSpace = 'nowrap';    dom.style.fontFamily = '"黑体", "Heiti SC", sans-serif';    dom.style.fontWeight = 'bold';    dom.style.fontSize = `${Math.floor(22 + Math.random() * 6)}px`;    // 描边和阴影选一个    if(this.options.textShadow === 1) { // 下面这个是描边        dom.style.textShadow = '#000 1px 0 1px, #000 0 1px 1px, #000 0 -1px 1px, #000 -1px 0 1px';    } else { // 下面这个是阴影        dom.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';    }    dom.style.pointerEvents = 'auto';    dom.style.cursor = 'default';    dom.style.zIndex = 10;        if (this.options.colourful) {        const color = this.colors[Math.floor(Math.random() * this.colors.length)];        dom.style.color = color;    } else {        dom.style.color = '#FFFFFF';    }  }  renderScroll(dom) {    // --- 核心修改：随机选择空闲轨道 ---        // 1. 找出所有当前空闲的轨道索引    const availableTracks = [];    this.tracks.forEach((isFree, index) => {        if (isFree) availableTracks.push(index);    });    let trackIndex = -1;    if (availableTracks.length > 0) {        // 2. 如果有空闲轨道，从中随机选一个        // 这解决了总是堆积在前几行的问题        const randomPos = Math.floor(Math.random() * availableTracks.length);        trackIndex = availableTracks[randomPos];    } else {        // 3. 如果全满了，就随机挤占任意一行        trackIndex = Math.floor(Math.random() * this.options.line);    }    this.tracks[trackIndex] = false;    setTimeout(() => { this.tracks[trackIndex] = true; }, 2000);     const topPos = trackIndex * this.trackHeight;    dom.style.top = `${topPos}px`;    dom.style.left = '100%';    dom.style.transform = 'translateX(0)';        this.container.appendChild(dom);    const containerWidth = this.container.offsetWidth || window.innerWidth;    const duration = this.options.speed + (Math.random() * 2);         const animation = dom.animate([      { transform: 'translateX(0)' },      { transform: `translateX(-${containerWidth + dom.offsetWidth + 50}px)` }    ], {      duration: duration * 1000,      easing: 'linear'    });    if (this.options.hover) {        dom.addEventListener('mouseenter', () => {            animation.pause();            dom.style.zIndex = 100;            dom.style.border = "1px solid rgba(255,255,255,0.5)";            dom.style.backgroundColor = "rgba(0,0,0,0.4)";            dom.style.borderRadius = "4px";        });        dom.addEventListener('mouseleave', () => {            animation.play();            dom.style.zIndex = 10;            dom.style.border = "none";            dom.style.backgroundColor = "transparent";        });    }    animation.onfinish = () => {      dom.remove();    };  }  renderStatic(dom, type) {    dom.style.left = '50%';    dom.style.transform = 'translateX(-50%)';    dom.style.zIndex = 20;    dom.style.textShadow = 'none';     dom.style.background = 'rgba(0,0,0,0.6)';    dom.style.borderRadius = '20px';    dom.style.padding = '4px 12px';    dom.style.border = `1px solid ${dom.style.color}`;    // --- 核心修改：移除行数限制 ---    // 允许静态弹幕出现在任意一行    const offset = Math.floor(Math.random() * this.options.line) * this.trackHeight;    if (type === 'top') {      dom.style.top = `${offset + 20}px`;    } else {      dom.style.top = 'auto';       dom.style.bottom = `${offset + 80}px`;    }    this.container.appendChild(dom);    setTimeout(() => {      dom.remove();    }, 5000);  }}]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title></title>
+      <link href="/js/mathjax_config.js"/>
+      <url>/js/mathjax_config.js</url>
+      
+        <content type="html"><![CDATA[MathJax = {  tex: {    inlineMath: [['$', '$'], ['\\(', '\\)']]  }};]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
