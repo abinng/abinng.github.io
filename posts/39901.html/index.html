@@ -1,0 +1,1392 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>012-Qt 的事件系统 | abinng😶‍🌫️</title><meta name="keywords" content="事件循环, QEvent, event(), eventFilter, 事件过滤器, deleteLater, 信号与事件区别"><meta name="author" content="abinng😶‍🌫️"><meta name="copyright" content="abinng😶‍🌫️"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f7f9fe"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-touch-fullscreen" content="yes"><meta name="apple-mobile-web-app-title" content="012-Qt 的事件系统"><meta name="application-name" content="012-Qt 的事件系统"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="#f7f9fe"><meta property="og:type" content="article"><meta property="og:title" content="012-Qt 的事件系统"><meta property="og:url" content="http://abinng.github.io/posts/39901.html/index.html"><meta property="og:site_name" content="abinng😶‍🌫️"><meta property="og:description" content="深度剖析 Qt 跨平台事件系统（Event System）的运行内幕。系统性解答了外部操作系统动作如何被 QApplication 打包，并通过多级事件过滤器、核心 event() 派发器最终转换为对象上虚函数调用的链路，并辨析了信号与事件的边界以及 deleteLater() 的安全释放机制。"><meta property="og:locale" content="zh-CN"><meta property="og:image" content="http://abinng.github.io/assets/cover/QT/12.webp"><meta property="article:author" content="abinng😶‍🌫️"><meta property="article:tag" content="cpp,算法,python,深度学习,代码,博客,Butterfly,Hexo,abinng😶‍🌫️"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="http://abinng.github.io/assets/cover/QT/12.webp"><meta name="description" content="深度剖析 Qt 跨平台事件系统（Event System）的运行内幕。系统性解答了外部操作系统动作如何被 QApplication 打包，并通过多级事件过滤器、核心 event() 派发器最终转换为对象上虚函数调用的链路，并辨析了信号与事件的边界以及 deleteLater() 的安全释放机制。"><link rel="shortcut icon" href="/favicon.ico"><link rel="canonical" href="http://abinng.github.io/posts/39901.html/"><link rel="preconnect" href="//cdn.cbd.int"/><meta name="google-site-verification" content="xxx"/><meta name="baidu-site-verification" content="code-xxx"/><meta name="msvalidate.01" content="xxx"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.cbd.int/@fortawesome/fontawesome-free@7.1.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.cbd.int/@fancyapps/ui@6.1.6/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  linkPageTop: undefined,
+  peoplecanvas: {"enable":true,"img":"/assets/ATRI-people.png"},
+  postHeadAiDescription: undefined,
+  diytitle: {"enable":true,"leaveTitle":"w(ﾟДﾟ)w 不要走！再看看嘛！","backTitle":"♪(^∇^*)欢迎肥来！"},
+  LA51: {"enable":true,"ck":"3Ol1Iy7dq073txBo","LingQueMonitorID":"3Ol1jFxj4SF3LU9D"},
+  greetingBox: {"enable":true,"default":"晚上好👋","list":[{"greeting":"晚安😴","startTime":0,"endTime":5},{"greeting":"早上好鸭👋, 祝你一天好心情！","startTime":6,"endTime":9},{"greeting":"上午好👋, 状态很好，鼓励一下～","startTime":10,"endTime":10},{"greeting":"11点多啦, 在坚持一下就吃饭啦～","startTime":11,"endTime":11},{"greeting":"午安👋, 宝贝","startTime":12,"endTime":14},{"greeting":"🌈充实的一天辛苦啦！","startTime":14,"endTime":18},{"greeting":"19点喽, 奖励一顿丰盛的大餐吧🍔。","startTime":19,"endTime":19},{"greeting":"晚上好👋, 在属于自己的时间好好放松😌~","startTime":20,"endTime":24}]},
+  twikooEnvId: 'https://twikoo-worker.abinng.dpdns.org',
+  commentBarrageConfig:{"enable":true,"maxBarrage":1,"barrageTime":8000,"accessToken":"69bc6684b6f6fd95917bfd6606eddd25","mailMd5":"74EF7B4E1E247A295204D8BB4B038394"},
+  music_page_default: "nav_music",
+  root: '/',
+  preloader: {"source":3},
+  friends_vue_info: undefined,
+  navMusic: true,
+  mainTone: undefined,
+  authorStatus: {"skills":null},
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简","rightMenuMsgToTraditionalChinese":"转为繁体","rightMenuMsgToSimplifiedChinese":"转为简体"},
+  noticeOutdate: {"limitDay":100,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":330},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    simplehomepage: true,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"copy":true,"copyrightEbable":false,"limitCount":50,"languages":{"author":"作者: abinng😶‍🌫️","link":"链接: ","source":"来源: abinng😶‍🌫️","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。","copySuccess":"复制成功，复制和转载请标注本文地址"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#425AEF","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.cbd.int/flickr-justified-gallery@2.2.0/dist/fjGallery.min.js',
+      css: 'https://cdn.cbd.int/flickr-justified-gallery@2.2.0/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  shortcutKey: undefined,
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  configTitle: 'abinng😶‍🌫️',
+  title: '012-Qt 的事件系统',
+  postAI: '',
+  pageFillDescription: '复习路线, 1. 事件是什么, 2. 事件循环：exec, 3. 分发入口：event(), 3.1 基类 event(), 4. 子类 handler 示例, 6. 事件过滤器, 6.1 过滤与传播示例, 6.1.1 定位目标对象, 6.1.2 分发模型, 6.1.3 代入示例代码, 7. 输入事件传播状态, 7.1 recognized, 7.2 isAccepted(), 7.3 两个状态的配合, 7.3.3 输入事件的三种情况, 7.4 小结, 8. 鼠标点击流程, 8.1 OS 消息, 8.2 exec() 事件循环, 8.3 notify(), 8.4 事件过滤器, 8.5 event() 分发, 8.6 处理与传播, 9. 主动发送事件, 10. 自定义事件, 11. 线程与延迟删除, 12. 信号和事件, 12.1 怎么配合, 12.2 选择依据由于我已经开始实习所以本篇往后我可能并不会详细进行笔记记录因为太累了操作系统本身就有事件系统但是是跨平台的框架所以在操作系统上层又封装了一层一套代码在不同操作系统上运行可参考教程爱编程的大丙和应用开发复习路线这篇笔记要回答的问题是收到一个外部动作或者代码主动投递一个事件之后是怎样把它变成某个对象上的函数调用的先记住这条主线产生事件事件循环取出事件准备分发可提前拦截按类型分发处理必要时发射下次忘记时可以按这个顺序复习先看事件是什么和建立事件循环的概念再看和责任链理解事件怎么从通用分发到具体看示例确认为什么调用基类后还能回到子类的看理解输入事件什么时候被当前控件消费什么时候继续交给父看事件过滤器理解怎么在对象收到事件之前拦截看完整流程复盘把前面的点串成一次鼠标点击的生命周期看和自定义事件理解代码主动发送事件的方式看事件循环线程和理解事件系统和对象生命周期的关系最后看信号与事件把事件系统和业务层连接起来事件是什么是一个基于的跨平台框架程序的大部分交互都围绕事件展开用户操作窗口状态变化定时器触发等都会变成事件再由分发给对应的对象处理窗口事件产生之后大致会经过事件派发事件过滤事件分发事件处理几个阶段对很多事件都有默认处理如果有特殊需求就在合适的位置重写或拦截对应的处理逻辑事件是由系统或者本身在不同的场景下发出的当用户按下移动鼠标敲下键盘或者是窗口关闭大小发生变化隐藏或显示都会发出一个相应的事件一些事件在对用户操作做出响应时发出如鼠标键盘事件等另一些事件则是由系统自动发出如计时器事件事件在中产生之后的分发过程是这样的当事件产生之后使用用应用程序对象调用函数将事件发送到指定的窗口事件在发送过程中可以通过事件过滤器进行过滤默认不对任何产生的事件进行过滤需要先给窗口安装过滤器该事件才会触发当事件发送到指定窗口之后窗口的事件分发器会对收到的事件进行分类事件分发器会将分类之后的事件鼠标事件键盘事件绘图事件分发给对应的事件处理器函数进行处理每个事件处理器函数都有默认的处理动作我们也可以重写这些事件处理器函数比如鼠标事件鼠标按下鼠标释放鼠标移动事件循环他会使应用程序进入事件循环这样就可以使应用程序在运行时接受各种事件一旦有事件发生便会构建一个相应的子类对象来表示它然后将它传递给相应的对象或其子对象分发入口函数在中的角色是一个统一的分发入口它接收通用的判断事件类型然后把它转换为具体的事件类并调用对应的事件处理函数根据事件类型进行路由分发核心就在这一句其他成百上千种事件的分发的返回值不是有没有执行完而是当前对象是否处理了这个事件通常返回表示这个事件已经被识别并处理返回表示当前对象不处理这个事件调用者可以按的规则继续走后续流程基类这一节主要解释子类处理不了的事件为什么要继续交给基类的可以看到中最后还调用了这是事件处理机制的责任链模式其理念在于不要重复你自己也就是说并不是每一个封装的组件类都包含了对每一个事件的处理而是专注自己特有的逻辑例如既然识别鼠标按下并调用这个逻辑对所有的控件都是一样的那就只在里写一次就够了所有的子类只需要专注自己特有的逻辑处理不了的就让基类继续处理这就形成了一套事件处理责任链假设调用了调用链大致如下第一层的函数只关心它自己特有的事件处理富文本链接的悬停点击处理鼠标提示处理快捷键覆盖如果不是上面这些专属事件或者处理完了还需要默认行为交给基类继续处理第二层只关心边框绘制相关的特殊逻辑处理边框样式改变等逻辑继续踢给父类第三层是所有可视化控件的基类它承担了几乎所有交互事件的基础分发工作大量分支关键点在这里进行了分发键盘鼠标移动滚轮绘制等几十上百个分支如果连都不认识这个事件最后交给第四层如果事件一路漏到了这里只处理最底层的核心机制比如定时器事件动态属性改变等关于窗口提供的其他事件处理器函数还有很多感兴趣的话可以仔细阅读的帮助文档窗口的事件处理器函数非常好找规律是这样的受保护的虚函数函数名分为两部分事件描述函数带一个事件类型的参数子类示例这一节用说明调用基类后为什么最终仍然会进入子类重写的类点击展开在中创建该对象点击展开运行后会发现有一个黑色的框框点击其内部会有输出该输出是中的语句程序的逻辑是进入这个循环后开始看有什么事件产生将事件加入队列不断取出队列中的事件到函数中进行分发我们重写了在启动直接一句相当于是交付于的基类的进行分发但是为什么又会调用的子类的呢中有隐藏参数指针这个都知道吧然后调用其中也有隐藏参数指针其类型虽然是但实际还是直接将的指针给传过去了所以还是指向的实例对象的现在回到鼠标点击发生时的调用过程鼠标点击进入你调用指针原封不动地传进去了发现这不是特有的事件处理逻辑比如富文本链接于是调用发现这不是特有的处理逻辑于是调用发现是进入鼠标按下事件的分支执行了这一整条调用链里指针的值你的实例地址始终没有变过的虚函数机制生效最终调用的是实际对象类型里的就是这么一个过程和这一节主要看输入事件什么时候被当前控件消费什么时候继续交给父是一个事件类和本质上是在修改事件对象内部的状态就是这个小小的值调用和仅仅只是在修改这个布尔值完全没有发生任何函数跳转或神奇的操作用一个例子来讲解和看这几个函数点击展开先看输出当我们注释掉后输出为解除的注释后输出为因为事件传给了父组件为什么呢顺一遍逻辑点击中的内部时产生一个鼠标事件被分发到然后调用再调用其中通过找到了对应事件类型的处理这里要注意下面代码只是帮助理解的伪代码不要把它当成源码逐字记忆对鼠标键盘这类输入事件来说事件对象通常会带有一个状态如果处理函数没有调用通常就认为当前控件消费了该输入事件调用你的重写函数事件的状态会影响后续是否继续传给父返回表示我认识这个事件类型并进行了处理对鼠标事件来说更实用的记法是默认情况下控件收到并处理了鼠标事件后事件不会继续交给父控件如果你希望父控件也有机会处理就在事件处理函数里调用调用之后返回根据前面所学我们只知道这里返回后代表认识这个事件类型并进行了处理后面呢不要忘了还有最外层的真实实现会经过内部和针对不同事件类型的专门处理逻辑下面仍然是针对鼠标键盘这类输入事件传播行为的简化模型针对输入事件传播行为的简化模型不是源码核心循环顺着树父子关系不断向上找调用当前对象的函数这里会进入注意这是类继承层面的调用函数执行完毕回到分发逻辑中此时再检查你刚才在里设置的布尔值如果事件被识别并且你没有调用如果你调用了就是拿着同一个进入下一轮循环传给父对象我们经过一层层返回最终赋值给对于这类输入事件还要看事件对象的状态返回值表示这个类型我处理过表示这次事件我是否消费掉当我们注释掉时鼠标事件保持状态父组件不会再收到这次点击当我们释放掉时把这次鼠标事件标记为未消费于是会让父也有机会处理这个输入事件也就是的父对象之后调用就会有多出的两行输出了为什么要设计两个条件才能呢可以继续看输入事件传播模型这一节如果想从整体上复盘一次鼠标点击可以直接跳到完整流程复盘一次鼠标点击的生命周期事件过滤器事件过滤器用于在目标对象进入之前拦截事件当的事件通过应用程序对象发送给相关窗口之后窗口接收到数据之前这个期间可对事件进行过滤过滤掉的事件就不能被继续处理了有一个函数用于建立事件过滤器函数原型如下参数要过滤的事件的所有者对象要过滤的具体的事件返回值如果想过滤掉这个事件停止它被进一步处理返回否则返回既然要过滤传递中的事件首当其冲还是要搞明白如何通过事件过滤器进行事件的过滤主要分为两步给要被过滤事件的类对象安装事件过滤器假设调用函数的对象为当前对象那么就可以基于参数指定的对象来过滤当前对象中的指定的事件了在要进行事件过滤的类中参数对应的类重写从类继承的虚函数过滤与传播示例这一节把事件过滤器后继续交给父这几件事放在同一个例子里看有一个类型的对象在中心现在鼠标左键点击中心处定位目标对象事件到达后取出事件根据坐标做找到目标一切依然从事件循环开始函数原型开启主事件循环当内部从操作系统拿到一个物理鼠标点击时它会做两件事翻译事件将系统消息打包成坐标碰撞检测调用类似的底层方法根据点击坐标目标对象被定位为最上层的此时指针指向了实例然后把目标对象和事件交给进入分发流程准备分发将目标和打包好的事件送入总枢纽分发模型事件进入后会进入内部的具体事件分发逻辑这里用简化模型理解输入事件传播这里用一个简化模型说明输入事件传播真实的源码不是一个简单的循环会进入内部和不同事件类型的处理分支下面这段代码只用来理解鼠标键盘这类输入事件在后可能继续交给父的行为输入事件传播的简化模型不是的真实源码当前接收者一开始是传递的输入事件例如环节检查概念上先检查当前上安装的事件过滤器原型如果返回表示事件被拦截彻底终结这次分发到此结束环节调用对象的分发入口如果过滤器没有拦截调用对象自身的原型这里会进入环节检查处理结果和状态对输入事件传播来说重点看两个条件的类层级认识这个事件吗这个事件最终保持状态吗事件已被当前对象处理并消费环节继续交给父如果代码走到这里通常说明输入事件被了让父也有机会处理原型使用同一个回到循环开头对父组件再走一遍如果冒泡到最顶层的窗口还是被返回这个模型只适合帮助理解输入事件的传播不要把它推广到所有事件例如绘图定时器等事件都有自己的语义不应该理解成后统一向父对象冒泡代入示例代码下面把前面的代码代入这个模型现在对照着上面的输入事件传播模型我们重演一遍你代码里发生的事起点实例鼠标事件被调用是环节没有安装事件过滤器继续分发环节调用鼠标事件保持状态除非你的处理函数显式调用然后调用了你的你的代码强行把状态改成了执行完毕返回表示它处理了此时环节判定为因为你了环节此时变成了你的实例第二轮循环再次经过环节检查上安装的事件过滤器到达环节调用你的终端输出了的打印信息下面是处理的流程图输入事件传播状态这一节解释输入事件传播时需要同时看的两个状态返回值和先强调一下这不是所有事件的统一底层公式而是理解鼠标键盘等输入事件传播时很有用的模型的事件类型很多绘图定时器自定义事件等都有自己的处理语义这两个状态表达的是两件不同的事是通过执行得到的返回值它表示当前对象是否处理这个事件类型里的事件成百上千除了鼠标键盘还有定时器事件重绘事件窗口改变大小事件甚至是你自己写的自定义事件不按输入事件方式传播的事件很多事件不应该按交给父冒泡理解比如是系统要求某个重绘自己是发给启动该的对象对于这类事件返回通常就表示当前对象已经处理返回则表示当前对象没有处理后续怎么走要看具体事件类型和内部规则简单说看的是这个事件类型当前对象是否处理表示当前处理逻辑是否消费这次事件这个状态主要在理解输入事件及其子类如鼠标键盘触摸等时有意义对于鼠标点击这类事件几乎所有的都能返回因为基类里面有对应的它能识别鼠标事件但是能识别不代表一定要消费这次事件这就引出了你需要的场景即当前对象虽然能处理这个事件类型但本次处理逻辑决定不消费它简单说看的是这一次输入事件是否被当前处理逻辑消费两个状态的配合单独看其中一个状态都不够下面用两个反例说明原因可以从两个反例来理解为什么需要区分这两个状态只看返回值的问题如果只看返回值那么只要一个控件的函数处理了鼠标点击并返回父就没有机会继续处理这个输入事件这样会限制一些需要父子控件共同响应的场景只看的问题这样也不可靠的子类在上都有状态但并不是每种事件都会用这个状态表达是否继续交给父例如的主要语义就不是输入事件传播输入事件的三种情况通过和这两个维度可以把输入事件分成三种常见情况任意当前对象不处理这个事件类型比如你给发了个它没见过的自定义事件直接走到最底层返回动作当前对象没有处理后续是否继续传递取决于具体事件类型当前对象处理并消费了这次事件常规的按钮点击默认动作对输入事件来说通常到当前对象为止当前对象处理了事件但没有消费它你在里写了代码执行了你做了想做的事比如打印了但这次事件仍允许父继续处理动作对鼠标键盘这类输入事件来说父可能继续获得处理机会小结从理解角度看这里可以类比为拦截器模式与责任链模式的结合表示当前对象是否处理这个事件类型在输入事件里表达这次事件是否被当前处理逻辑消费这样可以把框架默认分发路径和开发者对单次事件的处理决策分开理解鼠标点击流程我们以你在屏幕上点击了一下鼠标导致一个按钮改变了颜色为例从操作系统消息开始完整追踪这一个事件的生命周期可以按下面这条链路看消息应用拿到的是操作系统分发过来的消息而不是直接读取鼠标硬件物理产生你的手指按下鼠标左键鼠标硬件向主板发送一个电信号中断捕获操作系统捕获这个中断并计算出鼠标点击的屏幕坐标发现点击落在了你的程序窗口内推入系统队列操作系统生成一个底层系统消息例如在上是并把它放入你的程序的系统消息队列中事件循环现在轮到出场了你写的到底是个什么东西本质上就是一个死循环事件循环如果用最极简的伪代码来表示它长这样去系统的消息队列里看有没有新消息事件分发器内部依赖平台相关的事件分发器从操作系统消息队列中取出类似的底层消息转换成把平台相关的底层消息转换成跨平台的对象定位目标引擎根据坐标在内存的树中寻找发现鼠标点击的位置正是你创建的那个对象注如果你自己在代码里调用事件也会进入的事件队列然后由循环取出来处理事件找到目标对象后通常会进入这条分发路径当事件被打包好找到了目标对象通常会进入这条分发路径它是事件分发的核心入口之一就是你的就是准备发送是整个事件分发系统的重要枢纽如果你重写了这个函数可以观察或干预应用层面的事件分发但这种做法影响范围很大一般不建议用它处理普通业务逻辑事件过滤器在目标对象正式处理事件之前会先检查是否安装了事件过滤器会检查有没有别的对象对这个调用了如果有就把事件先送给那个监听者监听者可以检查这个事件甚至可以返回直接拦截这个事件如果被拦截不会再收到这次事件如果监听者返回放行或者根本没人监听事件才会真正送到目标手里分发事件来到这就是对象内部的事件分发入口就像我们之前讨论的是事件分发入口你调用了内部的认出了这是鼠标点击它将通用的强制转换为更具体的对鼠标这类输入事件如果你的处理函数没有调用通常就表示当前控件消费了这次事件它调用了处理与传播事件处理函数执行业务逻辑后输入事件可能被消费也可能继续交给父现在代码执行到了你重写的里你可以在这里改变按钮颜色打印发起网络请求执行完你的代码后控制权原路返回到的事件分发逻辑中对于鼠标这类输入事件后续大致可以这样理解你执行了或默认没动通常认为当前控件消费了这个事件程序回到事件循环继续等待下一次事件你执行了会让父也有机会处理这个输入事件顺着找到它的父亲父会经历自己的事件过滤器和对应的事件处理函数这个传播行为主要用于输入事件不要推广到所有主动发送事件这一节比较和一个同步发送一个异步投递前面主要讲的是系统事件例如鼠标点击键盘输入窗口重绘里也可以在代码中主动给某个对象发送事件常见接口是和它们的区别在于是否立即处理是同步发送会立刻进入目标对象的函数返回时事件已经处理完是异步投递会把事件放进目标线程的事件队列等事件循环之后再处理使用时要注意事件对象的生命周期同步发送栈对象可以异步投递通常使用投递出去的事件由在处理后释放不要再手动不接管事件对象的所有权这两个函数的使用场景也不同想立刻让对象处理事件用想把处理推迟到事件循环中或者从别的线程投递给某个对象用依赖事件循环如果目标线程没有运行事件循环投递的事件就不会被正常处理自定义事件当信号槽不适合表达某些低层事件或者你希望把一段逻辑放进事件队列里处理时可以定义自己的事件常见写法有两种使用已有的类型例如继承定义自己的事件类型和数据简单示例目标对象可以在中识别它发送时可以用也可以重写它专门用于处理自定义事件两种方式都可以一般来说如果对象已经重写了并且要统一处理多种事件就放在里如果只是处理自定义事件用更直接线程与延迟删除这一节说明事件循环和线程的关系以及为什么依赖事件系统的事件循环和线程关系很密切每个线程都可以有自己的事件循环对象属于哪个线程它收到的事件通常就在哪个线程的事件循环里处理主线程里一般是子线程如果需要处理事件也要运行事件循环比如使用默认会在里调用理解这一点后和跨线程信号就更容易理解了它们不是直接在当前调用点执行目标对象逻辑而是把工作交给目标对象所属线程的事件循环也依赖事件系统它不会立刻删除对象而是向对象所属线程的事件队列投递一个延迟删除事件等事件循环处理到这个事件时才真正删除对象这也是为什么里经常推荐在对象可能仍处于事件处理过程或者涉及跨线程时使用而不是直接前提是对象所属线程的事件循环还在运行否则延迟删除事件也没有机会被处理信号和事件这一节区分事件系统和信号槽事件偏底层输入状态变化信号偏对象对外通知事件和信号都可以触发后续代码执行所以容易混在一起可以这样区分事件通常表示底层输入或内部状态变化信号通常表示对象对外通知某个语义动作已经发生事件通常来自操作系统底层鼠标按键键盘窗口重绘或框架内部定时器信号来自对象内部的业务逻辑代码比如代码里显式写了怎么配合常见情况是事件先发生控件在事件处理函数里更新内部状态当它确认某个语义动作成立时再发射信号以最常见的点击按钮为例看看底层的链路系统触发事件你用鼠标点击了按钮操作系统发来底层消息把它打包成送到了对应的按钮控件处底层接收事件进入按钮在这里改变自己的状态比如让自己凹陷下去并消费这次鼠标按下事件系统再次触发你松开了鼠标又送来一个事件转化为信号进入按钮在这里让自己弹起恢复原状同时它内部判断鼠标按下和抬起都在按钮区域内于是发射信号业务层接收信号你在主窗口里写好的收到广播开始向服务器提交数据总结控件内部通过重写事件处理函数虚函数来处理系统交互在确认交互有效后对外发射信号来通知业务层选择依据什么时候重写事件处理函数什么时候连接主要看你是要改变控件行为还是只响应业务动作需要改变控件默认行为时重写事件处理函数场景你想写一个只能输入数字且输入字母时边框变红的输入框做法继承重写拦截掉非数字按键或直接重绘边框因为你要干预控件的默认系统行为必须在源头截断只关心业务动作时连接信号场景用户点击了登录按钮你需要发送网络请求做法直接按钮的信号不需要关心鼠标是左键点的还是右键点的按下了多少毫秒你只需要结果一般来说定制控件交互或拦截默认行为时用事件响应按钮点击文本变化这类业务动作时优先用信号',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-03-31 14:49:00',
+  postMainColor: '',
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#18171d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f7f9fe')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><script defer src="/js/mathjax_config.js"></script><script type="text/javascript" id="MathJax-script" defer src="https://unpkg.com/mathjax@3/es5/tex-chtml.js"></script><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script><script> LA.init({id:"3Ol1Iy7dq073txBo",ck:"3Ol1Iy7dq073txBo"})</script><script src="https://sdk.51.la/perf/js-sdk-perf.min.js" crossorigin="anonymous"></script><script>new LingQue.Monitor().init({id:"3Ol1jFxj4SF3LU9D"});</script><link rel="stylesheet" href="/css/custom.css"><script src="/js/easy-Danmaku.js"></script><script src="https://npm.elemecdn.com/echarts@4.9.0/dist/echarts.min.js"></script><script src="/js/charts-light-dark.js"></scripts><script src="scripts/twikoo-katex.js"></script><!-- hexo injector head_end start -->
+  <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/KaTeX/0.12.0/katex.min.css">
+  <script defer src="https://cdnjs.loli.net/ajax/libs/KaTeX/0.12.0/katex.min.js"></script>
+  <script defer src="https://cdnjs.loli.net/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js"></script>
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head><body data-type="anzhiyu"><div id="web_bg"></div><div id="an_music_bg"></div><div id="loading-box" onclick="document.getElementById(&quot;loading-box&quot;).classList.add(&quot;loaded&quot;)"><div class="loading-bg"><img class="loading-img nolazyload" alt="加载头像" src="/assets/avatar1.jpg"/><div class="loading-image-dot"></div></div></div><script>const preloader = {
+  endLoading: () => {
+    document.getElementById('loading-box').classList.add("loaded");
+  },
+  initLoading: () => {
+    document.getElementById('loading-box').classList.remove("loaded")
+  }
+}
+window.addEventListener('load',()=> { preloader.endLoading() })
+setTimeout(function(){preloader.endLoading();},10000)
+
+if (true) {
+  document.addEventListener('pjax:send', () => { preloader.initLoading() })
+  document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+}</script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.10/progress_bar/progress_bar.css"/><script async="async" src="https://cdn.cbd.int/pace-js@1.2.4/pace.min.js" data-pace-options="{ &quot;restartOnRequestAfter&quot;:false,&quot;eventLag&quot;:false}"></script><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><div id="nav-group"><span id="blog_name"><div class="back-home-button"><i class="anzhiyufont anzhiyu-icon-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.abinng.com/" title="博客"><img class="back-menu-item-icon" src="/favicon.ico" alt="博客"/><span class="back-menu-item-text">博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://github.com/abinng/Blog-code" title="代码库"><img class="back-menu-item-icon" src="/favicon.ico" alt="代码库"/><span class="back-menu-item-text">代码库</span></a></div></div></div></div><a id="site-name" href="/" accesskey="h"><div class="title">abinng😶‍🌫️</div><i class="anzhiyufont anzhiyu-icon-house-chimney"></i></a></span><div class="mask-name-container"><div id="name-container"><a id="page-name" href="javascript:anzhiyu.scrollToDest(0, 500)">PAGE_NAME</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 归档</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 我</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/charts/"><i class="fas fa-chart-bar faa-tada"></i><span> 文章统计</span></a></li></ul></div></div></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机前往一个文章" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-dice"></i></a></div><div class="nav-button" id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" title="搜索🔍" accesskey="s"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span> 搜索</span></a></div><input id="center-console" type="checkbox"/><label class="widget" for="center-console" title="中控台" onclick="anzhiyu.switchConsole();"><i class="left"></i><i class="widget center"></i><i class="widget right"></i></label><div id="console"><div class="console-card-group-reward"><ul class="reward-all console-card"><li class="reward-item"><a href="/assets/reward/wechat.png" target="_blank"><img class="post-qr-code-img" alt="微信" src="/assets/reward/wechat.png"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/assets/reward/alipay.png" target="_blank"><img class="post-qr-code-img" alt="支付宝" src="/assets/reward/alipay.png"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div><div class="console-card-group"><div class="console-card-group-left"><div class="console-card" id="card-newest-comments"><div class="card-content"><div class="author-content-item-tips">互动</div><span class="author-content-item-title"> 最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="console-card-group-right"><div class="console-card tags"><div class="card-content"><div class="author-content-item-tips">兴趣点</div><span class="author-content-item-title">寻找你感兴趣的领域</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/C/" style="font-size: 1.05rem;">C++<sup>25</sup></a><a href="/tags/CNN/" style="font-size: 1.05rem;">CNN<sup>6</sup></a><a href="/tags/CentOS/" style="font-size: 1.05rem;">CentOS<sup>1</sup></a><a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 1.05rem;">C语言<sup>5</sup></a><a href="/tags/Docker/" style="font-size: 1.05rem;">Docker<sup>3</sup></a><a href="/tags/Docker-Desktop/" style="font-size: 1.05rem;">Docker Desktop<sup>1</sup></a><a href="/tags/GCC/" style="font-size: 1.05rem;">GCC<sup>1</sup></a><a href="/tags/GDB/" style="font-size: 1.05rem;">GDB<sup>1</sup></a><a href="/tags/GitHub/" style="font-size: 1.05rem;">GitHub<sup>1</sup></a><a href="/tags/IO%E6%B5%81/" style="font-size: 1.05rem;">IO流<sup>1</sup></a><a href="/tags/Linux/" style="font-size: 1.05rem;">Linux<sup>9</sup></a><a href="/tags/Oat/" style="font-size: 1.05rem;">Oat++<sup>1</sup></a><a href="/tags/PyTorch/" style="font-size: 1.05rem;">PyTorch<sup>6</sup></a><a href="/tags/QSS/" style="font-size: 1.05rem;">QSS<sup>2</sup></a><a href="/tags/Qt/" style="font-size: 1.05rem;">Qt<sup>19</sup></a><a href="/tags/SHA256/" style="font-size: 1.05rem;">SHA256<sup>1</sup></a><a href="/tags/TCP-IP/" style="font-size: 1.05rem;">TCP/IP<sup>1</sup></a><a href="/tags/UI%E8%A7%A3%E8%80%A6/" style="font-size: 1.05rem;">UI解耦<sup>1</sup></a><a href="/tags/WSL2/" style="font-size: 1.05rem;">WSL2<sup>2</sup></a><a href="/tags/Web%E6%A1%86%E6%9E%B6/" style="font-size: 1.05rem;">Web框架<sup>1</sup></a><a href="/tags/Windows/" style="font-size: 1.05rem;">Windows<sup>4</sup></a><a href="/tags/%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE/" style="font-size: 1.05rem;">代理配置<sup>1</sup></a><a href="/tags/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="font-size: 1.05rem;">后端开发<sup>1</sup></a><a href="/tags/%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB/" style="font-size: 1.05rem;">图像分类<sup>5</sup></a><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 1.05rem;">多线程<sup>2</sup></a><a href="/tags/%E5%A4%9A%E8%BF%9B%E7%A8%8B/" style="font-size: 1.05rem;">多进程<sup>1</sup></a><a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 1.05rem;">安全<sup>1</sup></a><a href="/tags/%E5%AE%B9%E5%99%A8%E5%8C%96/" style="font-size: 1.05rem;">容器化<sup>1</sup></a><a href="/tags/%E5%BA%95%E5%B1%82/" style="font-size: 1.05rem;">底层<sup>1</sup></a><a href="/tags/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" style="font-size: 1.05rem;">开发工具<sup>1</sup></a><a href="/tags/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" style="font-size: 1.05rem;">开发环境<sup>2</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.05rem;">操作系统<sup>3</sup></a><a href="/tags/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/" style="font-size: 1.05rem;">数字签名<sup>1</sup></a><a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 1.05rem;">目标检测<sup>1</sup></a><a href="/tags/%E7%A7%91%E6%99%AE/" style="font-size: 1.05rem;">科普<sup>1</sup></a><a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" style="font-size: 1.05rem;">网络编程<sup>3</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 1.05rem;">计算机网络<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" style="font-size: 1.05rem;">计算机视觉<sup>6</sup></a><a href="/tags/%E9%98%B2%E7%AA%A5%E9%94%AE%E7%9B%98/" style="font-size: 1.05rem;">防窥键盘<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/" style="font-size: 1.05rem;">高并发<sup>1</sup></a></div></div><hr/></div></div><div class="console-card history"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-box-archiv"></i><span>文章</span></div><div class="card-archives"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/05/"><span class="card-archive-list-date">五月 2026</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">7</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/03/"><span class="card-archive-list-date">三月 2026</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">16</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/02/"><span class="card-archive-list-date">二月 2026</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">5</span><span>篇</span></div></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/01/"><span class="card-archive-list-date">一月 2026</span><div class="card-archive-list-count-group"><span class="card-archive-list-count">15</span><span>篇</span></div></a></li></ul></div><hr/></div></div></div><div class="button-group"><div class="console-btn-item"><a class="darkmode_switchbutton" title="显示模式切换" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-moon"></i></a></div><div class="console-btn-item" id="consoleHideAside" onclick="anzhiyu.hideAsideBtn()" title="边栏显示控制"><a class="asideSwitch"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></a></div><div class="console-btn-item on" id="consoleCommentBarrage" onclick="anzhiyu.switchCommentBarrage()" title="热评开关"><a class="commentBarrage"><i class="anzhiyufont anzhiyu-icon-message"></i></a></div><div class="console-btn-item" id="consoleMusic" onclick="anzhiyu.musicToggle()" title="音乐开关"><a class="music-switch"><i class="anzhiyufont anzhiyu-icon-music"></i></a></div></div><div class="console-mask" onclick="anzhiyu.hideConsole()" href="javascript:void(0);"></div></div><div class="nav-button" id="nav-totop"><a class="totopbtn" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i><span id="percent" onclick="anzhiyu.scrollToDest(0,500)">0</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" title="切换"><i class="anzhiyufont anzhiyu-icon-bars"></i></a></div></div></div></nav><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original">原创</a><span class="post-meta-categories"><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%90%8E%E7%AB%AF%E4%B8%8E%E5%BA%95%E5%B1%82/" itemprop="url">后端与底层</a><i class="anzhiyufont anzhiyu-icon-angle-right post-meta-separator"></i><i class="anzhiyufont anzhiyu-icon-inbox post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%90%8E%E7%AB%AF%E4%B8%8E%E5%BA%95%E5%B1%82/C-C/" itemprop="url">C/C++</a></span><span class="article-meta tags"><a class="article-meta__tags" href="/tags/C/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>C++</span></a><a class="article-meta__tags" href="/tags/Qt/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>Qt</span></a><a class="article-meta__tags" href="/tags/%E4%BA%8B%E4%BB%B6%E7%B3%BB%E7%BB%9F/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>事件系统</span></a><a class="article-meta__tags" href="/tags/QEvent/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>QEvent</span></a><a class="article-meta__tags" href="/tags/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/" tabindex="-1" itemprop="url"> <span> <i class="anzhiyufont anzhiyu-icon-hashtag"></i>事件分发</span></a></span></div></div><h1 class="post-title" itemprop="name headline">012-Qt 的事件系统</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="anzhiyufont anzhiyu-icon-calendar-days post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" itemprop="dateCreated datePublished" datetime="2026-03-31T06:49:00.000Z" title="发表于 2026-03-31 14:49:00">2026-03-31</time><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-history post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" itemprop="dateCreated datePublished" datetime="2026-03-31T06:49:00.000Z" title="更新于 2026-03-31 14:49:00">2026-03-31</time></span></div><div class="meta-secondline"><span class="post-meta-separator"></span><span class="post-meta-wordcount"><i class="anzhiyufont anzhiyu-icon-file-word post-meta-icon" title="文章字数"></i><span class="post-meta-label" title="文章字数">字数总计:</span><span class="word-count" title="文章字数">9.1k</span><span class="post-meta-separator"></span><i class="anzhiyufont anzhiyu-icon-clock post-meta-icon" title="阅读时长"></i><span class="post-meta-label" title="阅读时长">阅读时长:</span><span>31分钟</span></span><span class="post-meta-separator"></span><span id="" data-flag-title="012-Qt 的事件系统"><i class="anzhiyufont anzhiyu-icon-fw-eye post-meta-icon"></i><span class="post-meta-label" title="阅读量">阅读量:</span><span id="twikoo_visitors" title="访问量"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-spin"></i></span></span><span class="post-meta-separator">       </span><span class="post-meta-position" title="作者IP属地为新乡"><i class="anzhiyufont anzhiyu-icon-location-dot"></i>新乡</span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><img class="nolazyload" id="post-top-bg" src="/assets/cover/QT/12.webp"></div></header><main id="blog-container"><div class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container" itemscope itemtype="http://abinng.github.io/posts/39901.html/"><header><a class="post-meta-categories" href="/categories/%E5%90%8E%E7%AB%AF%E4%B8%8E%E5%BA%95%E5%B1%82/" itemprop="url">后端与底层</a><a class="post-meta-categories" href="/categories/%E5%90%8E%E7%AB%AF%E4%B8%8E%E5%BA%95%E5%B1%82/C-C/" itemprop="url">C/C++</a><a href="/tags/C/" tabindex="-1" itemprop="url">C++</a><a href="/tags/Qt/" tabindex="-1" itemprop="url">Qt</a><a href="/tags/%E4%BA%8B%E4%BB%B6%E7%B3%BB%E7%BB%9F/" tabindex="-1" itemprop="url">事件系统</a><a href="/tags/QEvent/" tabindex="-1" itemprop="url">QEvent</a><a href="/tags/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/" tabindex="-1" itemprop="url">事件分发</a><h1 id="CrawlerTitle" itemprop="name headline">012-Qt 的事件系统</h1><span itemprop="author" itemscope itemtype="http://schema.org/Person">abinng😶‍🌫️</span><time itemprop="dateCreated datePublished" datetime="2026-03-31T06:49:00.000Z" title="发表于 2026-03-31 14:49:00">2026-03-31</time><time itemprop="dateCreated datePublished" datetime="2026-03-31T06:49:00.000Z" title="更新于 2026-03-31 14:49:00">2026-03-31</time></header><p><code>auther</code>: abinng <code>date</code>: 2026-03-31 14:49
+<code>createDate:</code>2026-03-31 14:49</p>
+<p>由于我已经开始实习，所以本篇往后我可能并不会详细进行笔记记录，因为太累了</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="https://blog-img-worker.abinng.dpdns.org/2026/05/a0756e20356443652a49579de1e2f36b.webp"></p>
+<p>操作系统本身就有事件系统，但是Qt是跨平台的框架，所以Qt在操作系统上层又封装了一层QEvent，一套代码在不同操作系统上运行</p>
+<p>可参考<a target="_blank" rel="noopener" href="https://subingwen.cn/qt/">Qt 教程 | 爱编程的大丙</a>
+和 <a href="file:///D:/03_Tool_Res/05_Study/zo/QT%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/%E8%AF%BE%E4%BB%B6/Qt%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91.pdf">Qt应用开发.pdf</a></p>
+<hr>
+<h2 id="复习路线">复习路线</h2>
+<p>这篇笔记要回答的问题是：<strong>Qt
+收到一个外部动作，或者代码主动投递一个事件之后，是怎样把它变成某个对象上的函数调用的？</strong></p>
+<p>先记住这条主线：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OS/Qt 产生事件 -&gt; 事件循环 exec() 取出事件 -&gt; notify() 准备分发</span><br><span class="line">-&gt; eventFilter() 可提前拦截 -&gt; event() 按类型分发</span><br><span class="line">-&gt; mousePressEvent/keyPressEvent/... 处理 -&gt; 必要时发射 signal</span><br></pre></td></tr></table></figure>
+
+<p>下次忘记时，可以按这个顺序复习：</p>
+<ol type="1">
+<li>先看“事件是什么”和 <code>exec()</code>，建立事件循环的概念。</li>
+<li>再看 <code>event()</code> 和责任链，理解事件怎么从通用
+<code>QEvent</code> 分发到具体 handler。</li>
+<li>看 <code>InnerLabel</code> 示例，确认为什么调用基类
+<code>event()</code> 后还能回到子类的
+<code>mousePressEvent()</code>。</li>
+<li>看
+<code>accept/ignore</code>，理解输入事件什么时候被当前控件消费，什么时候继续交给父
+widget。</li>
+<li>看事件过滤器，理解怎么在对象收到事件之前拦截。</li>
+<li>看“完整流程复盘”，把前面的点串成一次鼠标点击的生命周期。</li>
+<li>看 <code>sendEvent()</code> / <code>postEvent()</code>
+和自定义事件，理解代码主动发送事件的方式。</li>
+<li>看事件循环、线程和
+<code>deleteLater()</code>，理解事件系统和对象生命周期的关系。</li>
+<li>最后看“信号与事件”，把事件系统和业务层连接起来。</li>
+</ol>
+<h2 id="1-事件是什么">1. 事件是什么</h2>
+<p>Qt 是一个基于 C++ 的跨平台框架，GUI
+程序的大部分交互都围绕事件展开。用户操作、窗口状态变化、定时器触发等都会变成事件，再由
+Qt
+分发给对应的对象处理。窗口事件产生之后，大致会经过：<code>事件派发 -&gt; 事件过滤 -&gt; 事件分发 -&gt; 事件处理</code>
+几个阶段。Qt
+对很多事件都有默认处理，如果有特殊需求，就在合适的位置重写或拦截对应的处理逻辑。</p>
+<p>事件（event）是由系统或者 Qt
+本身在不同的场景下发出的。当用户按下/移动鼠标、敲下键盘，或者是窗口关闭/大小发生变化/隐藏或显示都会发出一个相应的事件。一些事件在对用户操作做出响应时发出，如鼠标/键盘事件等；另一些事件则是由系统自动发出，如计时器事件。</p>
+<p>事件在Qt中产生之后的分发过程是这样的：</p>
+<p>当事件产生之后，Qt使用用应用程序对象调用notify()函数将事件发送到指定的窗口：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">override</span> <span class="keyword">virtual</span>] <span class="function"><span class="type">bool</span> <span class="title">QApplication::notify</span><span class="params">(QObject *receiver, QEvent *e)</span></span>;</span><br><span class="line"><span class="comment">// 事件在发送过程中可以通过事件过滤器进行过滤，默认不对任何产生的事件进行过滤。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要先给窗口安装过滤器, 该事件才会触发</span></span><br><span class="line">[<span class="keyword">virtual</span>] <span class="function"><span class="type">bool</span> <span class="title">QObject::eventFilter</span><span class="params">(QObject *watched, QEvent *event)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>当事件发送到指定窗口之后，窗口的事件分发器会对收到的事件进行分类:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">override</span> <span class="keyword">virtual</span> <span class="keyword">protected</span>] <span class="function"><span class="type">bool</span> <span class="title">QWidget::event</span><span class="params">(QEvent *event)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>事件分发器会将分类之后的事件（鼠标事件、键盘事件、绘图事件……）分发给对应的事件处理器函数进行处理，每个事件处理器函数都有默认的处理动作（我们也可以重写这些事件处理器函数），比如：鼠标事件：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 鼠标按下</span></span><br><span class="line">[<span class="keyword">virtual</span> <span class="keyword">protected</span>] <span class="function"><span class="type">void</span> <span class="title">QWidget::mousePressEvent</span><span class="params">(QMouseEvent *event)</span></span>;</span><br><span class="line"><span class="comment">// 鼠标释放</span></span><br><span class="line">[<span class="keyword">virtual</span> <span class="keyword">protected</span>] <span class="function"><span class="type">void</span> <span class="title">QWidget::mouseReleaseEvent</span><span class="params">(QMouseEvent *event)</span></span>;</span><br><span class="line"><span class="comment">// 鼠标移动</span></span><br><span class="line">[<span class="keyword">virtual</span> <span class="keyword">protected</span>] <span class="function"><span class="type">void</span> <span class="title">QWidget::mouseMoveEvent</span><span class="params">(QMouseEvent *event)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-事件循环exec">2. 事件循环：<code>exec</code></h2>
+<p>他会使Qt应用程序进入事件循环，这样就可以使应用程序在运行时接受各种事件。一旦有事件发生，Qt便会构建一个相应的QEvent子类对象来表示它，然后将它传递给相应的QObject对象或其子对象。</p>
+<h2 id="3-分发入口event">3. 分发入口：<code>event()</code></h2>
+<p><code>event()</code> 函数在 Qt
+中的角色是一个统一的分发入口。它接收通用的
+<code>QEvent</code>，判断事件类型（Type），然后把它转换为具体的事件类，并调用对应的事件处理函数（Event
+Handler）。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">QWidget::event</span><span class="params">(QEvent *event)</span> </span>{</span><br><span class="line">    <span class="comment">// 根据事件类型进行路由分发</span></span><br><span class="line">    <span class="keyword">switch</span> (event-&gt;<span class="built_in">type</span>()) {</span><br><span class="line">        <span class="keyword">case</span> QEvent::MouseButtonPress: {</span><br><span class="line">            QMouseEvent *mouseEvent = <span class="built_in">static_cast</span>&lt;QMouseEvent*&gt;(event);</span><br><span class="line">            <span class="keyword">this</span>-&gt;<span class="built_in">mousePressEvent</span>(mouseEvent);  <span class="comment">// &lt;--- 核心就在这一句！</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">case</span> QEvent::KeyPress: {</span><br><span class="line">            QKeyEvent *keyEvent = <span class="built_in">static_cast</span>&lt;QKeyEvent*&gt;(event);</span><br><span class="line">            <span class="keyword">this</span>-&gt;<span class="built_in">keyPressEvent</span>(keyEvent);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// ... 其他成百上千种事件的分发 ...</span></span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> QObject::<span class="built_in">event</span>(event);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p><code>event()</code>
+的返回值不是“有没有执行完”，而是“当前对象是否处理了这个事件”。通常返回
+<code>true</code> 表示这个事件已经被识别并处理；返回 <code>false</code>
+表示当前对象不处理这个事件，调用者可以按 Qt 的规则继续走后续流程。</p>
+<h3 id="31-基类-event">3.1 基类 <code>event()</code></h3>
+<p>这一节主要解释：子类处理不了的事件，为什么要继续交给基类的
+<code>event()</code>。</p>
+<p>可以看到 <code>QWidget::event</code> 中最后还调用了
+<code>QObject::event</code> ，这是 Qt
+事件处理机制的责任链模式，其理念在于 <strong>“DRY (Don’t Repeat Yourself
+- 不要重复你自己)”</strong>
+也就是说并不是每一个Qt封装的组件类都包含了对每一个事件的处理，而是专注自己特有的逻辑</p>
+<p>例如：既然“识别鼠标按下并调用
+<code>mousePressEvent</code>”这个逻辑对所有的 UI 控件（Label, Button,
+Slider, ComboBox…）都是一样的，那就只在 <code>QWidget::event</code>
+里写一次就够了。所有的子类只需要专注自己特有的逻辑，处理不了的就
+<code>return BaseClass::event(ev)</code>，让基类继续处理。这就形成了一套事件处理责任链。</p>
+<p>假设调用了 <code>QLabel::event</code> ，调用链大致如下：</p>
+<p><strong>第一层：<code>QLabel::event</code></strong>
+<code>QLabel</code> 的 <code>event</code>
+函数只关心<strong>它自己特有</strong>的事件。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">QLabel::event</span><span class="params">(QEvent *e)</span> </span>{</span><br><span class="line">    <span class="comment">// 1. 处理富文本链接的悬停、点击</span></span><br><span class="line">    <span class="comment">// 2. 处理 ToolTip（鼠标提示）</span></span><br><span class="line">    <span class="comment">// 3. 处理快捷键覆盖</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果不是上面这些专属事件，或者处理完了还需要默认行为：</span></span><br><span class="line">    <span class="keyword">return</span> QFrame::<span class="built_in">event</span>(e);  <span class="comment">// 交给基类 QFrame 继续处理</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p><strong>第二层：<code>QFrame::event</code></strong>
+<code>QFrame</code> 只关心边框绘制相关的特殊逻辑。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">QFrame::event</span><span class="params">(QEvent *e)</span> </span>{</span><br><span class="line">    <span class="comment">// 处理边框样式改变等逻辑...</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> QWidget::<span class="built_in">event</span>(e); <span class="comment">// 继续踢给父类 QWidget</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p><strong>第三层：<code>QWidget::event</code></strong>
+<code>QWidget</code> 是所有可视化控件的基类，它承担了几乎所有 UI
+交互事件的<strong>基础分发工作</strong>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">QWidget::event</span><span class="params">(QEvent *event)</span> </span>{</span><br><span class="line">    <span class="comment">// 大量 switch-case 分支</span></span><br><span class="line">    <span class="keyword">switch</span> (event-&gt;<span class="built_in">type</span>()) {</span><br><span class="line">        <span class="keyword">case</span> QEvent::MouseButtonPress: {</span><br><span class="line">            QMouseEvent *mouseEvent = <span class="built_in">static_cast</span>&lt;QMouseEvent*&gt;(event);</span><br><span class="line">            <span class="keyword">this</span>-&gt;<span class="built_in">mousePressEvent</span>(mouseEvent); <span class="comment">// 关键点：在这里进行了分发</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>; </span><br><span class="line">        }</span><br><span class="line">        <span class="keyword">case</span> QEvent::KeyPress:</span><br><span class="line">            <span class="keyword">this</span>-&gt;<span class="built_in">keyPressEvent</span>((QKeyEvent*)event);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="comment">// ... 键盘、鼠标移动、滚轮、绘制(Paint) 等几十上百个分支 ...</span></span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果连 QWidget 都不认识这个事件：</span></span><br><span class="line">    <span class="keyword">return</span> QObject::<span class="built_in">event</span>(event); <span class="comment">// 最后交给 QObject</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p><strong>第四层：<code>QObject::event</code></strong>
+如果事件一路漏到了这里，<code>QObject</code>
+只处理最底层的核心机制，比如定时器事件（<code>Timer</code>）、动态属性改变（<code>DynamicPropertyChange</code>）等。</p>
+<p>关于Qt窗口提供的其他事件处理器函数还有很多，感兴趣的话可以仔细阅读Qt的帮助文档，窗口的事件处理器函数非常好找，规律是这样的：</p>
+<ul>
+<li>受保护的虚函数</li>
+<li>函数名分为两部分: 事件描述+Event</li>
+<li>函数带一个事件类型的参数</li>
+</ul>
+<h2 id="4-子类-handler-示例">4. 子类 handler 示例</h2>
+<p>这一节用 <code>InnerLabel</code> 说明：调用基类 <code>event()</code>
+后，为什么最终仍然会进入子类重写的 <code>mousePressEvent()</code>。</p>
+<p><code>InnerLabel</code> 类</p>
+<details class="folding-tag"><summary> 点击展开 </summary>
+              <div class="content">
+              <div class="tabs" id="test"><ul class="nav-tabs"><button type="button" class="tab  active" data-href="test-1">inner_label.h</button><button type="button" class="tab " data-href="test-2">inner_label.cpp</button></ul><div class="tab-contents"><div class="tab-item-content active" id="test-1"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> INNER_LABEL_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> INNER_LABEL_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QLabel&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">InnerLabel</span> : <span class="keyword">public</span> QLabel</span><br><span class="line">{</span><br><span class="line">    Q_OBJECT</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">InnerLabel</span>(QWidget *parent = <span class="literal">nullptr</span>);</span><br><span class="line">    ~<span class="built_in">InnerLabel</span>() <span class="keyword">override</span> = <span class="keyword">default</span>;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">event</span><span class="params">(QEvent *event)</span> <span class="keyword">override</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">mousePressEvent</span><span class="params">(QMouseEvent *ev)</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// INNER_LABEL_H</span></span></span><br></pre></td></tr></table></figure></div><div class="tab-item-content" id="test-2"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"inner_label.h"</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QDebug&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QEvent&gt;</span></span></span><br><span class="line"></span><br><span class="line">InnerLabel::<span class="built_in">InnerLabel</span>(QWidget *parent) : <span class="built_in">QLabel</span>(parent)</span><br><span class="line">{</span><br><span class="line">    <span class="built_in">setFrameStyle</span>(QFrame::Panel | QFrame::Plain);</span><br><span class="line">    <span class="built_in">setLineWidth</span>(<span class="number">3</span>);</span><br><span class="line">    <span class="built_in">setMidLineWidth</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">InnerLabel::event</span><span class="params">(QEvent *ev)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="comment">// qDebug() &lt;&lt; ev-&gt;type();</span></span><br><span class="line">    <span class="keyword">return</span> QLabel::<span class="built_in">event</span>(ev);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">InnerLabel::mousePressEvent</span><span class="params">(QMouseEvent *ev)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">"InnerLabel mousePressEvvent"</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>
+              </div>
+            </details>
+
+<p>在 main.cpp 中创建该对象</p>
+<details class="folding-tag"><summary> 点击展开 </summary>
+              <div class="content">
+              <div class="tabs" id="test"><ul class="nav-tabs"><button type="button" class="tab  active" data-href="test-1">main.cpp</button></ul><div class="tab-contents"><div class="tab-item-content active" id="test-1"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QApplication&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"inner_label.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="function">QApplication <span class="title">a</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line"></span><br><span class="line">    QWidget* w = <span class="keyword">new</span> <span class="built_in">QWidget</span>();</span><br><span class="line"></span><br><span class="line">    w-&gt;<span class="built_in">setGeometry</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">500</span>, <span class="number">500</span>);</span><br><span class="line">    InnerLabel* in_label = <span class="keyword">new</span> <span class="built_in">InnerLabel</span>(w);</span><br><span class="line">    in_label-&gt;<span class="built_in">resize</span>(<span class="number">150</span>, <span class="number">150</span>);</span><br><span class="line">    in_label-&gt;<span class="built_in">move</span>(<span class="number">150</span>, <span class="number">150</span>);</span><br><span class="line">    w-&gt;<span class="built_in">show</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> a.<span class="built_in">exec</span>();</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>
+              </div>
+            </details>
+
+<p>运行后，会发现有一个黑色的框框，点击其内部会有输出，该输出是
+InnerLabel::mousePressEvent 中的语句</p>
+<p>程序的逻辑是，进入 <code>a.exec()</code>
+这个循环后开始看有什么事件产生，将事件加入队列，不断取出队列中的事件到
+<code>event</code> 函数中进行分发</p>
+<p>我们重写了 <code>InnerLabel::event</code> ，在启动直接一句
+<code>return QLabel::event(ev)</code> ，相当于是交付于
+<code>InnerLabel</code> 的基类 <code>QLabel</code> 的 <code>event</code>
+进行分发。但是为什么又会调用 QLabel 的子类 <code>InnerLabel</code> 的
+<code>mousePressEvent</code> 呢？</p>
+<p><code>InnerLabel::event</code> 中有隐藏参数 this 指针，这个都知道吧。
+然后调用 <code>QLabel::event</code> ，其中也有隐藏参数 this
+指针，其类型虽然是 <code>QLabel *</code>，但实际还是直接将
+InnerLabel::event 的 this 指针给传过去了，所以还是指向 InnerLabel
+的实例对象的。</p>
+<p>现在回到鼠标点击发生时的调用过程：</p>
+<ol type="1">
+<li><p>鼠标点击，进入 <code>InnerLabel::event</code>。</p></li>
+<li><p>你调用 <code>QLabel::event</code>，<code>this</code>
+指针原封不动地传进去了。</p></li>
+<li><p><code>QLabel::event</code> 发现这不是 QLabel
+特有的事件处理逻辑（比如富文本链接），于是调用
+<code>QFrame::event</code>。</p></li>
+<li><p><code>QFrame::event</code> 发现这不是 QFrame
+特有的处理逻辑，于是调用 <code>QWidget::event</code>。</p></li>
+<li><p><code>QWidget::event</code> 发现 <code>type</code> 是
+<code>QEvent::MouseButtonPress</code>，进入鼠标按下事件的分支。</p></li>
+<li><p><code>QWidget::event</code> 执行了
+<code>this-&gt;mousePressEvent(ev)</code>。</p></li>
+<li><p>这一整条调用链里，<code>this</code> 指针的值（你的
+<code>InnerLabel</code>
+实例地址）<strong>始终没有变过</strong>。</p></li>
+<li><p>C++ 的虚函数机制生效，最终调用的是实际对象类型里的
+<code>InnerLabel::mousePressEvent</code>。</p></li>
+</ol>
+<p>就是这么一个过程</p>
+<h2 id="5-accept-和-ignore">5. <code>accept</code> 和
+<code>ignore</code></h2>
+<p>这一节主要看输入事件什么时候被当前控件消费，什么时候继续交给父
+widget。</p>
+<p>QEvent 是一个事件类，<code>accept()</code> 和 <code>ignore()</code>
+本质上是在修改事件对象内部的状态。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">QEvent</span> {</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">bool</span> m_accepted; <span class="comment">// &lt;--- 就是这个小小的 bool 值</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">accept</span><span class="params">()</span> </span>{ m_accepted = <span class="literal">true</span>; }</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">ignore</span><span class="params">()</span> </span>{ m_accepted = <span class="literal">false</span>; }</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isAccepted</span><span class="params">()</span> <span class="type">const</span> </span>{ <span class="keyword">return</span> m_accepted; }</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+
+<p>调用 <code>accept()</code> 和
+<code>ignore()</code>，<strong>仅仅只是在修改这个布尔值，完全没有发生任何函数跳转或神奇的操作。</strong></p>
+<p>用一个例子来讲解 <code>accept</code> 和 <code>ignore</code>：</p>
+<p>看这几个函数：</p>
+<details class="folding-tag"><summary> 点击展开 </summary>
+              <div class="content">
+              <div class="tabs" id="test"><ul class="nav-tabs"><button type="button" class="tab  active" data-href="test-1">inner_label.h</button><button type="button" class="tab " data-href="test-2">inner_label.cpp</button><button type="button" class="tab " data-href="test-3">widget.h</button><button type="button" class="tab " data-href="test-4">widget.cpp</button><button type="button" class="tab " data-href="test-5">main.cpp</button></ul><div class="tab-contents"><div class="tab-item-content active" id="test-1"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> INNER_LABEL_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> INNER_LABEL_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QLabel&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">InnerLabel</span> : <span class="keyword">public</span> QLabel</span><br><span class="line">{</span><br><span class="line">    Q_OBJECT</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">InnerLabel</span>(QWidget *parent = <span class="literal">nullptr</span>);</span><br><span class="line">    ~<span class="built_in">InnerLabel</span>() <span class="keyword">override</span> = <span class="keyword">default</span>;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">event</span><span class="params">(QEvent *event)</span> <span class="keyword">override</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">mousePressEvent</span><span class="params">(QMouseEvent *ev)</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// INNER_LABEL_H</span></span></span><br></pre></td></tr></table></figure></div><div class="tab-item-content" id="test-2"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"inner_label.h"</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QDebug&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QMouseEvent&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QEvent&gt;</span></span></span><br><span class="line"></span><br><span class="line">InnerLabel::<span class="built_in">InnerLabel</span>(QWidget *parent) : <span class="built_in">QLabel</span>(parent)</span><br><span class="line">{</span><br><span class="line">    <span class="built_in">setFrameStyle</span>(QFrame::Panel | QFrame::Plain);</span><br><span class="line">    <span class="built_in">setLineWidth</span>(<span class="number">3</span>);</span><br><span class="line">    <span class="built_in">setMidLineWidth</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">InnerLabel::event</span><span class="params">(QEvent *ev)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="comment">// qDebug() &lt;&lt; ev-&gt;type();</span></span><br><span class="line">    <span class="keyword">if</span> (ev-&gt;<span class="built_in">type</span>() == QEvent::MouseButtonPress) {</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; __PRETTY_FUNCTION__;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> QLabel::<span class="built_in">event</span>(ev);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">InnerLabel::mousePressEvent</span><span class="params">(QMouseEvent *ev)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="built_in">qDebug</span>() &lt;&lt; __PRETTY_FUNCTION__;</span><br><span class="line">    ev-&gt;<span class="built_in">ignore</span>();</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div><div class="tab-item-content" id="test-3"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> WIDGET_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> WIDGET_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QWidget&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"inner_label.h"</span></span></span><br><span class="line"></span><br><span class="line">QT_BEGIN_NAMESPACE</span><br><span class="line"><span class="keyword">namespace</span> Ui {</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span>;</span><br><span class="line">}</span><br><span class="line">QT_END_NAMESPACE</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> : <span class="keyword">public</span> QWidget {</span><br><span class="line">    Q_OBJECT</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Widget</span>(QWidget *parent = <span class="literal">nullptr</span>);</span><br><span class="line">    ~<span class="built_in">Widget</span>();</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">event</span><span class="params">(QEvent *ev)</span> <span class="keyword">override</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">mousePressEvent</span><span class="params">(QMouseEvent *ev)</span> <span class="keyword">override</span></span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Ui::Widget *ui;</span><br><span class="line">    InnerLabel *in_label;</span><br><span class="line">};</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// WIDGET_H</span></span></span><br></pre></td></tr></table></figure></div><div class="tab-item-content" id="test-4"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"widget.h"</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"ui_widget.h"</span></span></span><br><span class="line"></span><br><span class="line">Widget::<span class="built_in">Widget</span>(QWidget *parent) : <span class="built_in">QWidget</span>(parent), <span class="built_in">ui</span>(<span class="keyword">new</span> Ui::Widget)</span><br><span class="line">{</span><br><span class="line">    ui-&gt;<span class="built_in">setupUi</span>(<span class="keyword">this</span>);</span><br><span class="line">    <span class="built_in">setGeometry</span>(<span class="number">100</span>, <span class="number">100</span>, <span class="number">500</span>, <span class="number">500</span>);</span><br><span class="line">    in_label = <span class="keyword">new</span> <span class="built_in">InnerLabel</span>(<span class="keyword">this</span>);</span><br><span class="line">    in_label-&gt;<span class="built_in">resize</span>(<span class="number">150</span>, <span class="number">150</span>);</span><br><span class="line">    in_label-&gt;<span class="built_in">move</span>(<span class="number">150</span>, <span class="number">150</span>);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">Widget::~<span class="built_in">Widget</span>()</span><br><span class="line">{</span><br><span class="line">    <span class="keyword">delete</span> ui;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">Widget::event</span><span class="params">(QEvent *ev)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="keyword">if</span> (ev-&gt;<span class="built_in">type</span>() == QEvent::MouseButtonPress) {</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; __PRETTY_FUNCTION__;</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> QWidget::<span class="built_in">event</span>(ev);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Widget::mousePressEvent</span><span class="params">(QMouseEvent *ev)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="built_in">qDebug</span>() &lt;&lt; __PRETTY_FUNCTION__;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div><div class="tab-item-content" id="test-5"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;QApplication&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">"widget.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="function">QApplication <span class="title">a</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">    Widget w;</span><br><span class="line">    w.<span class="built_in">show</span>();</span><br><span class="line">    <span class="keyword">return</span> a.<span class="built_in">exec</span>();</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div></div><div class="tab-to-top"><button type="button" aria-label="scroll to top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div>
+              </div>
+            </details>
+
+<p>先看输出，当我们注释掉 <code>ev-&gt;ignore</code> 后，输出为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">InnerLabel::event</span><span class="params">(QEvent*)</span></span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">InnerLabel::mousePressEvent</span><span class="params">(QMouseEvent*)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>解除 <code>ev-&gt;ignore</code> 的注释后，输出为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">InnerLabel::event</span><span class="params">(QEvent*)</span></span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">InnerLabel::mousePressEvent</span><span class="params">(QMouseEvent*)</span></span></span><br><span class="line"><span class="function"><span class="comment">// --- 因为 ignore()，事件传给了父组件 Widget ---</span></span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">Widget::event</span><span class="params">(QEvent*)</span></span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">Widget::mousePressEvent</span><span class="params">(QMouseEvent*)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>为什么呢？？？</p>
+<p>顺一遍逻辑：</p>
+<p>点击ui中 InnerLabel 的内部时，产生一个鼠标事件，被分发到
+<code>InnerLabel::event</code> ，然后调用 <code>QLabel::event</code>
+，再调用 <code>QFrame::event</code> -&gt;
+<code>QWidget::event</code>，其中通过 switch case
+找到了对应事件类型的处理。</p>
+<p>这里要注意：下面代码只是帮助理解的伪代码，不要把它当成 Qt
+源码逐字记忆。对鼠标、键盘这类输入事件来说，事件对象通常会带有一个
+accepted 状态；如果处理函数没有调用 <code>ignore()</code>，Qt
+通常就认为当前控件消费了该输入事件。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">QWidget::event</span><span class="params">(QEvent *event)</span> </span>{</span><br><span class="line">    <span class="keyword">switch</span> (event-&gt;<span class="built_in">type</span>()) {</span><br><span class="line">        <span class="keyword">case</span> QEvent::MouseButtonPress: {</span><br><span class="line">            <span class="comment">// 调用你的重写函数；事件的 accepted 状态会影响后续是否继续传给父 widget</span></span><br><span class="line">            <span class="keyword">this</span>-&gt;<span class="built_in">mousePressEvent</span>((QMouseEvent*)event); </span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 返回 true 表示“我认识这个事件类型并进行了处理”</span></span><br><span class="line">        }</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>对鼠标事件来说，更实用的记法是：默认情况下控件收到并处理了鼠标事件后，事件不会继续交给父控件；如果你希望父控件也有机会处理，就在事件处理函数里调用
+<code>ev-&gt;ignore()</code>。</p>
+</blockquote>
+<p>调用 <code>InnerLabel::mousePressEvent</code>
+之后，<code>QWidget::event</code> 返回 <code>true</code>。</p>
+<p>根据前面所学，我们只知道这里返回true后代表“认识这个事件类型并进行了处理“，后面呢？</p>
+<p>不要忘了还有最外层的 QApplication。真实 Qt 实现会经过
+<code>QApplication::notify()</code>、内部 helper
+和针对不同事件类型的专门处理逻辑。下面仍然是<strong>针对鼠标/键盘这类输入事件传播行为的简化模型</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 针对输入事件传播行为的简化模型，不是 Qt 源码</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">deliverInputEvent</span><span class="params">(QWidget *targetObject, QInputEvent *event)</span> </span>{</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 核心循环：顺着 UI 树（父子关系）不断向上找</span></span><br><span class="line">    <span class="keyword">while</span> (targetObject != <span class="literal">nullptr</span>) {</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 1. 调用当前对象的 event() 函数</span></span><br><span class="line">        <span class="comment">// 这里会进入 InnerLabel::event -&gt; QLabel::event -&gt; QWidget::event -&gt; mousePressEvent</span></span><br><span class="line">        <span class="comment">// 注意：这是 C++ 类继承层面的调用</span></span><br><span class="line">        <span class="type">bool</span> recognized = targetObject-&gt;<span class="built_in">event</span>(event); </span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 2. 函数执行完毕，回到分发逻辑中</span></span><br><span class="line">        <span class="comment">// 此时再检查你刚才在 mousePressEvent 里设置的布尔值</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (recognized &amp;&amp; event-&gt;<span class="built_in">isAccepted</span>()) {</span><br><span class="line">            <span class="comment">// 如果事件被识别，并且你没有调用 ignore()</span></span><br><span class="line">            <span class="keyword">break</span>; </span><br><span class="line">        }</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 3. 如果你调用了 ignore()，event-&gt;isAccepted() 就是 false！</span></span><br><span class="line">        targetObject = targetObject-&gt;<span class="built_in">parentWidget</span>(); </span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 拿着同一个 event，进入下一轮 while 循环，传给父对象</span></span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p>我们经过一层层返回 <code>true</code>，最终赋值给
+<code>recognized</code>。对于这类输入事件，还要看事件对象的 accepted
+状态：<code>event()</code>
+返回值表示“这个类型我处理过”，<code>accept/ignore</code>
+表示“这次事件我是否消费掉”。</p>
+<p>当我们注释掉 <code>ev-&gt;ignore</code> 时，鼠标事件保持 accepted
+状态，父组件不会再收到这次点击。</p>
+<p>当我们释放掉 <code>ev-&gt;ignore</code>
+时，<code>InnerLabel::mousePressEvent</code>
+把这次鼠标事件标记为未消费。于是 Qt 会让父 widget
+也有机会处理这个输入事件，也就是 InnerLabel 的父对象 Widget，之后调用
+<code>Widget::event</code> -&gt; <code>QWidget::event</code> -&gt;
+<code>Widget::mousePressEvent</code> ，就会有多出的两行输出了。</p>
+<p>为什么Qt要设计两个条件才能break呢？可以继续看“输入事件传播模型”这一节。</p>
+<p>如果想从整体上复盘一次鼠标点击，可以直接跳到“完整流程复盘：一次鼠标点击的生命周期”。</p>
+<h2 id="6-事件过滤器">6. 事件过滤器</h2>
+<p>事件过滤器用于在目标对象进入 <code>event()</code> 之前拦截事件。</p>
+<p>当Qt的事件通过应用程序对象发送给相关窗口之后，窗口接收到数据之前这个期间可对事件进行过滤，过滤掉的事件就不能被继续处理了。QObject有一个
+<code>eventFilter()</code> 函数，用于建立事件过滤器。函数原型如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">virtual</span>] <span class="function"><span class="type">bool</span> <span class="title">QObject::eventFilter</span><span class="params">(QObject *watched, QEvent *event)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>参数:</p>
+<ul>
+<li><code>watched</code>：要过滤的事件的所有者对象</li>
+<li><code>event</code>：要过滤的具体的事件</li>
+</ul>
+<p>返回值：如果想过滤掉这个事件，停止它被进一步处理，返回true，否则返回
+false</p>
+<p>既然要过滤传递中的事件，首当其冲还是要搞明白如何通过事件过滤器进行事件的过滤，主要分为两步：</p>
+<p>给要被过滤事件的类对象安装事件过滤器</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">QObject::installEventFilter</span><span class="params">(QObject *filterObj)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>假设调用 <code>installEventFilter()</code>
+函数的对象为当前对象，那么就可以基于参数指定的 <code>filterObj</code>
+对象来过滤当前对象中的指定的事件了。</p>
+<p>在要进行事件过滤的类中（ <code>filterObj</code>
+参数对应的类）重写从QObject类继承的虚函数 <code>eventFilter()</code>
+。</p>
+<h3 id="61-过滤与传播示例">6.1 过滤与传播示例</h3>
+<p>这一节把事件过滤器、<code>event()</code>、<code>ignore()</code>
+后继续交给父 widget 这几件事放在同一个例子里看。</p>
+<p>Widget有一个QLabel类型的对象，在Widget中心，现在鼠标左键点击中心处</p>
+<h4 id="611-定位目标对象">6.1.1 定位目标对象</h4>
+<p>OS 事件到达后，<code>exec()</code> 取出事件，Qt 根据坐标做 Hit
+Testing，找到目标 widget。</p>
+<p>一切依然从事件循环开始。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数原型：开启主事件循环</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">QApplication::exec</span><span class="params">()</span></span>; </span><br></pre></td></tr></table></figure>
+
+<p>当 <code>exec()</code>
+内部从操作系统拿到一个物理鼠标点击时，它会做两件事：</p>
+<ol type="1">
+<li><p><strong>翻译事件：</strong> 将系统消息打包成
+<code>QMouseEvent *mouseEvent;</code>。</p></li>
+<li><p><strong>坐标碰撞检测 (Hit Testing)：</strong> 调用类似
+<code>QWidget *target = QApplication::widgetAt(x, y);</code>
+的底层方法。</p>
+<ul>
+<li><p>根据点击坐标，目标对象被定位为最上层的
+<code>QLabel</code>。</p></li>
+<li><p>此时，<code>target</code> 指针指向了 <code>QLabel</code>
+实例。</p></li>
+</ul></li>
+</ol>
+<p>然后，<code>exec</code> 把目标对象和事件交给 <code>notify</code>
+进入分发流程：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 准备分发！将目标 QLabel 和 打包好的事件 送入总枢纽</span></span><br><span class="line">qApp-&gt;<span class="built_in">notify</span>(target, mouseEvent); </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="612-分发模型">6.1.2 分发模型</h4>
+<p>事件进入 <code>notify()</code> 后，会进入 Qt
+内部的具体事件分发逻辑。这里用简化模型理解输入事件传播。</p>
+<p>这里用一个简化模型说明输入事件传播。真实的 Qt 源码不是一个简单的
+<code>while(parent)</code> 循环，<code>notify()</code> 会进入内部 helper
+和不同事件类型的处理分支。下面这段代码只用来理解<strong>鼠标/键盘这类输入事件在
+ignore 后可能继续交给父 widget</strong>的行为。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输入事件传播的简化模型，不是 QApplication::notify 的真实源码。</span></span><br><span class="line"><span class="comment">// receiver: 当前接收者（一开始是 QLabel）</span></span><br><span class="line"><span class="comment">// event: 传递的输入事件（例如 QMouseEvent）</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">deliverInputEvent</span><span class="params">(QWidget *receiver, QInputEvent *event)</span> </span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="keyword">while</span> (receiver != <span class="literal">nullptr</span>) {</span><br><span class="line">        </span><br><span class="line">        <span class="type">bool</span> eventHandled = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ---------------------------------------------------------</span></span><br><span class="line">        <span class="comment">// 环节 A：检查 Event Filter</span></span><br><span class="line">        <span class="comment">// ---------------------------------------------------------</span></span><br><span class="line">        <span class="comment">// 概念上：先检查当前 receiver 上安装的事件过滤器</span></span><br><span class="line">        <span class="keyword">for</span> (QObject *filter : receiver-&gt;<span class="built_in">installedFilters</span>()) {</span><br><span class="line">            <span class="comment">// 原型：bool QObject::eventFilter(QObject *watched, QEvent *event);</span></span><br><span class="line">            <span class="keyword">if</span> (filter-&gt;<span class="built_in">eventFilter</span>(receiver, event)) {</span><br><span class="line">                <span class="comment">// 如果 filter 返回 true，表示事件被拦截</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 彻底终结！这次分发到此结束。</span></span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ---------------------------------------------------------</span></span><br><span class="line">        <span class="comment">// 环节 B：调用对象的 event() 分发入口</span></span><br><span class="line">        <span class="comment">// ---------------------------------------------------------</span></span><br><span class="line">        <span class="comment">// 如果过滤器没有拦截，调用对象自身的 event()</span></span><br><span class="line">        <span class="comment">// 原型：virtual bool QObject::event(QEvent *e);</span></span><br><span class="line">        <span class="comment">// 这里会进入 QLabel::event -&gt; QWidget::event -&gt; QLabel::mousePressEvent</span></span><br><span class="line">        eventHandled = receiver-&gt;<span class="built_in">event</span>(event);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ---------------------------------------------------------</span></span><br><span class="line">        <span class="comment">// 环节 C：检查处理结果和 accepted 状态</span></span><br><span class="line">        <span class="comment">// ---------------------------------------------------------</span></span><br><span class="line">        <span class="comment">// 对输入事件传播来说，重点看两个条件：</span></span><br><span class="line">        <span class="comment">// 1. receiver 的类层级认识这个事件吗？(eventHandled == true)</span></span><br><span class="line">        <span class="comment">// 2. 这个事件最终保持 accepted 状态吗？(event-&gt;isAccepted() == true)</span></span><br><span class="line">        <span class="keyword">if</span> (eventHandled &amp;&amp; event-&gt;<span class="built_in">isAccepted</span>()) {</span><br><span class="line">            <span class="comment">// 事件已被当前对象处理并消费</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>; </span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ---------------------------------------------------------</span></span><br><span class="line">        <span class="comment">// 环节 D：继续交给父 widget</span></span><br><span class="line">        <span class="comment">// ---------------------------------------------------------</span></span><br><span class="line">        <span class="comment">// 如果代码走到这里，通常说明输入事件被 ignore 了，</span></span><br><span class="line">        <span class="comment">// Qt 让父 widget 也有机会处理。</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 原型：QWidget* QWidget::parentWidget() const;</span></span><br><span class="line">        receiver = receiver-&gt;<span class="built_in">parentWidget</span>();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 使用同一个 event，回到 while 循环开头，对父组件再走一遍 A -&gt; B -&gt; C</span></span><br><span class="line">    }</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// 如果冒泡到最顶层的窗口还是被 ignore，返回 false</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p>这个模型只适合帮助理解输入事件的传播。不要把它推广到所有 Qt
+事件；例如绘图、定时器、resize 等事件都有自己的语义，不应该理解成“ignore
+后统一向父对象冒泡”。</p>
+<hr>
+<h4 id="613-代入示例代码">6.1.3 代入示例代码</h4>
+<p>下面把前面的 <code>InnerLabel</code> / <code>Widget</code>
+代码代入这个模型。</p>
+<p>现在，对照着上面的输入事件传播模型，我们重演一遍你代码里发生的事：</p>
+<ol type="1">
+<li><p><strong>起点：</strong>
+<code>notify(InnerLabel实例, 鼠标事件)</code>
+被调用。<code>receiver</code> 是 <code>InnerLabel</code>。</p></li>
+<li><p><strong>环节 A：</strong> <code>InnerLabel</code>
+没有安装事件过滤器，继续分发。</p></li>
+<li><p><strong>环节 B：</strong> 调用
+<code>QLabel::event(ev)</code>。</p>
+<ul>
+<li><p>鼠标事件保持 accepted 状态，除非你的处理函数显式调用
+<code>ignore()</code>。</p></li>
+<li><p>然后调用了你的
+<code>InnerLabel::mousePressEvent</code>。</p></li>
+<li><p>你的代码强行把状态改成了 <code>ev-&gt;ignore()</code>。</p></li>
+<li><p><code>QLabel::event</code> 执行完毕，返回
+<code>true</code>（表示它处理了）。此时 <code>eventHandled</code> =
+<code>true</code>。</p></li>
+</ul></li>
+<li><p><strong>环节 C：</strong>
+<code>if (eventHandled &amp;&amp; event-&gt;isAccepted())</code> 判定为
+<code>false</code>（因为你 ignore 了）。</p></li>
+<li><p><strong>环节 D：</strong>
+<code>receiver = QLabel-&gt;parentWidget();</code>。此时
+<code>receiver</code> 变成了你的 <code>Widget</code> 实例！</p></li>
+<li><p><strong>第二轮 while 循环：</strong></p>
+<ul>
+<li><p>再次经过环节 A（检查 <code>Widget</code>
+上安装的事件过滤器）。</p></li>
+<li><p>到达环节 B，调用 <code>Widget::event(ev)</code> -&gt;
+<code>Widget::mousePressEvent</code>。</p></li>
+<li><p>你的终端输出了 <code>Widget</code> 的打印信息。</p></li>
+</ul></li>
+</ol>
+<p>下面是qt处理的流程图 <img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="https://blog-img-worker.abinng.dpdns.org/2026/05/487e46b9f9713be469c1ae4c6d6debd8.webp"></p>
+<h2 id="7-输入事件传播状态">7. 输入事件传播状态</h2>
+<p>这一节解释输入事件传播时需要同时看的两个状态：<code>event()</code>
+返回值和 <code>isAccepted()</code>。</p>
+<p>先强调一下：这不是 Qt
+所有事件的统一底层公式，而是理解鼠标、键盘等输入事件传播时很有用的模型。Qt
+的事件类型很多，绘图、定时器、resize、自定义事件等都有自己的处理语义。</p>
+<p>这两个状态表达的是两件不同的事：</p>
+<h3 id="71-recognized">7.1 <code>recognized</code></h3>
+<p><code>recognized</code> 是通过执行
+<code>targetObject-&gt;event(event)</code> 得到的 <code>bool</code>
+返回值。它表示当前对象是否处理这个事件类型。</p>
+<ul>
+<li><p><strong>Qt 里的事件成百上千：</strong>
+除了鼠标、键盘，还有定时器事件 (<code>QTimerEvent</code>)、重绘事件
+(<code>QPaintEvent</code>)、窗口改变大小事件
+(<code>QResizeEvent</code>)，甚至是你自己写的自定义事件。</p></li>
+<li><p><strong>不按输入事件方式传播的事件：</strong>
+很多事件不应该按“交给父 widget 冒泡”理解。比如 <code>QPaintEvent</code>
+是系统要求某个 widget 重绘自己，<code>QTimerEvent</code> 是发给启动该
+timer 的对象。</p></li>
+<li><p>对于这类事件，<code>event()</code> 返回 <code>true</code>
+通常就表示当前对象已经处理；返回 <code>false</code>
+则表示当前对象没有处理。后续怎么走，要看具体事件类型和 Qt
+内部规则。</p></li>
+</ul>
+<p>简单说，<code>recognized</code>
+看的是“这个事件类型当前对象是否处理”。</p>
+<h3 id="72-isaccepted">7.2 <code>isAccepted()</code></h3>
+<p><code>isAccepted()</code> 表示当前处理逻辑是否消费这次事件。</p>
+<p>这个状态主要在理解 <strong>UI 输入事件（<code>QInputEvent</code>
+及其子类，如鼠标、键盘、触摸等）</strong> 时有意义。</p>
+<p>对于鼠标点击这类事件，几乎所有的 <code>QWidget</code> 都能返回
+<code>true</code>（因为基类 <code>QWidget::event</code> 里面有对应的
+switch
+case，它能识别鼠标事件）。但是，能识别不代表一定要消费这次事件。</p>
+<p>这就引出了你需要 <code>ignore()</code> 的场景（即
+<code>isAccepted() == false</code>）：当前对象虽然能处理这个事件类型，但本次处理逻辑决定不消费它。</p>
+<p>简单说，<code>isAccepted()</code>
+看的是“这一次输入事件是否被当前处理逻辑消费”。</p>
+<hr>
+<h3 id="73-两个状态的配合">7.3 两个状态的配合</h3>
+<p>单独看其中一个状态都不够，下面用两个反例说明原因。</p>
+<p>可以从两个反例来理解为什么需要区分这两个状态：</p>
+<h4 id="731-只看-event-返回值的问题">7.3.1 只看 <code>event()</code>
+返回值的问题</h4>
+<p>如果只看 <code>event()</code> 返回值，那么只要一个控件的
+<code>event()</code> 函数处理了鼠标点击并返回 <code>true</code>，父
+widget
+就没有机会继续处理这个输入事件。这样会限制一些需要父子控件共同响应的场景。</p>
+<h4 id="732-只看-event-isaccepted-的问题">7.3.2 只看
+<code>event-&gt;isAccepted()</code> 的问题</h4>
+<p>这样也不可靠。<code>QEvent</code> 的子类在 API 上都有
+<code>accept/ignore</code>
+状态，但并不是每种事件都会用这个状态表达“是否继续交给父 widget”。例如
+<code>QTimerEvent</code>、<code>QPaintEvent</code>
+的主要语义就不是输入事件传播。</p>
+<h4 id="733-输入事件的三种情况">7.3.3 输入事件的三种情况</h4>
+<p>通过 <code>recognized</code> 和 <code>event-&gt;isAccepted()</code>
+这两个维度，可以把输入事件分成三种常见情况：</p>
+<ol type="1">
+<li><p><strong><code>false</code> +
+<code>(任意)</code>：当前对象不处理这个事件类型。</strong></p>
+<ul>
+<li><p>比如你给 <code>InnerLabel</code>
+发了个它没见过的自定义事件，<code>event()</code> 直接走到最底层返回
+<code>false</code>。</p></li>
+<li><p><strong>动作：</strong>
+当前对象没有处理。后续是否继续传递取决于具体事件类型。</p></li>
+</ul></li>
+<li><p><strong><code>true</code> +
+<code>true</code>：当前对象处理并消费了这次事件。</strong></p>
+<ul>
+<li><p>常规的按钮点击（默认 accept）。</p></li>
+<li><p><strong>动作：</strong>
+对输入事件来说，通常到当前对象为止。</p></li>
+</ul></li>
+<li><p><strong><code>true</code> +
+<code>false</code>：当前对象处理了事件，但没有消费它。</strong></p>
+<ul>
+<li><p>你在 <code>mousePressEvent</code> 里写了
+<code>ignore()</code>。代码执行了，你做了想做的事（比如打印了
+Log），但这次事件仍允许父 widget 继续处理。</p></li>
+<li><p><strong>动作：</strong> 对鼠标、键盘这类输入事件来说，父 widget
+可能继续获得处理机会。</p></li>
+</ul></li>
+</ol>
+<h3 id="74-小结">7.4 小结</h3>
+<p>从理解角度看，这里可以类比为
+<strong>“拦截器模式（Interceptor）”与“责任链模式（Chain of
+Responsibility）”的结合</strong>。</p>
+<ul>
+<li><p><code>recognized</code>
+表示当前对象是否处理这个事件类型。</p></li>
+<li><p><code>isAccepted()</code>
+在输入事件里表达这次事件是否被当前处理逻辑消费。</p></li>
+</ul>
+<p>这样可以把 <strong>“框架默认分发路径”</strong> 和
+<strong>“开发者对单次事件的处理决策”</strong> 分开理解。</p>
+<h2 id="8-鼠标点击流程">8. 鼠标点击流程</h2>
+<p>我们以
+<strong>“你在屏幕上点击了一下鼠标，导致一个按钮改变了颜色”</strong>
+为例，从操作系统消息开始，完整追踪这一个事件的生命周期。</p>
+<p>可以按下面这条链路看：</p>
+<hr>
+<h3 id="81-os-消息">8.1 OS 消息</h3>
+<p>Qt 应用拿到的是操作系统分发过来的消息，而不是直接读取鼠标硬件。</p>
+<ol type="1">
+<li><p><strong>物理产生：</strong>
+你的手指按下鼠标左键，鼠标硬件向主板发送一个电信号（中断）。</p></li>
+<li><p><strong>OS 捕获：</strong>
+操作系统（Windows/macOS/Linux）捕获这个中断，并计算出鼠标点击的屏幕坐标，发现点击落在了你的
+Qt 程序窗口内。</p></li>
+<li><p><strong>推入系统队列：</strong>
+操作系统生成一个<strong>底层系统消息</strong>（例如在 Windows 上是
+<code>WM_LBUTTONDOWN</code>），并把它放入你的 Qt
+程序的<strong>系统消息队列</strong>中。</p></li>
+</ol>
+<h3 id="82-exec-事件循环">8.2 <code>exec()</code> 事件循环</h3>
+<p>现在，轮到 Qt 出场了。你写的 <code>return a.exec();</code>
+到底是个什么东西？</p>
+<p><code>exec()</code> 本质上就是一个<strong>死循环（Event
+Loop，事件循环）</strong>。如果用最极简的伪代码来表示，它长这样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">QApplication::exec</span><span class="params">()</span> </span>{</span><br><span class="line">    <span class="keyword">while</span> (!<span class="keyword">this</span>-&gt;quit_flag) {</span><br><span class="line">        <span class="comment">// 去系统的消息队列里看有没有新消息</span></span><br><span class="line">        <span class="built_in">processEvents</span>(); </span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> exit_code;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<ol type="1">
+<li><p><strong>事件分发器
+(<code>QAbstractEventDispatcher</code>)：</strong> <code>exec()</code>
+内部依赖平台相关的事件分发器，从操作系统消息队列中取出类似
+<code>WM_LBUTTONDOWN</code> 的底层消息。</p></li>
+<li><p><strong>转换成 QEvent：</strong> Qt
+把平台相关的底层消息转换成跨平台的
+<strong><code>QMouseEvent</code></strong> 对象。</p></li>
+<li><p><strong>定位目标：</strong> Qt 引擎根据坐标，在内存的 UI
+树中寻找，发现鼠标点击的位置正是你创建的那个 <code>InnerLabel</code>
+对象。</p></li>
+</ol>
+<p><em>(注：如果你自己在代码里调用
+<code>QApplication::postEvent()</code>，事件也会进入 Qt
+的事件队列，然后由 <code>exec()</code> 循环取出来处理。)</em></p>
+<h3 id="83-notify">8.3 <code>notify()</code></h3>
+<p>事件找到目标对象后，通常会进入
+<code>QCoreApplication::notify()</code> /
+<code>QApplication::notify()</code> 这条分发路径。</p>
+<p>当事件被打包好，找到了目标对象（<code>InnerLabel</code>），通常会进入
+<code>QCoreApplication::notify()</code> /
+<code>QApplication::notify()</code> 这条分发路径。它是 Qt
+事件分发的核心入口之一。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">QCoreApplication::notify</span><span class="params">(QObject *receiver, QEvent *event)</span> </span>{</span><br><span class="line">    <span class="comment">// receiver 就是你的 InnerLabel</span></span><br><span class="line">    <span class="comment">// event 就是 QMouseEvent</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ... 准备发送 ...</span></span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p><code>notify</code>
+是整个事件分发系统的重要枢纽。如果你重写了这个函数，可以观察或干预应用层面的事件分发；但这种做法影响范围很大，一般不建议用它处理普通业务逻辑。</p>
+<h3 id="84-事件过滤器">8.4 事件过滤器</h3>
+<p>在目标对象正式处理事件之前，Qt 会先检查是否安装了事件过滤器。</p>
+<ol type="1">
+<li><p>Qt 会检查：有没有别的对象对这个 <code>InnerLabel</code> 调用了
+<code>installEventFilter()</code>？</p></li>
+<li><p>如果有，就把事件先送给那个<strong>监听者（Filter）</strong>。</p></li>
+<li><p>监听者可以检查这个事件，甚至可以返回 <code>true</code>
+直接拦截这个事件。如果被拦截，<code>InnerLabel</code>
+不会再收到这次事件。</p></li>
+<li><p>如果监听者返回
+<code>false</code>（放行），或者根本没人监听，事件才会真正送到目标手里。</p></li>
+</ol>
+<h3 id="85-event-分发">8.5 <code>event()</code> 分发</h3>
+<p>事件来到
+<code>InnerLabel::event(ev)</code>。这就是对象内部的事件分发入口。</p>
+<ol type="1">
+<li><p>就像我们之前讨论的，<code>event()</code>
+是事件分发入口。</p></li>
+<li><p>你调用了 <code>QLabel::event(ev)</code> -&gt;
+<code>QWidget::event(ev)</code>。</p></li>
+<li><p><code>QWidget::event</code> 内部的
+<code>switch (ev-&gt;type())</code> 认出了这是鼠标点击。</p></li>
+<li><p>它将通用的 <code>QEvent</code>
+强制转换（<code>static_cast</code>）为更具体的
+<code>QMouseEvent</code>。</p></li>
+<li><p>对鼠标这类输入事件，如果你的处理函数没有调用
+<code>ignore()</code>，通常就表示当前控件消费了这次事件。</p></li>
+<li><p>它调用了 <code>this-&gt;mousePressEvent(ev)</code>。</p></li>
+</ol>
+<h3 id="86-处理与传播">8.6 处理与传播</h3>
+<p>事件处理函数执行业务逻辑后，输入事件可能被消费，也可能继续交给父
+widget。</p>
+<p>现在，代码执行到了你重写的
+<code>InnerLabel::mousePressEvent(QMouseEvent *ev)</code>
+里。你可以在这里改变按钮颜色、打印 Log、发起网络请求。</p>
+<p>执行完你的代码后，控制权原路返回到 Qt 的事件分发逻辑中。</p>
+<p>对于鼠标这类输入事件，后续大致可以这样理解：</p>
+<ol type="1">
+<li><p><strong>你执行了
+<code>ev-&gt;accept()</code>（或默认没动）：</strong> Qt
+通常认为当前控件消费了这个事件，程序回到事件循环，继续等待下一次事件。</p></li>
+<li><p><strong>你执行了 <code>ev-&gt;ignore()</code>：</strong> Qt
+会让父 widget 也有机会处理这个输入事件。</p>
+<ul>
+<li><p>Qt 顺着 <code>InnerLabel</code> 找到它的 UI 父亲
+<code>Widget</code>。</p></li>
+<li><p>父 widget 会经历自己的事件过滤器、<code>event()</code>
+和对应的事件处理函数。</p></li>
+<li><p>这个传播行为主要用于输入事件，不要推广到所有
+<code>QEvent</code>。</p></li>
+</ul></li>
+</ol>
+<h2 id="9-主动发送事件">9. 主动发送事件</h2>
+<p>这一节比较 <code>sendEvent()</code> 和
+<code>postEvent()</code>：一个同步发送，一个异步投递。</p>
+<p>前面主要讲的是系统事件，例如鼠标点击、键盘输入、窗口重绘。Qt
+里也可以在代码中主动给某个对象发送事件，常见接口是
+<code>sendEvent()</code> 和 <code>postEvent()</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">QCoreApplication::<span class="built_in">sendEvent</span>(receiver, event);</span><br><span class="line">QCoreApplication::<span class="built_in">postEvent</span>(receiver, event);</span><br></pre></td></tr></table></figure>
+
+<p>它们的区别在于是否立即处理：</p>
+<ul>
+<li><code>sendEvent()</code> 是同步发送，会立刻进入目标对象的
+<code>event()</code>。函数返回时，事件已经处理完。</li>
+<li><code>postEvent()</code>
+是异步投递，会把事件放进目标线程的事件队列，等事件循环之后再处理。</li>
+</ul>
+<p>使用时要注意事件对象的生命周期：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">QEvent <span class="title">ev</span><span class="params">(QEvent::User)</span></span>;</span><br><span class="line">QCoreApplication::<span class="built_in">sendEvent</span>(obj, &amp;ev);   <span class="comment">// 同步发送，栈对象可以</span></span><br><span class="line"></span><br><span class="line">QCoreApplication::<span class="built_in">postEvent</span>(obj, <span class="keyword">new</span> <span class="built_in">QEvent</span>(QEvent::User)); <span class="comment">// 异步投递，通常使用 new</span></span><br></pre></td></tr></table></figure>
+
+<p><code>postEvent()</code> 投递出去的事件由 Qt 在处理后释放；不要再手动
+delete。<code>sendEvent()</code> 不接管事件对象的所有权。</p>
+<p>这两个函数的使用场景也不同：</p>
+<ul>
+<li>想立刻让对象处理事件，用 <code>sendEvent()</code>。</li>
+<li>想把处理推迟到事件循环中，或者从别的线程投递给某个对象，用
+<code>postEvent()</code>。</li>
+</ul>
+<p><code>postEvent()</code>
+依赖事件循环。如果目标线程没有运行事件循环，投递的事件就不会被正常处理。</p>
+<h2 id="10-自定义事件">10. 自定义事件</h2>
+<p>当信号槽不适合表达某些低层事件，或者你希望把一段逻辑放进事件队列里处理时，可以定义自己的事件。</p>
+<p>常见写法有两种：</p>
+<ol type="1">
+<li>使用已有的 <code>QEvent</code> 类型，例如
+<code>QEvent::User</code>。</li>
+<li>继承 <code>QEvent</code>，定义自己的事件类型和数据。</li>
+</ol>
+<p>简单示例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyEvent</span> : <span class="keyword">public</span> QEvent</span><br><span class="line">{</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> QEvent::Type <span class="title">type</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>{</span><br><span class="line">        <span class="type">static</span> <span class="type">int</span> id = QEvent::<span class="built_in">registerEventType</span>();</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">static_cast</span>&lt;QEvent::Type&gt;(id);</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">MyEvent</span><span class="params">(QString text)</span></span></span><br><span class="line"><span class="function">        : QEvent(type()), text(std::move(text))</span></span><br><span class="line"><span class="function">    {</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    QString text;</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+
+<p>目标对象可以在 <code>event()</code> 中识别它：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">MyObject::event</span><span class="params">(QEvent *ev)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="keyword">if</span> (ev-&gt;<span class="built_in">type</span>() == MyEvent::<span class="built_in">type</span>()) {</span><br><span class="line">        <span class="keyword">auto</span> *myEvent = <span class="built_in">static_cast</span>&lt;MyEvent *&gt;(ev);</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; myEvent-&gt;text;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> QObject::<span class="built_in">event</span>(ev);</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p>发送时可以用 <code>postEvent()</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QCoreApplication::<span class="built_in">postEvent</span>(obj, <span class="keyword">new</span> <span class="built_in">MyEvent</span>(<span class="string">"hello"</span>));</span><br></pre></td></tr></table></figure>
+
+<p>也可以重写 <code>customEvent()</code>，它专门用于处理自定义事件：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyObject::customEvent</span><span class="params">(QEvent *ev)</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    <span class="keyword">if</span> (ev-&gt;<span class="built_in">type</span>() == MyEvent::<span class="built_in">type</span>()) {</span><br><span class="line">        <span class="keyword">auto</span> *myEvent = <span class="built_in">static_cast</span>&lt;MyEvent *&gt;(ev);</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; myEvent-&gt;text;</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+
+<p>两种方式都可以。一般来说，如果对象已经重写了 <code>event()</code>
+并且要统一处理多种事件，就放在 <code>event()</code>
+里；如果只是处理自定义事件，用 <code>customEvent()</code> 更直接。</p>
+<h2 id="11-线程与延迟删除">11. 线程与延迟删除</h2>
+<p>这一节说明事件循环和线程的关系，以及 <code>deleteLater()</code>
+为什么依赖事件系统。</p>
+<p>Qt
+的事件循环和线程关系很密切。每个线程都可以有自己的事件循环，对象属于哪个线程，它收到的事件通常就在哪个线程的事件循环里处理。</p>
+<p>主线程里一般是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">QApplication <span class="title">app</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line"><span class="keyword">return</span> app.<span class="built_in">exec</span>();</span><br></pre></td></tr></table></figure>
+
+<p>子线程如果需要处理事件，也要运行事件循环。比如使用
+<code>QThread::exec()</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QThread thread;</span><br><span class="line">worker-&gt;<span class="built_in">moveToThread</span>(&amp;thread);</span><br><span class="line">thread.<span class="built_in">start</span>(); <span class="comment">// QThread 默认会在 run() 里调用 exec()</span></span><br></pre></td></tr></table></figure>
+
+<p>理解这一点后，<code>postEvent()</code>
+和跨线程信号就更容易理解了：它们不是直接在当前调用点执行目标对象逻辑，而是把工作交给目标对象所属线程的事件循环。</p>
+<p><code>deleteLater()</code> 也依赖事件系统：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj-&gt;<span class="built_in">deleteLater</span>();</span><br></pre></td></tr></table></figure>
+
+<p>它不会立刻删除对象，而是向对象所属线程的事件队列投递一个延迟删除事件。等事件循环处理到这个事件时，Qt
+才真正删除对象。</p>
+<p>这也是为什么 Qt
+里经常推荐在对象可能仍处于事件处理过程、或者涉及跨线程时使用
+<code>deleteLater()</code>，而不是直接
+<code>delete obj</code>。前提是对象所属线程的事件循环还在运行，否则延迟删除事件也没有机会被处理。</p>
+<h2 id="12-信号和事件">12. 信号和事件</h2>
+<p>这一节区分事件系统和信号槽：事件偏底层输入/状态变化，信号偏对象对外通知。</p>
+<p>事件和信号都可以触发后续代码执行，所以容易混在一起。</p>
+<p>可以这样区分：事件通常表示底层输入或 Qt
+内部状态变化；信号通常表示对象对外通知某个语义动作已经发生。</p>
+<p>事件：通常来自操作系统底层（鼠标按键、键盘、窗口重绘）或 Qt
+框架内部（定时器）。 信号：来自 Qt
+对象内部的业务逻辑代码（比如代码里显式写了
+<code>emit clicked()</code>）。</p>
+<h3 id="121-怎么配合">12.1 怎么配合</h3>
+<p>常见情况是：事件先发生，控件在事件处理函数里更新内部状态；当它确认某个语义动作成立时，再发射信号。</p>
+<p>以最常见的“点击按钮 (<code>QPushButton</code>)
+”为例，看看底层的链路：</p>
+<ol type="1">
+<li><p><strong>【系统触发事件】</strong>：你用鼠标点击了按钮，操作系统发来底层消息，<code>QApplication</code>
+把它打包成 <code>QMouseEvent</code>，送到了对应的按钮控件处。</p></li>
+<li><p><strong>【底层接收事件】</strong>：进入
+<code>QPushButton::mousePressEvent(ev)</code>。按钮在这里改变自己的 UI
+状态（比如让自己凹陷下去），并消费这次鼠标按下事件。</p></li>
+<li><p><strong>【系统再次触发】</strong>：你松开了鼠标，Qt 又送来一个
+<code>QMouseEvent</code> (Release)。</p></li>
+<li><p><strong>【事件转化为信号】</strong>：进入
+<code>QPushButton::mouseReleaseEvent(ev)</code>。按钮在这里让自己弹起，恢复原状。同时，它内部判断鼠标按下和抬起都在按钮区域内，于是发射
+<code>clicked()</code> 信号。</p></li>
+<li><p><strong>【业务层接收信号】</strong>：你在主窗口里写好的
+<code>connect(btn, &amp;QPushButton::clicked, this, &amp;Widget::submitData);</code>
+收到广播，开始向服务器提交数据。</p></li>
+</ol>
+<p><strong>总结：</strong> 控件内部通过重写
+<strong>事件处理函数（虚函数）</strong>
+来处理系统交互，在确认交互有效后，对外
+<strong>发射信号（Signal）</strong> 来通知业务层。</p>
+<h3 id="122-选择依据">12.2 选择依据</h3>
+<p>什么时候重写事件处理函数，什么时候连接
+signal，主要看你是要改变控件行为，还是只响应业务动作。</p>
+<p><strong>需要改变控件默认行为时，重写事件处理函数</strong></p>
+<ul>
+<li><p><strong>场景：</strong>
+你想写一个只能输入数字、且输入字母时边框变红的输入框
+(<code>QLineEdit</code>)。</p></li>
+<li><p><strong>做法：</strong> 继承 <code>QLineEdit</code>，重写
+<code>keyPressEvent</code>。拦截掉非数字按键 (<code>ignore</code> 或直接
+<code>return</code>)，重绘边框。因为你要干预控件的<strong>默认系统行为</strong>，必须在源头截断。</p></li>
+</ul>
+<p><strong>只关心业务动作时，连接信号</strong></p>
+<ul>
+<li><p><strong>场景：</strong>
+用户点击了登录按钮，你需要发送网络请求。</p></li>
+<li><p><strong>做法：</strong> 直接 <code>connect</code> 按钮的
+<code>clicked</code>
+信号。不需要关心鼠标是左键点的还是右键点的、按下了多少毫秒，你只需要结果。</p></li>
+</ul>
+<p>一般来说，定制控件交互或拦截默认行为时用事件；响应按钮点击、文本变化这类业务动作时优先用信号。</p>
+</article><div class="post-copyright"><div class="copyright-cc-box"><i class="anzhiyufont anzhiyu-icon-copyright"></i></div><div class="post-copyright__author_box"><a class="post-copyright__author_img" href="/" title="头像"><img class="post-copyright__author_img_back" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/avatar1.jpg" title="头像" alt="头像"><img class="post-copyright__author_img_front" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/avatar1.jpg" title="头像" alt="头像"></a><div class="post-copyright__author_name">abinng😶‍🌫️</div><div class="post-copyright__author_desc"></div></div><div class="post-copyright__post__info"><a class="post-copyright__original" title="该文章为原创文章，注意版权协议" href="http://abinng.github.io/posts/39901.html/">原创</a><a class="post-copyright-title"><span onclick="rm.copyPageUrl('http://abinng.github.io/posts/39901.html/')">012-Qt 的事件系统</span></a></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div class="rewardLeftButton"><div class="post-reward" onclick="anzhiyu.addRewardMask()"><div class="reward-button button--animated" title="赞赏作者"><i class="anzhiyufont anzhiyu-icon-hand-heart-fill"></i>打赏作者</div><div class="reward-main"><div class="reward-all"><span class="reward-title">感谢你赐予我前进的力量</span><ul class="reward-group"><li class="reward-item"><a href="/assets/reward/wechat.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/reward/wechat.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/assets/reward/alipay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/reward/alipay.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul><a class="reward-main-btn" href="/about/#about-reward" target="_blank"><div class="reward-text">赞赏者名单</div><div class="reward-dec">因为你们的支持让我意识到写文章的价值🙏</div></a></div></div></div><div id="quit-box" onclick="anzhiyu.removeRewardMask()" style="display: none"></div></div><div class="shareRight"><div class="share-link mobile"><div class="share-qrcode"><div class="share-button" title="使用手机访问这篇文章"><i class="anzhiyufont anzhiyu-icon-qrcode"></i></div><div class="share-main"><div class="share-main-all"><div id="qrcode" title="http://abinng.github.io/posts/39901.html/"></div><div class="reward-dec">使用手机访问这篇文章</div></div></div></div></div><div class="share-link weibo"><a class="share-button" target="_blank" href="https://service.weibo.com/share/share.php?title=012-Qt 的事件系统&amp;url=http://abinng.github.io/posts/39901.html/&amp;pic=/assets/cover/QT/12.webp" rel="external nofollow noreferrer noopener"><i class="anzhiyufont anzhiyu-icon-weibo"></i></a></div><script>function copyCurrentPageUrl() {
+  var currentPageUrl = window.location.href;
+  var input = document.createElement("input");
+  input.setAttribute("value", currentPageUrl);
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(input);
+}</script><div class="share-link copyurl"><div class="share-button" id="post-share-url" title="复制链接" onclick="copyCurrentPageUrl()"><i class="anzhiyufont anzhiyu-icon-link"></i></div></div></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://abinng.github.io" target="_blank">abinng😶‍🌫️</a>！</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__box"><div class="post-meta__box__tag-list"><a class="post-meta__box__tags" href="/tags/C/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>C++<span class="tagsPageCount">25</span></a><a class="post-meta__box__tags" href="/tags/Qt/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>Qt<span class="tagsPageCount">19</span></a><a class="post-meta__box__tags" href="/tags/%E4%BA%8B%E4%BB%B6%E7%B3%BB%E7%BB%9F/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>事件系统<span class="tagsPageCount">2</span></a><a class="post-meta__box__tags" href="/tags/QEvent/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>QEvent<span class="tagsPageCount">1</span></a><a class="post-meta__box__tags" href="/tags/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/"><span class="tags-punctuation"> <i class="anzhiyufont anzhiyu-icon-tag"></i></span>事件分发<span class="tagsPageCount">1</span></a></div></div></div><div class="post_share"><div class="social-share" data-image="/assets/cover/QT/16.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"/><script src="https://cdn.cbd.int/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer="defer"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/64071.html/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/cover/Qt-demo-%E9%93%B6%E8%A1%8C%E8%BE%93%E5%85%A5%E9%94%AE%E7%9B%98.webp" onerror="onerror=null;src='/assets/404.png'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Qt demo:银行输入键盘</div></div></a></div><div class="next-post pull-right"><a href="/posts/33206.html/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/cover/QT/13.webp" onerror="onerror=null;src='/assets/404.png'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">013-Qt 事件系统的小案例</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="anzhiyufont anzhiyu-icon-thumbs-up fa-fw" style="font-size: 1.5rem; margin-right: 4px"></i><span>喜欢这篇文章的人也看了</span></div><div class="relatedPosts-list"><div><a href="/posts/33206.html/" title="013-Qt 事件系统的小案例"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/cover/QT/13.webp" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-05-09</div><div class="title">013-Qt 事件系统的小案例</div></div></a></div><div><a href="/posts/64071.html/" title="Qt demo:银行输入键盘"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/cover/Qt-demo-%E9%93%B6%E8%A1%8C%E8%BE%93%E5%85%A5%E9%94%AE%E7%9B%98.webp" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-03-29</div><div class="title">Qt demo:银行输入键盘</div></div></a></div><div><a href="/posts/12940.html/" title="001-Qt的编译原理"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/cover/Qt/1.webp" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-03-18</div><div class="title">001-Qt的编译原理</div></div></a></div><div><a href="/posts/16239.html/" title="003-Qt 的对象管理"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/cover/QT/3.webp" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-03-18</div><div class="title">003-Qt 的对象管理</div></div></a></div><div><a href="/posts/51196.html/" title="005-Qt 的容器"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/cover/QT/5.webp" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-03-19</div><div class="title">005-Qt 的容器</div></div></a></div><div><a href="/posts/49572.html/" title="006-Qt 的布局"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/cover/QT/6.webp" alt="cover"><div class="content is-center"><div class="date"><i class="anzhiyufont anzhiyu-icon-calendar-days fa-fw"></i> 2026-03-19</div><div class="title">006-Qt 的布局</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="anzhiyufont anzhiyu-icon-comments"></i><span> 评论</span></div><div class="comment-randomInfo"><a onclick="anzhiyu.addRandomCommentInfo()" href="javascript:void(0)">匿名评论</a><a href="/privacy" style="margin-left: 4px">隐私政策</a></div><div class="comment-tips" id="comment-tips"><span>✅ 你无需删除空行，直接评论以获取最佳展示效果</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div><div class="comment-barrage"></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="anzhiyufont anzhiyu-icon-bars"></i><span>文章目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E4%B9%A0%E8%B7%AF%E7%BA%BF"><span class="toc-number">1.</span> <span class="toc-text">复习路线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BA%8B%E4%BB%B6%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">1. 事件是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AFexec"><span class="toc-number">3.</span> <span class="toc-text">2. 事件循环：exec</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%88%86%E5%8F%91%E5%85%A5%E5%8F%A3event"><span class="toc-number">4.</span> <span class="toc-text">3. 分发入口：event()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#31-%E5%9F%BA%E7%B1%BB-event"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 基类 event()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%AD%90%E7%B1%BB-handler-%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.</span> <span class="toc-text">4. 子类 handler 示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-accept-%E5%92%8C-ignore"><span class="toc-number">6.</span> <span class="toc-text">5. accept 和
+ignore</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%BA%8B%E4%BB%B6%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">7.</span> <span class="toc-text">6. 事件过滤器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#61-%E8%BF%87%E6%BB%A4%E4%B8%8E%E4%BC%A0%E6%92%AD%E7%A4%BA%E4%BE%8B"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 过滤与传播示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#611-%E5%AE%9A%E4%BD%8D%E7%9B%AE%E6%A0%87%E5%AF%B9%E8%B1%A1"><span class="toc-number">7.1.1.</span> <span class="toc-text">6.1.1 定位目标对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#612-%E5%88%86%E5%8F%91%E6%A8%A1%E5%9E%8B"><span class="toc-number">7.1.2.</span> <span class="toc-text">6.1.2 分发模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#613-%E4%BB%A3%E5%85%A5%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">7.1.3.</span> <span class="toc-text">6.1.3 代入示例代码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E8%BE%93%E5%85%A5%E4%BA%8B%E4%BB%B6%E4%BC%A0%E6%92%AD%E7%8A%B6%E6%80%81"><span class="toc-number">8.</span> <span class="toc-text">7. 输入事件传播状态</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#71-recognized"><span class="toc-number">8.1.</span> <span class="toc-text">7.1 recognized</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#72-isaccepted"><span class="toc-number">8.2.</span> <span class="toc-text">7.2 isAccepted()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#73-%E4%B8%A4%E4%B8%AA%E7%8A%B6%E6%80%81%E7%9A%84%E9%85%8D%E5%90%88"><span class="toc-number">8.3.</span> <span class="toc-text">7.3 两个状态的配合</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#731-%E5%8F%AA%E7%9C%8B-event-%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">8.3.1.</span> <span class="toc-text">7.3.1 只看 event()
+返回值的问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#732-%E5%8F%AA%E7%9C%8B-event-isaccepted-%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">8.3.2.</span> <span class="toc-text">7.3.2 只看
+event-&gt;isAccepted() 的问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#733-%E8%BE%93%E5%85%A5%E4%BA%8B%E4%BB%B6%E7%9A%84%E4%B8%89%E7%A7%8D%E6%83%85%E5%86%B5"><span class="toc-number">8.3.3.</span> <span class="toc-text">7.3.3 输入事件的三种情况</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#74-%E5%B0%8F%E7%BB%93"><span class="toc-number">8.4.</span> <span class="toc-text">7.4 小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E6%B5%81%E7%A8%8B"><span class="toc-number">9.</span> <span class="toc-text">8. 鼠标点击流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#81-os-%E6%B6%88%E6%81%AF"><span class="toc-number">9.1.</span> <span class="toc-text">8.1 OS 消息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#82-exec-%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF"><span class="toc-number">9.2.</span> <span class="toc-text">8.2 exec() 事件循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#83-notify"><span class="toc-number">9.3.</span> <span class="toc-text">8.3 notify()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#84-%E4%BA%8B%E4%BB%B6%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">9.4.</span> <span class="toc-text">8.4 事件过滤器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#85-event-%E5%88%86%E5%8F%91"><span class="toc-number">9.5.</span> <span class="toc-text">8.5 event() 分发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#86-%E5%A4%84%E7%90%86%E4%B8%8E%E4%BC%A0%E6%92%AD"><span class="toc-number">9.6.</span> <span class="toc-text">8.6 处理与传播</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E4%B8%BB%E5%8A%A8%E5%8F%91%E9%80%81%E4%BA%8B%E4%BB%B6"><span class="toc-number">10.</span> <span class="toc-text">9. 主动发送事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6"><span class="toc-number">11.</span> <span class="toc-text">10. 自定义事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%BB%B6%E8%BF%9F%E5%88%A0%E9%99%A4"><span class="toc-number">12.</span> <span class="toc-text">11. 线程与延迟删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-%E4%BF%A1%E5%8F%B7%E5%92%8C%E4%BA%8B%E4%BB%B6"><span class="toc-number">13.</span> <span class="toc-text">12. 信号和事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#121-%E6%80%8E%E4%B9%88%E9%85%8D%E5%90%88"><span class="toc-number">13.1.</span> <span class="toc-text">12.1 怎么配合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#122-%E9%80%89%E6%8B%A9%E4%BE%9D%E6%8D%AE"><span class="toc-number">13.2.</span> <span class="toc-text">12.2 选择依据</span></a></li></ol></li></ol></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div id="footer_deal"><a class="deal_link" href="mailto:abinng@foxmail.com" title="email"><i class="anzhiyufont anzhiyu-icon-envelope"></i></a><img class="footer_mini_logo" title="返回顶部" alt="返回顶部" onclick="anzhiyu.scrollToDest(0, 500)" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/assets/avatar1.jpg" size="50px"/><a class="deal_link" target="_blank" rel="noopener" href="https://github.com/abinng" title="Github"><i class="anzhiyufont anzhiyu-icon-github"></i></a></div><div id="workboard"><img class="workSituationImg boardsign" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="https://img.shields.io/badge/author-abinng-9cf" alt="距离月入25k也就还差一个大佬带我~" title="距离月入25k也就还差一个大佬带我~"/><div id="runtimeTextTip"></div></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v8.1.1" title="博客框架为Hexo_v8.1.1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.1.5/img/badge/Frame-Hexo.svg" alt="博客框架为Hexo_v8.1.1"/></a><a class="github-badge" target="_blank" href="https://hexo.anheyu.com/" style="margin-inline:5px" data-title="本站使用AnZhiYu主题" title="本站使用AnZhiYu主题"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.9/img/Theme-AnZhiYu-2E67D3.svg" alt="本站使用AnZhiYu主题"/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="https://npm.elemecdn.com/anzhiyu-blog@2.2.0/img/badge/Copyright-BY-NC-SA.svg" alt="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"/></a></p></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div id="footer-bar-tips"><div class="copyright">&copy;2026 By <a class="footer-bar-link" href="/" title="abinng😶‍🌫️" target="_blank">abinng😶‍🌫️</a></div></div><div id="footer-type-tips"></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/anzhiyu-c/hexo-theme-anzhiyu" title="主题">主题</a></div></div></div></footer></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="sidebar-site-data site-data is-center"><a href="/archives/" title="archive"><div class="headline">文章</div><div class="length-num">43</div></a><a href="/tags/" title="tag"><div class="headline">标签</div><div class="length-num">93</div></a><a href="/categories/" title="category"><div class="headline">分类</div><div class="length-num">12</div></a></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><a class="darkmode_switchbutton menu-child" href="javascript:void(0);" title="显示模式"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span>显示模式</span></a></div><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title">网页</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://blog.abinng.com/" title="博客"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/favicon.ico" alt="博客"/><span class="back-menu-item-text">博客</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title">项目</div><div class="back-menu-list"><a class="back-menu-item" target="_blank" rel="noopener" href="https://github.com/abinng/Blog-code" title="代码库"><img class="back-menu-item-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null,this.src=&quot;/assets/404.png&quot;" data-lazy-src="/favicon.ico" alt="代码库"/><span class="back-menu-item-text">代码库</span></a></div></div></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 文章</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/archives/"><i class="anzhiyufont anzhiyu-icon-box-archive faa-tada" style="font-size: 0.9em;"></i><span> 归档</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/categories/"><i class="anzhiyufont anzhiyu-icon-shapes faa-tada" style="font-size: 0.9em;"></i><span> 分类</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags faa-tada" style="font-size: 0.9em;"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 友链</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/comments/"><i class="anzhiyufont anzhiyu-icon-envelope faa-tada" style="font-size: 0.9em;"></i><span> 留言板</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span> 关于</span></a><ul class="menus_item_child"><li><a class="site-page child faa-parent animated-hover" href="/about/"><i class="anzhiyufont anzhiyu-icon-paper-plane faa-tada" style="font-size: 0.9em;"></i><span> 我</span></a></li><li><a class="site-page child faa-parent animated-hover" href="/charts/"><i class="fas fa-chart-bar faa-tada"></i><span> 文章统计</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-tags"><div class="item-headline"></div><div class="card-tag-cloud"><a href="/tags/C/" style="font-size: 0.88rem;">C++<sup>25</sup></a><a href="/tags/CNN/" style="font-size: 0.88rem;">CNN<sup>6</sup></a><a href="/tags/CentOS/" style="font-size: 0.88rem;">CentOS<sup>1</sup></a><a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 0.88rem;">C语言<sup>5</sup></a><a href="/tags/Docker/" style="font-size: 0.88rem;">Docker<sup>3</sup></a><a href="/tags/Docker-Desktop/" style="font-size: 0.88rem;">Docker Desktop<sup>1</sup></a><a href="/tags/GCC/" style="font-size: 0.88rem;">GCC<sup>1</sup></a><a href="/tags/GDB/" style="font-size: 0.88rem;">GDB<sup>1</sup></a><a href="/tags/GitHub/" style="font-size: 0.88rem;">GitHub<sup>1</sup></a><a href="/tags/IO%E6%B5%81/" style="font-size: 0.88rem;">IO流<sup>1</sup></a><a href="/tags/Linux/" style="font-size: 0.88rem;">Linux<sup>9</sup></a><a href="/tags/Oat/" style="font-size: 0.88rem;">Oat++<sup>1</sup></a><a href="/tags/PyTorch/" style="font-size: 0.88rem;">PyTorch<sup>6</sup></a><a href="/tags/QSS/" style="font-size: 0.88rem;">QSS<sup>2</sup></a><a href="/tags/Qt/" style="font-size: 0.88rem;">Qt<sup>19</sup></a><a href="/tags/SHA256/" style="font-size: 0.88rem;">SHA256<sup>1</sup></a><a href="/tags/TCP-IP/" style="font-size: 0.88rem;">TCP/IP<sup>1</sup></a><a href="/tags/UI%E8%A7%A3%E8%80%A6/" style="font-size: 0.88rem;">UI解耦<sup>1</sup></a><a href="/tags/WSL2/" style="font-size: 0.88rem;">WSL2<sup>2</sup></a><a href="/tags/Web%E6%A1%86%E6%9E%B6/" style="font-size: 0.88rem;">Web框架<sup>1</sup></a><a href="/tags/Windows/" style="font-size: 0.88rem;">Windows<sup>4</sup></a><a href="/tags/%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE/" style="font-size: 0.88rem;">代理配置<sup>1</sup></a><a href="/tags/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="font-size: 0.88rem;">后端开发<sup>1</sup></a><a href="/tags/%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB/" style="font-size: 0.88rem;">图像分类<sup>5</sup></a><a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" style="font-size: 0.88rem;">多线程<sup>2</sup></a><a href="/tags/%E5%A4%9A%E8%BF%9B%E7%A8%8B/" style="font-size: 0.88rem;">多进程<sup>1</sup></a><a href="/tags/%E5%AE%89%E5%85%A8/" style="font-size: 0.88rem;">安全<sup>1</sup></a><a href="/tags/%E5%AE%B9%E5%99%A8%E5%8C%96/" style="font-size: 0.88rem;">容器化<sup>1</sup></a><a href="/tags/%E5%BA%95%E5%B1%82/" style="font-size: 0.88rem;">底层<sup>1</sup></a><a href="/tags/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" style="font-size: 0.88rem;">开发工具<sup>1</sup></a><a href="/tags/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" style="font-size: 0.88rem;">开发环境<sup>2</sup></a><a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 0.88rem;">操作系统<sup>3</sup></a><a href="/tags/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/" style="font-size: 0.88rem;">数字签名<sup>1</sup></a><a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 0.88rem;">目标检测<sup>1</sup></a><a href="/tags/%E7%A7%91%E6%99%AE/" style="font-size: 0.88rem;">科普<sup>1</sup></a><a href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" style="font-size: 0.88rem;">网络编程<sup>3</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 0.88rem;">计算机网络<sup>1</sup></a><a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" style="font-size: 0.88rem; font-weight: 500; color: var(--anzhiyu-lighttext)">计算机视觉<sup>6</sup></a><a href="/tags/%E9%98%B2%E7%AA%A5%E9%94%AE%E7%9B%98/" style="font-size: 0.88rem;">防窥键盘<sup>1</sup></a><a href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/" style="font-size: 0.88rem;">高并发<sup>1</sup></a></div></div><hr/></div></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="anzhiyufont anzhiyu-icon-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="anzhiyufont anzhiyu-icon-arrows-left-right"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="anzhiyufont anzhiyu-icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="anzhiyufont anzhiyu-icon-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="anzhiyufont anzhiyu-icon-comments"></i></a><a id="switch-commentBarrage" href="javascript:anzhiyu.switchCommentBarrage();" title="开关弹幕"><i class="anzhiyufont anzhiyu-icon-danmu"></i></a><button id="go-up" type="button" title="回到顶部"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></button></div></div><div id="nav-music"><a id="nav-music-hoverTips" onclick="anzhiyu.musicToggle()" accesskey="m">播放音乐</a><div id="console-music-bg"></div><meting-js id="8152976493" server="netease" type="playlist" mutex="true" preload="none" theme="var(--anzhiyu-main)" data-lrctype="0" order="random" volume="0.7"></meting-js></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="anzhiyufont anzhiyu-icon-xmark"></i></button></nav><div class="is-center" id="loading-database"><i class="anzhiyufont anzhiyu-icon-spinner anzhiyu-pulse-icon"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div id="rightMenu"><div class="rightMenu-group rightMenu-small"><div class="rightMenu-item" id="menu-backward"><i class="anzhiyufont anzhiyu-icon-arrow-left"></i></div><div class="rightMenu-item" id="menu-forward"><i class="anzhiyufont anzhiyu-icon-arrow-right"></i></div><div class="rightMenu-item" id="menu-refresh"><i class="anzhiyufont anzhiyu-icon-arrow-rotate-right" style="font-size: 1rem;"></i></div><div class="rightMenu-item" id="menu-top"><i class="anzhiyufont anzhiyu-icon-arrow-up"></i></div></div><div class="rightMenu-group rightMenu-line rightMenuPlugin"><div class="rightMenu-item" id="menu-copytext"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制选中文本</span></div><div class="rightMenu-item" id="menu-pastetext"><i class="anzhiyufont anzhiyu-icon-paste"></i><span>粘贴文本</span></div><a class="rightMenu-item" id="menu-commenttext"><i class="anzhiyufont anzhiyu-icon-comment-medical"></i><span>引用到评论</span></a><div class="rightMenu-item" id="menu-newwindow"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开</span></div><div class="rightMenu-item" id="menu-copylink"><i class="anzhiyufont anzhiyu-icon-link"></i><span>复制链接地址</span></div><div class="rightMenu-item" id="menu-copyimg"><i class="anzhiyufont anzhiyu-icon-images"></i><span>复制此图片</span></div><div class="rightMenu-item" id="menu-downloadimg"><i class="anzhiyufont anzhiyu-icon-download"></i><span>下载此图片</span></div><div class="rightMenu-item" id="menu-newwindowimg"><i class="anzhiyufont anzhiyu-icon-window-restore"></i><span>新窗口打开图片</span></div><div class="rightMenu-item" id="menu-search"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>站内搜索</span></div><div class="rightMenu-item" id="menu-searchBaidu"><i class="anzhiyufont anzhiyu-icon-magnifying-glass"></i><span>百度搜索</span></div><div class="rightMenu-item" id="menu-music-toggle"><i class="anzhiyufont anzhiyu-icon-play"></i><span>播放音乐</span></div><div class="rightMenu-item" id="menu-music-back"><i class="anzhiyufont anzhiyu-icon-backward"></i><span>切换到上一首</span></div><div class="rightMenu-item" id="menu-music-forward"><i class="anzhiyufont anzhiyu-icon-forward"></i><span>切换到下一首</span></div><div class="rightMenu-item" id="menu-music-playlist" onclick="window.open(&quot;https://y.qq.com/n/ryqq/playlist/8802438608&quot;, &quot;_blank&quot;);" style="display: none;"><i class="anzhiyufont anzhiyu-icon-radio"></i><span>查看所有歌曲</span></div><div class="rightMenu-item" id="menu-music-copyMusicName"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制歌名</span></div></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item menu-link" id="menu-randomPost"><i class="anzhiyufont anzhiyu-icon-shuffle"></i><span>随便逛逛</span></a><a class="rightMenu-item menu-link" href="/categories/"><i class="anzhiyufont anzhiyu-icon-cube"></i><span>博客分类</span></a><a class="rightMenu-item menu-link" href="/tags/"><i class="anzhiyufont anzhiyu-icon-tags"></i><span>文章标签</span></a></div><div class="rightMenu-group rightMenu-line rightMenuOther"><a class="rightMenu-item" id="menu-copy" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-copy"></i><span>复制地址</span></a><a class="rightMenu-item" id="menu-commentBarrage" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-message"></i><span class="menu-commentBarrage-text">关闭热评</span></a><a class="rightMenu-item" id="menu-darkmode" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-circle-half-stroke"></i><span class="menu-darkmode-text">深色模式</span></a><a class="rightMenu-item" id="menu-translate" href="javascript:void(0);"><i class="anzhiyufont anzhiyu-icon-language"></i><span>轉為繁體</span></a></div></div><div id="rightmenu-mask"></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.cbd.int/@fancyapps/ui@6.1.6/dist/fancybox/fancybox.umd.js"></script><script src="https://cdn.cbd.int/instant.page@5.2.0/instantpage.js" type="module"></script><script src="https://cdn.cbd.int/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><script src="https://cdn.cbd.int/node-snackbar@0.1.16/dist/snackbar.min.js"></script><canvas id="universe"></canvas><script async src="https://npm.elemecdn.com/anzhiyu-theme-static@1.0.0/dark/dark.js"></script><script async src="/anzhiyu/random.js"></script><script async="async">(function () {
+  var grt = new Date("01/01/2026 00:00:00"); //设置网站上线时间
+  var now = new Date();
+  var dnum;
+  var hnum;
+  var mnum;
+  var snum;
+  var nowHour;
+
+  // 计算并更新天数、小时数、分钟数和秒数
+  function updateTime() {
+    now = new Date(); // 更新 now 的值
+    nowHour = now.getHours(); // 更新 nowHour 的值
+    var days = (now - grt) / 1000 / 60 / 60 / 24;
+    dnum = Math.floor(days);
+    var hours = (now - grt) / 1000 / 60 / 60 - 24 * dnum;
+    hnum = Math.floor(hours);
+    if (String(hnum).length == 1) {
+      hnum = "0" + hnum;
+    }
+    var minutes = (now - grt) / 1000 / 60 - 24 * 60 * dnum - 60 * hnum;
+    mnum = Math.floor(minutes);
+    if (String(mnum).length == 1) {
+      mnum = "0" + mnum;
+    }
+    var seconds = (now - grt) / 1000 - 24 * 60 * 60 * dnum - 60 * 60 * hnum - 60 * mnum;
+    snum = Math.round(seconds);
+    if (String(snum).length == 1) {
+      snum = "0" + snum;
+    }
+  }
+
+  // 更新网页中显示的网站运行时间
+  function updateHtml() {
+    const footer = document.getElementById("footer");
+    if (!footer) return
+    let currentTimeHtml = "";
+    if (nowHour < 18 && nowHour >= 9) {
+      // 如果是上班时间，默认就是"安知鱼-上班摸鱼中.svg"图片，不需要更改
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    } else {
+      // 如果是下班时间，插入"安知鱼-下班啦.svg"图片
+      let img = document.querySelector("#workboard .workSituationImg");
+      if (img != null) {
+        img.src = "https://img.shields.io/badge/author-abinng-9cf";
+        img.title = "下班了就该开开心心的玩耍，嘿嘿~";
+        img.alt = "下班了就该开开心心的玩耍，嘿嘿~";
+      }
+
+      currentTimeHtml = `本站居然运行了 ${dnum} 天<span id='runtime'> ${hnum} 小时 ${mnum} 分 ${snum} 秒 </span><i class='anzhiyufont anzhiyu-icon-heartbeat' style='color:red'></i>`;
+    }
+
+    if (document.getElementById("runtimeTextTip")) {
+      document.getElementById("runtimeTextTip").innerHTML = currentTimeHtml;
+    }
+  }
+
+  setInterval(() => {
+    updateTime();
+    updateHtml();
+  }, 1000);
+})();</script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>(() => {
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-worker.abinng.dpdns.org',
+      region: '',
+      onCommentLoaded: () => {
+        anzhiyu.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      }
+    }, null))
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') setTimeout(runFn,0)
+    else getScript('https://cdn.cbd.int/twikoo@1.6.44/dist/twikoo.all.min.js').then(runFn)
+  }
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-worker.abinng.dpdns.org',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const runFn = () => {
+    init();
+    
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) anzhiyu.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else {
+      loadTwikoo()
+    }
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script><input type="hidden" name="page-type" id="page-type" value="post"><script async src="/js/anzhiyu/comment_barrage.js"></script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-worker.abinng.dpdns.org',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.textContent= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://cdn.cbd.int/twikoo@1.6.44/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'data-lazy-src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'><div class='name'><span>${array[i].nick} </span></div></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <time datetime="${array[i].date}">${anzhiyu.diffDate(array[i].date, true)}</time></div>
+        </div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom && ($dom.innerHTML= result)
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script>var visitorMail = "visitor@abinng.com";
+</script><script async data-pjax src="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/waterfall/waterfall.js"></script><script src="https://cdn.cbd.int/qrcodejs@1.0.0/qrcode.min.js"></script><script src="/js/anzhiyu/right_click_menu.js"></script><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.1.9/icon/ali_iconfont_css.css"><link rel="stylesheet" href="https://cdn.cbd.int/anzhiyu-theme-static@1.0.0/aplayer/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.cbd.int/anzhiyu-blog-static@1.0.1/js/APlayer.min.js"></script><script src="https://cdn.cbd.int/hexo-anzhiyu-music@1.0.1/assets/js/Meting2.min.js"></script><script src="https://cdn.cbd.int/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:type\"]","meta[property=\"og:site_name\"]","meta[property=\"og:description\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+  // removeEventListener scroll 
+  anzhiyu.removeGlobalFnEvent('pjax')
+  anzhiyu.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script charset="UTF-8" src="https://cdn.cbd.int/anzhiyu-theme-static@1.1.5/accesskey/accesskey.js"></script><script>window.addEventListener('load', () => {
+  const getnaokuo_danmu = () => {
+    if (!window.location.pathname.startsWith('/comments/')) return; 
+    
+    const naokuo_danmu = async () => {
+      // 将 Pug 变量传递给 JS 类
+      const Danmaku = new EasyDanmaku({
+        el: '#danmu-wrap', 
+        line: 10,           // 行数
+        speed: 20,         // 速度
+        hover: true,         // 悬停暂停 (true/false)
+        loop: true,           // 循环播放 (true/false)
+        colourful: true, // 彩色弹幕 (true/false)
+        coefficient: 1.38, // 密度系数
+        runtime: 10,      // 运行时长(目前代码中未强制限制总时长，主要靠loop控制)
+        textShadow: 1 // 描边(1)和阴影(2)
+      });
+
+      try {
+        let danmuStore = null; 
+        // 恢复缓存读取逻辑 (如果需要的话，可以取消下面这行的注释)
+        //- let danmuStore = saveToLocal.get('twikoo-danmu');
+
+        if (!danmuStore) {
+          const options = {
+            method: "POST",
+            body: JSON.stringify({
+              "event": "COMMENT_GET",
+              "url": "/comments/",
+              "includeReply": false,
+              "pageSize": 100
+            }),
+            headers: { 'Content-Type': 'application/json' }
+          }
+          
+          const response = await fetch('https://twikoo-worker.abinng.dpdns.org', options);
+          if (response.ok) {
+            const resData = await response.json();
+            const data = resData.data || []; 
+            
+            danmuStore = [];
+            data.forEach(i => {
+              const cleanContent = formatDanmaku(i.comment);
+              if(cleanContent && cleanContent.length > 0) {
+                 danmuStore.push({ 
+                   content: cleanContent, 
+                   nick: i.nick, 
+                   url: i.url 
+                 });
+              }
+            });
+            
+            Danmaku.batchSend(danmuStore, true);
+            // 缓存数据
+            saveToLocal.set('twikoo-danmu', danmuStore, 0.5)
+          }
+        } else {
+          Danmaku.batchSend(danmuStore, true);
+        }
+      } catch (err) {
+        console.error("弹幕加载出错:", err);
+      }
+
+      function formatDanmaku(str) {
+          if(!str) return "";
+          str = str.replace(/<img.*?>/g, '');
+          str = str.replace(/<.*?>/g, '');
+          str = str.replace(/[\r\n]/g, ' ');
+          return str.trim();
+      }
+      
+      // --- 修改开始：替换了这里的按钮 HTML ---
+      const btnContainer = document.getElementById('danmu-Btn');
+      if(btnContainer) {
+          btnContainer.innerHTML = `
+              <button class="danmu-btn btn-show" onclick="document.getElementById('danmu-wrap').style.opacity = '1'">
+                <i class="anzhiyufont anzhiyu-icon-play-circle" style="margin-right:4px"></i> 开启弹幕
+              </button> 
+              <button class="danmu-btn btn-hide" onclick="document.getElementById('danmu-wrap').style.opacity = '0'">
+                <i class="anzhiyufont anzhiyu-icon-pause-circle" style="margin-right:4px"></i> 关闭弹幕
+              </button>
+          `;
+      }
+      // --- 修改结束 ---
+    }
+
+    (async () => {
+      if (typeof EasyDanmaku === 'function') {
+        await naokuo_danmu();
+      } else {
+        const easyDanmakuScript = await getScript('/js/easy-Danmaku.js');
+        await naokuo_danmu();
+      }
+    })();
+  }
+  getnaokuo_danmu()
+  document.addEventListener('pjax:complete', getnaokuo_danmu)
+})
+</script><style>#danmu-wrap {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 60px);
+  z-index: 999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* --- 新增：弹幕按钮样式 --- */
+#danmu-Btn {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.danmu-btn {
+  border: none;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* 开启按钮 - 渐变粉色 */
+.btn-show {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+/* 关闭按钮 - 渐变蓝色 */
+.btn-hide {
+  background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+}
+
+.danmu-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.danmu-btn:active {
+  transform: scale(0.95);
+}</style></div><div id="popup-window"><div class="popup-window-title">通知</div><div class="popup-window-divider"></div><div class="popup-window-content"><div class="popup-tip">你好呀</div><div class="popup-link"><i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i></div></div></div></body></html>
