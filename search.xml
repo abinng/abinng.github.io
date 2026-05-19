@@ -577,9 +577,9 @@
             
             <tag> Qt </tag>
             
-            <tag> 容器 </tag>
-            
             <tag> COW </tag>
+            
+            <tag> 容器 </tag>
             
         </tags>
       
@@ -612,11 +612,11 @@
             
             <tag> Qt </tag>
             
-            <tag> COW </tag>
-            
             <tag> QString </tag>
             
             <tag> 字符编码 </tag>
+            
+            <tag> COW </tag>
             
             <tag> 性能优化 </tag>
             
@@ -665,43 +665,6 @@
     
     <entry>
       
-        <title>001-Qt的编译原理</title>
-      
-      <link href="/posts/12940.html/"/>
-      <url>/posts/12940.html/</url>
-      
-        <content type="html"><![CDATA[<p><code>auther</code>: abinng <code>date</code>: 2026-03-18 20:07<code>createDate:</code>2026-03-18 20:07</p><p>在传统的 C++ 编译过程的基础上，多出了三个部分：</p><ul><li>ui 文件</li><li>元对象系统—&gt;信号和槽相关</li><li>QRC 资源文件</li></ul><p><img src="https://blog-img-worker.abinng.dpdns.org/2026/05/0bf15b562549efc8c22864e8cdc810fb.webp" alt="file-20260318204812131"></p><h3 id="qt-程序的标准编译流程">Qt 程序的标准编译流程</h3><p>在标准的 C++ 编译流程（预处理 -&gt; 编译 -&gt; 汇编 -&gt;链接）之前，Qt 增加了一个非常关键的 <strong>“代码生成阶段”</strong>。整个过程可以分为以下五个核心步骤：</p><p><strong>1. 界面文件的处理 (UIC - User InterfaceCompiler)</strong></p><ul><li><strong>输入：</strong> 开发者在 UI 设计器（QtDesigner）中拖拽生成的界面文件，比如 <code>win.ui</code>（本质上是一个XML 格式的文件）。</li><li><strong>处理：</strong> Qt 提供的 <strong>UIC 工具</strong>会解析这个 <code>.ui</code> 文件，并自动生成标准的 C++ 头文件，例如<code>ui_win.h</code>。</li><li><strong>关联：</strong> 我们的业务逻辑代码（如<code>win.cpp</code>）通过 <code>#include "ui_win.h"</code>来获取并操控界面上的控件。<em>(图中标注的<code>win.cpp -&gt; ui_win.h</code> 就是指这种包含关系)</em>。</li></ul><p><strong>2. 资源文件的处理 (RCC - Resource Compiler)</strong></p><ul><li><strong>输入：</strong> 开发者在工程中使用的外部资源文件，比如图片<code>D:/img/a.png</code>，它们被集中登记在 <code>.qrc</code>资源文件中。</li><li><strong>处理：</strong> <strong>RCC 子系统</strong>会读取这些二进制资源，并将它们转化为标准的 C++ 源文件（如底部的<code>xxx.cpp</code>）。</li><li><strong>本质：</strong> 图片等资源会被转换成巨大的<code>const unsigned char</code><strong>全局字符数组</strong>。这样，资源就被硬编码进了代码中，最终打进<code>.exe</code> 里，程序发布时就不怕丢失图片了。</li></ul><p><strong>3. 元对象系统的处理 (MOC - Meta-Object Compiler)</strong></p><ul><li><em>补充一点图上没画出的细节：</em> MOC 主要扫描工程中包含了<code>Q_OBJECT</code> 宏的头文件（比如 <code>widget.h</code> 或<code>win.h</code>）。</li><li><strong>处理：</strong> <strong>MOC 工具</strong> 负责支撑 Qt强大的信号与槽机制、反射机制。它会根据头文件中的声明，自动生成包含底层实现代码的C++ 源文件，通常命名为 <code>moc_*.cpp</code>（图中为<code>moc_widget.cpp</code>）。</li></ul><p><strong>4. 标准 C++ 编译阶段 (Compiler)</strong></p><ul><li>到了这一步，所有的“原材料”都准备好了。</li><li>C++ 编译器（如 GCC, MSVC 或Clang）开始介入。它将开发者手写的源码（<code>main.cpp</code>,<code>win.cpp</code>）和 Qt 工具生成的源码（<code>moc_widget.cpp</code>,<code>xxx.cpp</code>）统一进行编译。</li><li><strong>输出：</strong>生成各自对应的机器码目标文件（<code>.o</code> 或<code>.obj</code>），即图中的 <code>main.o</code>, <code>win.o</code>,<code>moc_widget.o</code>, <code>xxx.o</code>。</li></ul><p><strong>5. 最终链接阶段 (Linker)</strong></p><ul><li><strong>处理：</strong> 链接器（Linker）将前面生成的所有<code>.o</code> 目标文件整合到一起，同时还会去链接 Qt框架的核心动态/静态库（比如 Qt5Core, Qt5Gui 等）。</li><li><strong>输出：</strong> 最终合成我们需要的可执行文件，比如<code>build.exe</code>。</li></ul><hr><p><strong>总结一下核心逻辑：</strong> Qt的编译之所以看起来复杂，就是因为纯 C++ 语法不支持信号与槽、可视化 UI构建以及资源打包。所以 Qt 发明了 <strong>UIC、MOC、RCC</strong>这三大神器，<strong>先通过工具生成标准的 C++ 代码，然后再把接力棒交回给C++ 编译器</strong>去走传统流程。</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> 后端与底层 </category>
-          
-          <category> C/C++ </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> C++ </tag>
-            
-            <tag> Qt </tag>
-            
-            <tag> 编译原理 </tag>
-            
-            <tag> MOC </tag>
-            
-            <tag> 底层机制 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      
         <title>002-CMake 模板</title>
       
       <link href="/posts/57570.html/"/>
@@ -739,6 +702,43 @@
     
     <entry>
       
+        <title>001-Qt的编译原理</title>
+      
+      <link href="/posts/12940.html/"/>
+      <url>/posts/12940.html/</url>
+      
+        <content type="html"><![CDATA[<p><code>auther</code>: abinng <code>date</code>: 2026-03-18 20:07<code>createDate:</code>2026-03-18 20:07</p><p>在传统的 C++ 编译过程的基础上，多出了三个部分：</p><ul><li>ui 文件</li><li>元对象系统—&gt;信号和槽相关</li><li>QRC 资源文件</li></ul><p><img src="https://blog-img-worker.abinng.dpdns.org/2026/05/0bf15b562549efc8c22864e8cdc810fb.webp" alt="file-20260318204812131"></p><h3 id="qt-程序的标准编译流程">Qt 程序的标准编译流程</h3><p>在标准的 C++ 编译流程（预处理 -&gt; 编译 -&gt; 汇编 -&gt;链接）之前，Qt 增加了一个非常关键的 <strong>“代码生成阶段”</strong>。整个过程可以分为以下五个核心步骤：</p><p><strong>1. 界面文件的处理 (UIC - User InterfaceCompiler)</strong></p><ul><li><strong>输入：</strong> 开发者在 UI 设计器（QtDesigner）中拖拽生成的界面文件，比如 <code>win.ui</code>（本质上是一个XML 格式的文件）。</li><li><strong>处理：</strong> Qt 提供的 <strong>UIC 工具</strong>会解析这个 <code>.ui</code> 文件，并自动生成标准的 C++ 头文件，例如<code>ui_win.h</code>。</li><li><strong>关联：</strong> 我们的业务逻辑代码（如<code>win.cpp</code>）通过 <code>#include "ui_win.h"</code>来获取并操控界面上的控件。<em>(图中标注的<code>win.cpp -&gt; ui_win.h</code> 就是指这种包含关系)</em>。</li></ul><p><strong>2. 资源文件的处理 (RCC - Resource Compiler)</strong></p><ul><li><strong>输入：</strong> 开发者在工程中使用的外部资源文件，比如图片<code>D:/img/a.png</code>，它们被集中登记在 <code>.qrc</code>资源文件中。</li><li><strong>处理：</strong> <strong>RCC 子系统</strong>会读取这些二进制资源，并将它们转化为标准的 C++ 源文件（如底部的<code>xxx.cpp</code>）。</li><li><strong>本质：</strong> 图片等资源会被转换成巨大的<code>const unsigned char</code><strong>全局字符数组</strong>。这样，资源就被硬编码进了代码中，最终打进<code>.exe</code> 里，程序发布时就不怕丢失图片了。</li></ul><p><strong>3. 元对象系统的处理 (MOC - Meta-Object Compiler)</strong></p><ul><li><em>补充一点图上没画出的细节：</em> MOC 主要扫描工程中包含了<code>Q_OBJECT</code> 宏的头文件（比如 <code>widget.h</code> 或<code>win.h</code>）。</li><li><strong>处理：</strong> <strong>MOC 工具</strong> 负责支撑 Qt强大的信号与槽机制、反射机制。它会根据头文件中的声明，自动生成包含底层实现代码的C++ 源文件，通常命名为 <code>moc_*.cpp</code>（图中为<code>moc_widget.cpp</code>）。</li></ul><p><strong>4. 标准 C++ 编译阶段 (Compiler)</strong></p><ul><li>到了这一步，所有的“原材料”都准备好了。</li><li>C++ 编译器（如 GCC, MSVC 或Clang）开始介入。它将开发者手写的源码（<code>main.cpp</code>,<code>win.cpp</code>）和 Qt 工具生成的源码（<code>moc_widget.cpp</code>,<code>xxx.cpp</code>）统一进行编译。</li><li><strong>输出：</strong>生成各自对应的机器码目标文件（<code>.o</code> 或<code>.obj</code>），即图中的 <code>main.o</code>, <code>win.o</code>,<code>moc_widget.o</code>, <code>xxx.o</code>。</li></ul><p><strong>5. 最终链接阶段 (Linker)</strong></p><ul><li><strong>处理：</strong> 链接器（Linker）将前面生成的所有<code>.o</code> 目标文件整合到一起，同时还会去链接 Qt框架的核心动态/静态库（比如 Qt5Core, Qt5Gui 等）。</li><li><strong>输出：</strong> 最终合成我们需要的可执行文件，比如<code>build.exe</code>。</li></ul><hr><p><strong>总结一下核心逻辑：</strong> Qt的编译之所以看起来复杂，就是因为纯 C++ 语法不支持信号与槽、可视化 UI构建以及资源打包。所以 Qt 发明了 <strong>UIC、MOC、RCC</strong>这三大神器，<strong>先通过工具生成标准的 C++ 代码，然后再把接力棒交回给C++ 编译器</strong>去走传统流程。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 后端与底层 </category>
+          
+          <category> C/C++ </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> C++ </tag>
+            
+            <tag> Qt </tag>
+            
+            <tag> 编译原理 </tag>
+            
+            <tag> MOC </tag>
+            
+            <tag> 底层机制 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      
         <title>Oatpp 入门--最简框架</title>
       
       <link href="/posts/35594.html/"/>
@@ -760,11 +760,11 @@
             
             <tag> C++ </tag>
             
-            <tag> 网络编程 </tag>
-            
             <tag> Oat++ </tag>
             
             <tag> Web框架 </tag>
+            
+            <tag> 网络编程 </tag>
             
             <tag> 后端开发 </tag>
             
@@ -908,11 +908,11 @@
             
             <tag> C++ </tag>
             
-            <tag> 操作系统 </tag>
-            
             <tag> Linux </tag>
             
             <tag> 多线程 </tag>
+            
+            <tag> 操作系统 </tag>
             
         </tags>
       
@@ -945,9 +945,9 @@
             
             <tag> C++ </tag>
             
-            <tag> 操作系统 </tag>
-            
             <tag> Linux </tag>
+            
+            <tag> 操作系统 </tag>
             
             <tag> 多进程 </tag>
             
@@ -982,11 +982,11 @@
             
             <tag> C++ </tag>
             
+            <tag> Linux </tag>
+            
             <tag> 操作系统 </tag>
             
             <tag> IO流 </tag>
-            
-            <tag> Linux </tag>
             
         </tags>
       
@@ -1128,9 +1128,9 @@
             
             <tag> Windows </tag>
             
-            <tag> 开发环境 </tag>
-            
             <tag> 代理配置 </tag>
+            
+            <tag> 开发环境 </tag>
             
         </tags>
       
@@ -1528,17 +1528,6 @@
     
     
     <entry>
-      <title>categories</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>charts</title>
       <link href="/charts/index.html"/>
       <url>/charts/index.html</url>
@@ -1550,22 +1539,11 @@
     
     
     <entry>
-      <title>about</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
+      <title>categories</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title></title>
-      <link href="/js/mathjax_config.js"/>
-      <url>/js/mathjax_config.js</url>
-      
-        <content type="html"><![CDATA[MathJax = {  tex: {    inlineMath: [['$', '$'], ['\\(', '\\)']]  }};]]></content>
       
     </entry>
     
@@ -1583,9 +1561,9 @@
     
     
     <entry>
-      <title>留言板</title>
-      <link href="/comments/index.html"/>
-      <url>/comments/index.html</url>
+      <title>about</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -1606,10 +1584,21 @@
     
     <entry>
       <title></title>
-      <link href="/js/easy-Danmaku.js"/>
-      <url>/js/easy-Danmaku.js</url>
+      <link href="/js/mathjax_config.js"/>
+      <url>/js/mathjax_config.js</url>
       
-        <content type="html"><![CDATA[/** * Bilibili 风格弹幕核心逻辑 (最终优化版：全屏随机分布) */class EasyDanmaku {  constructor(options) {    this.container = document.querySelector(options.el);    this.options = {      line: parseInt(options.line, 10) || 10,      speed: options.speed || 10,      hover: options.hover,      loop: options.loop,      colourful: options.colourful,      coefficient: options.coefficient || 1,      textShadow: options.textShadow || 1    };        // 颜色库    this.colors = ['#FFFFFF','#FFFFFF','#FE0302', '#FF7204', '#FFAA02', '#00CD00', '#4266BE', '#CC0273', '#CC3333', '#0099CC', '#FF6666'];    this.tracks = new Array(this.options.line).fill(true);    this.danmakuQueue = [];    this.timer = null;    this.isPaused = false;        this.init();  }  init() {    if (this.container) {        this.container.style.position = 'fixed';        this.container.style.top = '60px';        this.container.style.left = '0';        this.container.style.width = '100%';        this.container.style.height = 'calc(100% - 60px)';        this.container.style.pointerEvents = 'none';        this.container.style.zIndex = '999';        this.container.style.overflow = 'hidden';    }    let containerHeight = this.container ? this.container.offsetHeight : 0;    if (containerHeight === 0) {        containerHeight = window.innerHeight - 60;     }    this.trackHeight = containerHeight / this.options.line;    if (!this.trackHeight || this.trackHeight <= 0) this.trackHeight = 40;  }  batchSend(dataList, isLoop = false) {    let index = 0;    const sendNext = () => {      if (this.isPaused) return;      if (index >= dataList.length) {        if (this.options.loop) index = 0;        else return;      }      const item = dataList[index];      this.send(item);      index++;    };    if (this.timer) clearInterval(this.timer);        const interval = 1000 / this.options.coefficient;        this.timer = setInterval(() => {      if(Math.random() > 0.1) sendNext();    }, interval);   }  send(item) {    if (!this.container) return;    const rand = Math.random();    let type = 'scroll';    // 5% 概率顶部，5% 概率底部，90% 滚动    if (rand > 0.95) type = 'bottom';    else if (rand > 0.90) type = 'top';    const dom = document.createElement('div');    dom.innerText = item.content;        this.setStyle(dom, type);    if (type === 'scroll') {      this.renderScroll(dom);    } else {      this.renderStatic(dom, type);    }  }  setStyle(dom, type) {    dom.style.position = 'absolute';    dom.style.whiteSpace = 'nowrap';    dom.style.fontFamily = '"黑体", "Heiti SC", sans-serif';    dom.style.fontWeight = 'bold';    dom.style.fontSize = `${Math.floor(22 + Math.random() * 6)}px`;    // 描边和阴影选一个    if(this.options.textShadow === 1) { // 下面这个是描边        dom.style.textShadow = '#000 1px 0 1px, #000 0 1px 1px, #000 0 -1px 1px, #000 -1px 0 1px';    } else { // 下面这个是阴影        dom.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';    }    dom.style.pointerEvents = 'auto';    dom.style.cursor = 'default';    dom.style.zIndex = 10;        if (this.options.colourful) {        const color = this.colors[Math.floor(Math.random() * this.colors.length)];        dom.style.color = color;    } else {        dom.style.color = '#FFFFFF';    }  }  renderScroll(dom) {    // --- 核心修改：随机选择空闲轨道 ---        // 1. 找出所有当前空闲的轨道索引    const availableTracks = [];    this.tracks.forEach((isFree, index) => {        if (isFree) availableTracks.push(index);    });    let trackIndex = -1;    if (availableTracks.length > 0) {        // 2. 如果有空闲轨道，从中随机选一个        // 这解决了总是堆积在前几行的问题        const randomPos = Math.floor(Math.random() * availableTracks.length);        trackIndex = availableTracks[randomPos];    } else {        // 3. 如果全满了，就随机挤占任意一行        trackIndex = Math.floor(Math.random() * this.options.line);    }    this.tracks[trackIndex] = false;    setTimeout(() => { this.tracks[trackIndex] = true; }, 2000);     const topPos = trackIndex * this.trackHeight;    dom.style.top = `${topPos}px`;    dom.style.left = '100%';    dom.style.transform = 'translateX(0)';        this.container.appendChild(dom);    const containerWidth = this.container.offsetWidth || window.innerWidth;    const duration = this.options.speed + (Math.random() * 2);         const animation = dom.animate([      { transform: 'translateX(0)' },      { transform: `translateX(-${containerWidth + dom.offsetWidth + 50}px)` }    ], {      duration: duration * 1000,      easing: 'linear'    });    if (this.options.hover) {        dom.addEventListener('mouseenter', () => {            animation.pause();            dom.style.zIndex = 100;            dom.style.border = "1px solid rgba(255,255,255,0.5)";            dom.style.backgroundColor = "rgba(0,0,0,0.4)";            dom.style.borderRadius = "4px";        });        dom.addEventListener('mouseleave', () => {            animation.play();            dom.style.zIndex = 10;            dom.style.border = "none";            dom.style.backgroundColor = "transparent";        });    }    animation.onfinish = () => {      dom.remove();    };  }  renderStatic(dom, type) {    dom.style.left = '50%';    dom.style.transform = 'translateX(-50%)';    dom.style.zIndex = 20;    dom.style.textShadow = 'none';     dom.style.background = 'rgba(0,0,0,0.6)';    dom.style.borderRadius = '20px';    dom.style.padding = '4px 12px';    dom.style.border = `1px solid ${dom.style.color}`;    // --- 核心修改：移除行数限制 ---    // 允许静态弹幕出现在任意一行    const offset = Math.floor(Math.random() * this.options.line) * this.trackHeight;    if (type === 'top') {      dom.style.top = `${offset + 20}px`;    } else {      dom.style.top = 'auto';       dom.style.bottom = `${offset + 80}px`;    }    this.container.appendChild(dom);    setTimeout(() => {      dom.remove();    }, 5000);  }}]]></content>
+        <content type="html"><![CDATA[MathJax = {  tex: {    inlineMath: [['$', '$'], ['\\(', '\\)']]  }};]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>留言板</title>
+      <link href="/comments/index.html"/>
+      <url>/comments/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
@@ -1621,6 +1610,17 @@
       <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title></title>
+      <link href="/js/easy-Danmaku.js"/>
+      <url>/js/easy-Danmaku.js</url>
+      
+        <content type="html"><![CDATA[/** * Bilibili 风格弹幕核心逻辑 (最终优化版：全屏随机分布) */class EasyDanmaku {  constructor(options) {    this.container = document.querySelector(options.el);    this.options = {      line: parseInt(options.line, 10) || 10,      speed: options.speed || 10,      hover: options.hover,      loop: options.loop,      colourful: options.colourful,      coefficient: options.coefficient || 1,      textShadow: options.textShadow || 1    };        // 颜色库    this.colors = ['#FFFFFF','#FFFFFF','#FE0302', '#FF7204', '#FFAA02', '#00CD00', '#4266BE', '#CC0273', '#CC3333', '#0099CC', '#FF6666'];    this.tracks = new Array(this.options.line).fill(true);    this.danmakuQueue = [];    this.timer = null;    this.isPaused = false;        this.init();  }  init() {    if (this.container) {        this.container.style.position = 'fixed';        this.container.style.top = '60px';        this.container.style.left = '0';        this.container.style.width = '100%';        this.container.style.height = 'calc(100% - 60px)';        this.container.style.pointerEvents = 'none';        this.container.style.zIndex = '999';        this.container.style.overflow = 'hidden';    }    let containerHeight = this.container ? this.container.offsetHeight : 0;    if (containerHeight === 0) {        containerHeight = window.innerHeight - 60;     }    this.trackHeight = containerHeight / this.options.line;    if (!this.trackHeight || this.trackHeight <= 0) this.trackHeight = 40;  }  batchSend(dataList, isLoop = false) {    let index = 0;    const sendNext = () => {      if (this.isPaused) return;      if (index >= dataList.length) {        if (this.options.loop) index = 0;        else return;      }      const item = dataList[index];      this.send(item);      index++;    };    if (this.timer) clearInterval(this.timer);        const interval = 1000 / this.options.coefficient;        this.timer = setInterval(() => {      if(Math.random() > 0.1) sendNext();    }, interval);   }  send(item) {    if (!this.container) return;    const rand = Math.random();    let type = 'scroll';    // 5% 概率顶部，5% 概率底部，90% 滚动    if (rand > 0.95) type = 'bottom';    else if (rand > 0.90) type = 'top';    const dom = document.createElement('div');    dom.innerText = item.content;        this.setStyle(dom, type);    if (type === 'scroll') {      this.renderScroll(dom);    } else {      this.renderStatic(dom, type);    }  }  setStyle(dom, type) {    dom.style.position = 'absolute';    dom.style.whiteSpace = 'nowrap';    dom.style.fontFamily = '"黑体", "Heiti SC", sans-serif';    dom.style.fontWeight = 'bold';    dom.style.fontSize = `${Math.floor(22 + Math.random() * 6)}px`;    // 描边和阴影选一个    if(this.options.textShadow === 1) { // 下面这个是描边        dom.style.textShadow = '#000 1px 0 1px, #000 0 1px 1px, #000 0 -1px 1px, #000 -1px 0 1px';    } else { // 下面这个是阴影        dom.style.textShadow = '1px 1px 2px rgba(0,0,0,0.8)';    }    dom.style.pointerEvents = 'auto';    dom.style.cursor = 'default';    dom.style.zIndex = 10;        if (this.options.colourful) {        const color = this.colors[Math.floor(Math.random() * this.colors.length)];        dom.style.color = color;    } else {        dom.style.color = '#FFFFFF';    }  }  renderScroll(dom) {    // --- 核心修改：随机选择空闲轨道 ---        // 1. 找出所有当前空闲的轨道索引    const availableTracks = [];    this.tracks.forEach((isFree, index) => {        if (isFree) availableTracks.push(index);    });    let trackIndex = -1;    if (availableTracks.length > 0) {        // 2. 如果有空闲轨道，从中随机选一个        // 这解决了总是堆积在前几行的问题        const randomPos = Math.floor(Math.random() * availableTracks.length);        trackIndex = availableTracks[randomPos];    } else {        // 3. 如果全满了，就随机挤占任意一行        trackIndex = Math.floor(Math.random() * this.options.line);    }    this.tracks[trackIndex] = false;    setTimeout(() => { this.tracks[trackIndex] = true; }, 2000);     const topPos = trackIndex * this.trackHeight;    dom.style.top = `${topPos}px`;    dom.style.left = '100%';    dom.style.transform = 'translateX(0)';        this.container.appendChild(dom);    const containerWidth = this.container.offsetWidth || window.innerWidth;    const duration = this.options.speed + (Math.random() * 2);         const animation = dom.animate([      { transform: 'translateX(0)' },      { transform: `translateX(-${containerWidth + dom.offsetWidth + 50}px)` }    ], {      duration: duration * 1000,      easing: 'linear'    });    if (this.options.hover) {        dom.addEventListener('mouseenter', () => {            animation.pause();            dom.style.zIndex = 100;            dom.style.border = "1px solid rgba(255,255,255,0.5)";            dom.style.backgroundColor = "rgba(0,0,0,0.4)";            dom.style.borderRadius = "4px";        });        dom.addEventListener('mouseleave', () => {            animation.play();            dom.style.zIndex = 10;            dom.style.border = "none";            dom.style.backgroundColor = "transparent";        });    }    animation.onfinish = () => {      dom.remove();    };  }  renderStatic(dom, type) {    dom.style.left = '50%';    dom.style.transform = 'translateX(-50%)';    dom.style.zIndex = 20;    dom.style.textShadow = 'none';     dom.style.background = 'rgba(0,0,0,0.6)';    dom.style.borderRadius = '20px';    dom.style.padding = '4px 12px';    dom.style.border = `1px solid ${dom.style.color}`;    // --- 核心修改：移除行数限制 ---    // 允许静态弹幕出现在任意一行    const offset = Math.floor(Math.random() * this.options.line) * this.trackHeight;    if (type === 'top') {      dom.style.top = `${offset + 20}px`;    } else {      dom.style.top = 'auto';       dom.style.bottom = `${offset + 80}px`;    }    this.container.appendChild(dom);    setTimeout(() => {      dom.remove();    }, 5000);  }}]]></content>
       
     </entry>
     
